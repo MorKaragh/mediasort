@@ -37,12 +37,20 @@ $(document).ready( function() {
 
 $(document).ready( function() {
 	$("#tagBox").tagging();
+	$('#locationSelect').select2({
+        tags: true
+    });
+	$('#authorSelect').select2({
+        tags: true
+    });
 });
 
 $("#sendBtn").click(function(){
     var tagz = $("#tagBox").tagging( "getTags" );
     var reader = new FileReader();
     var file    = document.querySelector('input[type=file]').files[0];
+    var locationn = $( "#locationSelect option:selected" ).text();
+    var authorr = $( "#authorSelect option:selected" ).text();
     reader.readAsDataURL(file);
 
     reader.onload = function (e) {
@@ -50,7 +58,7 @@ $("#sendBtn").click(function(){
               method: "POST",
               contentType: "application/json",
               url: "/send",
-              data: JSON.stringify({tags : tagz, img: e.target.result}),
+              data: JSON.stringify({tags : tagz, img: e.target.result, author: authorr, location: locationn}),
               success: function(response) {
                                console.log(response);
                            },

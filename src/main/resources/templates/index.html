@@ -13,19 +13,41 @@
           rel="stylesheet" media="screen"/>
     <link href="../static/css/tag-basic-style.css" th:href="@{css/tag-basic-style.css}"
           rel="stylesheet" media="screen"/>
-
+    <link href="../static/css/select2.min.css" th:href="@{css/select2.min.css}"
+          rel="stylesheet" media="screen"/>
 </head>
 <body>
 
-    <div class="container">
-        <div class="well row">
-            <div class="col-md-6">
+    <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
+        <div class="well">
+            <div class="row">
                 <div class="form-group">
-                    <!--<label>Upload Image</label>-->
+                    <label for="authorSelect" class="control-label">Автор</label>
+                    <select id="authorSelect" class="js-example-basic-single dictSelector" name="state">
+                        <option th:each="item : ${authors}" th:text="${item.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="locationSelect" class="control-label">Место</label>
+                    <select id="locationSelect" class="js-example-basic-single dictSelector" name="state">
+                        <option th:each="item : ${locations}" th:text="${item.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-inline">
+                <div class="form-group col-lg-8 col-md-8">
+                    <div data-tags-input-name="tag" id="tagBox"></div>
+                </div>
+                <button id="sendBtn" type="button" class="btn btn-lg btn-default">Сохранить</button>
+            </div>
+            <div class="row">
+                <div class="form-group"  style="margin-top: 15px">
                     <div class="input-group">
                     <span class="input-group-btn">
                         <span class="btn btn-default btn-file">
-                            Выбрать… <input type="file" id="imgInp" />
+                            Картинка… <input type="file" id="imgInp" />
                         </span>
                     </span>
                         <input type="text" class="form-control" readonly="readonly" />
@@ -33,17 +55,14 @@
                     <img id='img-upload'/>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div data-tags-input-name="tag" id="tagBox"></div>
-                </div>
-            </div>
+
         </div>
     </div>
 
 </body>
     <script src="../static/js/jquery-3.2.1.min.js" th:src="@{js/jquery-3.2.1.min.js}"></script>
-    <script src="../static/js/common.js" th:src="@{js/common.js}"></script>
     <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
     <script src="../static/js/tagging.min.js" th:src="@{js/tagging.min.js}"></script>
+    <script src="../static/js/select2.min.js" th:src="@{js/select2.min.js}"></script>
+    <script src="../static/js/common.js" th:src="@{js/common.js}"></script>
 </html>

@@ -3,9 +3,13 @@ package ru.mewory.photohost.service;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mewory.photohost.dao.AuthorRepository;
 import ru.mewory.photohost.dao.ImagesRepository;
+import ru.mewory.photohost.dao.LocationRepository;
 import ru.mewory.photohost.dao.TagRepository;
+import ru.mewory.photohost.model.Author;
 import ru.mewory.photohost.model.Image;
+import ru.mewory.photohost.model.Location;
 import ru.mewory.photohost.model.Tag;
 
 import java.io.File;
@@ -26,27 +30,43 @@ public class SaveService {
     private TagRepository tagRepository;
 
     @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
     private ImagesRepository imagesRepository;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
 
-
     public void save(Image pic){
-        byte[] data = Base64.decodeBase64(pic.getPic());
+        String finalPath = getFinalPath(pic);
+        try (OutputStream stream = new FileOutputStream(finalPath)) {
+            stream.write(Base64.decodeBase64(pic.getPic()));
+            Long imageId = saveImage(finalPath);
+            Location l = locationRepository.findByName(pic.getLocation());
+            if (l == null) {
+                locationRepository.save(new Location(pic.getLocation()));
+            }
+            Author a = authorRepository.findByName(pic.getAuthor());
+            if (a == null) {
+                authorRepository.save(new Author(pic.getAuthor()));
+            }
+            saveTags(imageId,pic.getTags());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFinalPath(Image pic) {
         LocalDate today = LocalDate.now();
         String folderName = today.format(formatter);
 
         String folderPath = "photos/" + folderName;
         createFolder(folderPath);
 
-        String finalPath = folderPath + "/" + randomName() + "." + pic.getExtension();
-        try (OutputStream stream = new FileOutputStream(finalPath)) {
-            stream.write(data);
-            Long imageId = saveImage(finalPath);
-            saveTags(imageId,pic.getTags());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return folderPath + "/" + randomName() + "." + pic.getExtension();
     }
 
     private void saveTags(Long imageId, List<String> tags) {

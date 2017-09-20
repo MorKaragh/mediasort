@@ -20,6 +20,12 @@ public class Image {
 
     private Long id;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
+
     @JsonProperty("tags")
     @Transient
     private List<String> tags;
@@ -28,11 +34,6 @@ public class Image {
     @Transient
     private String encoded;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long getId() {
-        return id;
-    }
 
     public void setId(Long id) {
         this.id = id;
