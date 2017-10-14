@@ -1,25 +1,18 @@
 package ru.mewory.photohost.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
- * Created by tookuk on 9/3/17.
+ * Created by tookuk on 10/10/17.
  */
 @Entity
-@Table(name="tag")
-public class Tag  implements Serializable {
+@Table(name="themes",
+        uniqueConstraints = {@UniqueConstraint(columnNames={"name"})}
+)
+public class Theme {
 
-    private Long id;
     private String name;
-
-    public Tag() {
-    }
-
-    public Tag(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private Long id;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,6 +24,13 @@ public class Tag  implements Serializable {
         this.id = id;
     }
 
+    public Theme() {
+    }
+
+    public Theme(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -38,5 +38,4 @@ public class Tag  implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
 }

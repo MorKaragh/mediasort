@@ -24,17 +24,14 @@ import java.util.UUID;
  * Created by tookuk on 9/16/17.
  */
 @Service
-public class SaveService {
+public class ImageSaveService {
 
     @Autowired
     private TagRepository tagRepository;
-
     @Autowired
     private LocationRepository locationRepository;
-
     @Autowired
     private AuthorRepository authorRepository;
-
     @Autowired
     private ImagesRepository imagesRepository;
 

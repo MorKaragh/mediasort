@@ -18,10 +18,47 @@
     display: block;
 }
 
-#img-upload{
+#img-upload {
     width: 100%;
 }
 
-.dictSelector{
+.dictSelector {
     width: 200px;
+}
+
+.mab-jquery-taginput.tag-input {
+    border: 1px solid grey !important;
+    border-radius: 3px;
+    padding: 10px 10px 6px 10px;
+}
+
+.reportTag {
+    background-color: #99ccff;
+    color:white;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.reportTagBox {
+    margin: 5px 0 0 0;
+    border-left: 3px solid black;
+    float: left;
+    padding: 3px 0 3px 5px;
+}
+
+.reportItemDescription {
+        margin: 5px 0 0 0;
+        padding: 3px 0 3px 0;
+}
+
+.reportItemLocation {
+    font-size: large;
+}
+
+.inError {
+    color: red !important;
+}
+
+.inptlbl {
+    width: 60px;
 }
