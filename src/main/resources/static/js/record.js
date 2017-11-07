@@ -9,11 +9,6 @@ $(document).ready(function() {
         tags: true
     });
 
-    $('#datetimepicker2').datetimepicker({
-        locale: 'ru',
-        format: 'DD.MM.YYYY'
-    });
-
     var taglist = [];
     $.ajax({
         url : "rectags",
@@ -60,6 +55,9 @@ $(document).ready(function() {
     $('body').show();
     $("#authorSelect").focus();
 
+    $('.date').datepicker({
+        format: "dd.mm.yyyy"
+    });
 
 });
 
@@ -91,6 +89,7 @@ $("#sendBtn").click(function(){
         showError("внесите тэги и место!")
         return;
     }
+    console.log(JSON.stringify({tags : tagz, description: desc, author: authorr, location: locationn, theme: themeVar}));
     $.ajax({
       method: "POST",
       contentType: "application/json",
@@ -99,6 +98,9 @@ $("#sendBtn").click(function(){
       success: function(response) {
                    },
       error: function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+        console.log(ajaxOptions);
+        console.log(thrownError);
                  }
     }).done(function(response) {
         location.reload();

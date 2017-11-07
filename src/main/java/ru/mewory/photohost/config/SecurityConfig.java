@@ -1,7 +1,31 @@
 package ru.mewory.photohost.config;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-/**
- * Created by tookuk on 10/13/17.
- */
-public class SecurityConfig {
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .antMatchers("/record").hasRole("USER")
+                .antMatchers("/report").hasRole("USER")
+                .antMatchers("/").hasRole("USER")
+                .antMatchers(HttpMethod.POST,"/sendRecord").hasRole("USER")
+                .and()
+                .formLogin().loginPage("/login").successForwardUrl("/record")
+                .and().csrf().disable();
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .inMemoryAuthentication()
+                .withUser("user").password("123321").roles("USER");
+    }
 }

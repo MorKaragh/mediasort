@@ -55,7 +55,12 @@ public class MainController {
         return mav;
     }
 
-    @RequestMapping(value = { "/", "/record" })
+    @RequestMapping(value = {"/","/login"})
+    public String login(Model model) {
+        return "login";
+    }
+
+    @RequestMapping(value = {"/record"})
     public ModelAndView record(Model model){
         ModelAndView mav = new ModelAndView("record");
         List<Author> authors = authorRepository.findAll();
@@ -67,34 +72,42 @@ public class MainController {
         return mav;
     }
 
+    @RequestMapping(method=RequestMethod.GET, value="report")
+    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
+        System.out.println(allRequestParams.toString());
+        ModelAndView mav = new ModelAndView("report");
+        List<Record> records = reportService.getReport(allRequestParams);
+        mav.addObject("report",records);
+        List<Location> locations = locationRepository.findAll();
+        mav.addObject("locations", locations);
+        List<Theme> themes = themeRepository.findAll();
+        mav.addObject("themes", themes);
+        mav.addObject("startDate",allRequestParams.get("startDate"));
+        mav.addObject("endDate",allRequestParams.get("endDate"));
+        return mav;
+    }
+
+    public class SearchRequest {
+        private Map<String, String> params;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/send")
     public String upload(@RequestBody Image img) throws IOException {
         imageSaveService.save(img);
         return "index";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/sendRecord")
+    @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
     public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
         recordSaveService.save(record);
         Map<String,String> result = new HashMap<>();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(method=RequestMethod.GET, value="rectags")
+    @RequestMapping(method=RequestMethod.GET, value="/rectags")
     public @ResponseBody List<Tag> recordTags(){
         return tagRepository.findAll();
     }
 
-    @RequestMapping(method=RequestMethod.GET, value="report")
-    public @ResponseBody ModelAndView getReport(){
-        ModelAndView mav = new ModelAndView("report");
-        List<Record> records = reportService.getReport(null);
-        mav.addObject("report",records);
-        List<Location> locations = locationRepository.findAll();
-        mav.addObject("locations", locations);
-        List<Theme> themes = themeRepository.findAll();
-        mav.addObject("themes", themes);
-        return mav;
-    }
 
 }

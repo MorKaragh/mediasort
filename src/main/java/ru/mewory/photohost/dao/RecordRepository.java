@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.mewory.photohost.model.Record;
 import ru.mewory.photohost.model.Tag;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,4 +12,6 @@ import java.util.List;
  */
 public interface RecordRepository extends JpaRepository<Record,Long> {
     List<Record> findByLocation(String location);
+    List<Record> findByTheme(String theme);
+    List<Record> findByThemeAndLocationAndDateBetween(String theme, String location, Date startDate, Date endDate);
 }

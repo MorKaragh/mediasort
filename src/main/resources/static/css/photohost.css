@@ -62,3 +62,11 @@
 .inptlbl {
     width: 60px;
 }
+
+.date {
+    width: 150px;
+}
+
+.red-label{
+    color: red;
+}
