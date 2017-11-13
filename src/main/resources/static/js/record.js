@@ -52,12 +52,13 @@ $(document).ready(function() {
       }
     });
 
-    $('body').show();
     $("#authorSelect").focus();
 
     $('.date').datepicker({
         format: "dd.mm.yyyy"
     });
+
+    $('body').show();
 
 });
 

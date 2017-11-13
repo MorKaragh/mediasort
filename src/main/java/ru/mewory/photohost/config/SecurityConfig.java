@@ -16,6 +16,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/record").hasRole("USER")
                 .antMatchers("/report").hasRole("USER")
                 .antMatchers("/").hasRole("USER")
+                .antMatchers("/test").permitAll()
+                .antMatchers("/instaload").permitAll()
                 .antMatchers(HttpMethod.POST,"/sendRecord").hasRole("USER")
                 .and()
                 .formLogin().loginPage("/login").successForwardUrl("/record")

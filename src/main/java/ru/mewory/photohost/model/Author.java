@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class Author {
 
     private String name;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
     private Long id;
 
     @Id

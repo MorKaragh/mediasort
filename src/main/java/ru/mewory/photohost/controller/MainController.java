@@ -1,5 +1,7 @@
 package ru.mewory.photohost.controller;
 
+import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -8,20 +10,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.mewory.photohost.dao.AuthorRepository;
-import ru.mewory.photohost.dao.LocationRepository;
-import ru.mewory.photohost.dao.TagRepository;
-import ru.mewory.photohost.dao.ThemeRepository;
+import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.model.*;
+import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordSaveService;
 import ru.mewory.photohost.service.SimpleReportService;
+import ru.mewory.photohost.service.vkapi.InstagramService;
+import ru.mewory.photohost.service.vkapi.VkService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by tookuk on 9/3/17.
@@ -44,6 +43,38 @@ public class MainController {
     private SimpleReportService reportService;
     @Autowired
     private ThemeRepository themeRepository;
+    @Autowired
+    private VkService vkService;
+    @Autowired
+    private InstagramService instagramService;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private CommentsRepository commentsRepository;
+
+    @GetMapping("/test")
+    public String test() throws ClientException, ApiException {
+        List<Post> all = postRepository.findAll();
+        all.toString();
+        List<Comment> byPost = commentsRepository.findByPost(all.get(0));
+        byPost.toString();
+        return "login";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/parseInstagram")
+    public ResponseEntity<Map<String,String>> parseInstagram(@RequestBody InstagramData instagramData) throws IOException {
+        Map<String,String> result = new HashMap<>();
+        instagramService.parseData(instagramData);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping("/instaload")
+    public ModelAndView instaload(){
+        ModelAndView mav = new ModelAndView("instaload");
+        return mav;
+    }
 
     @RequestMapping("/photo")
     public ModelAndView photo(Model model) {
