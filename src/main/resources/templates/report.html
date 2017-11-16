@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
-    <title>media</title>
+<head lang="ru">
+    <title>отчет</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <div th:replace="fragments/header :: header-css"/>
 </head>
@@ -13,10 +13,7 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Отчет</a>
         </div>
-        <ul class="nav navbar-nav">
-            <li><a href="record">Внесение</a></li>
-            <li class="active"><a href="report">Отчет</a></li>
-        </ul>
+        <div th:replace="fragments/header :: navbar"/>
     </div>
 </nav>
 

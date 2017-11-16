@@ -14,20 +14,18 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(length = 4000)
-    private String text;
-    private Long netId;
     @Enumerated(EnumType.STRING)
     private SocNet socnet;
-    private Date date;
-
     @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "author_id")
     private Author author;
-
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OrderBy("id")
     private Set<Comment> comments = new HashSet<>();
+    @Column(length = 8000)
+    private String text;
+    private Long netId;
+    private Date date;
 
     public Set<Comment> getComments() {
         return comments;
@@ -36,7 +34,6 @@ public class Post {
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
-
 
     public Author getAuthor() {
         return author;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head lang="ru">
     <meta charset="UTF-8"/>
     <title>Загрузчик Instagram</title>
     <div th:replace="fragments/header :: header-css"/>
@@ -14,26 +14,24 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Загрузка из Instagram</a>
         </div>
-        <ul class="nav navbar-nav">
-            <li><a href="record">Внесение</a></li>
-            <li><a href="report">Отчет</a></li>
-            <li class="active"><a href="instaload">Загрузка из Instagram</a></li>
-        </ul>
+        <div th:replace="fragments/header :: navbar"/>
     </div>
 </nav>
 
 <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
     <div>
-
-        <div class="row">
-            <div id="summernote" class="summernote">Скопируйте сюда комментарии</div>
+        <div class="row editor">
+            <div id="summernote" class="summernote"></div>
         </div>
+        <div class="parsed"></div>
         <div class="row form-group" style="padding: 0 15px 0 15px">
-            <button id="sendBtn" type="button" class="btn btn-lg btn-default">Сохранить</button>
+            <button id="sendBtn" type="button" class="btn btn-lg btn-default">Проверить</button>
+            <button id="saveBtn" type="button" class="btn btn-lg btn-default">Сохранить</button>
+            <button id="backBtn" type="button" class="btn btn-lg btn-default">Назад</button>
         </div>
-
     </div>
 </div>
+
 
 </body>
 <div th:replace="fragments/header :: script"/>

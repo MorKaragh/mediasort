@@ -17,7 +17,7 @@ public class Comment {
     @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "post_id")
     private Post post;
-    @Column(length = 4000)
+    @Column(length = 8000)
     private String text;
     private Long netId;
 
@@ -27,6 +27,15 @@ public class Comment {
 
     @Enumerated(EnumType.STRING)
     private CommentStatus status;
+    private String changeUser;
+
+    public String getChangeUser() {
+        return changeUser;
+    }
+
+    public void setChangeUser(String changeUser) {
+        this.changeUser = changeUser;
+    }
 
     public Author getAuthor() {
         return author;
@@ -76,4 +85,15 @@ public class Comment {
         this.netId = netId;
     }
 
+    @Override
+    public String toString() {
+        return "Comment{" + "\n" +
+                "id=" + id + "\n" +
+                ", post=" + post +
+                ", text='" + text + '\'' + "\n" +
+                ", netId=" + netId + "\n" +
+                ", author=" + author + "\n" +
+                ", status=" + status + "\n" +
+                '}';
+    }
 }

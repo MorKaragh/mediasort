@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="ru">
+    <meta charset="UTF-8"/>
+    <title>Загрузчик Вконтакте</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+
+
+<body hidden="true">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Загрузка из VK</a>
+        </div>
+        <div th:replace="fragments/header :: navbar"/>
+    </div>
+</nav>
+
+<input id="offset" type="hidden" th:value="${offset}"/>
+
+<div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
+    <div>
+        <div class="row"><h2>Загружено:</h2></div>
+        <div class="row">
+            <div class="vk-post-head well" th:each="item : ${posts}">
+                <div class="post-author" th:text="${item.author}"></div>
+                <div class="post-date" th:text="${item.date}"></div>
+                <div class="post-comment" th:text="${item.text}"></div>
+            </div>
+        </div>
+        <div class="row form-group" style="padding: 0 15px 0 15px">
+            <button id="moreBtn" type="button" class="btn btn-lg btn-default">Загрузить ещё</button>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/header :: script"/>
+
+<!--custom-->
+<script src="../static/js/vkload.js" th:src="@{js/vkload.js}"></script>
+</html>

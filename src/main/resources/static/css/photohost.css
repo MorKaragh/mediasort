@@ -70,3 +70,17 @@
 .red-label{
     color: red;
 }
+
+.post-author{
+    font-size: larger;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
+.post-comment{
+    font-family: "Arial";
+}
+
+.post-comment-box{
+    padding: 7px;
+}

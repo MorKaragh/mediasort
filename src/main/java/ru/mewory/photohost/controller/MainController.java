@@ -2,6 +2,7 @@ package ru.mewory.photohost.controller;
 
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,8 @@ import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordSaveService;
 import ru.mewory.photohost.service.SimpleReportService;
-import ru.mewory.photohost.service.vkapi.InstagramService;
+import ru.mewory.photohost.service.vkapi.InstagramParser;
+import ru.mewory.photohost.service.vkapi.PostService;
 import ru.mewory.photohost.service.vkapi.VkService;
 
 import java.io.IOException;
@@ -46,34 +48,95 @@ public class MainController {
     @Autowired
     private VkService vkService;
     @Autowired
-    private InstagramService instagramService;
+    private PostService postService;
 
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private CommentsRepository commentsRepository;
 
     @GetMapping("/test")
-    public String test() throws ClientException, ApiException {
-        List<Post> all = postRepository.findAll();
-        all.toString();
-        List<Comment> byPost = commentsRepository.findByPost(all.get(0));
-        byPost.toString();
+    public String test() throws ClientException, ApiException, InterruptedException {
+        Long maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
+        maxPostIdWithFreeComments.toString();
+        Long nextId = postRepository.findMaxPostIdWithFreeCommentsLessThenId(maxPostIdWithFreeComments);
         return "login";
     }
 
+    @RequestMapping(value = {"/record"})
+    public ModelAndView record(@RequestParam Map<String,String> allRequestParams){
+        ModelAndView mav = new ModelAndView("record");
+        List<Author> authors = authorRepository.findAll();
+        mav.addObject("authors", authors);
+        List<Location> locations = locationRepository.findAll();
+        mav.addObject("locations", locations);
+        List<Theme> themes = themeRepository.findAll();
+        mav.addObject("themes", themes);
+
+        Post post = postService.findNextPostAndFetchFreeComments(
+                Long.valueOf(allRequestParams.get("postId")));
+        mav.addObject("post",post);
+
+        return mav;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/parseInstagram")
-    public ResponseEntity<Map<String,String>> parseInstagram(@RequestBody InstagramData instagramData) throws IOException {
-        Map<String,String> result = new HashMap<>();
-        instagramService.parseData(instagramData);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ModelAndView parseInstagram(@RequestBody InstagramData instagramData) throws IOException {
+        ModelAndView modelAndView = new ModelAndView("parsedpost");
+        List<SocnetDTO> parsed = InstagramParser.parse(instagramData.getData());
+        modelAndView.addObject("post",parsed.get(0));
+        modelAndView.addObject("comments",parsed.subList(1,parsed.size()));
+        return modelAndView;
     }
 
     @RequestMapping("/instaload")
     public ModelAndView instaload(){
         ModelAndView mav = new ModelAndView("instaload");
         return mav;
+    }
+
+    @RequestMapping(method=RequestMethod.GET, value="/vkload")
+    public ModelAndView vkload(@RequestParam Map<String,String> allRequestParams) throws InterruptedException, ClientException, ApiException {
+        ModelAndView mav = new ModelAndView("vkload");
+        int offset = getOffset(allRequestParams);
+        mav.addObject("offset",offset);
+        List<List<SocnetDTO>> postsWithComments = vkService.getPostsWithComments(offset);
+        if (!CollectionUtils.isEmpty(postsWithComments)){
+            List<Post> posts = new ArrayList<>();
+            postsWithComments.forEach(socnetDTOS -> posts.add(postService.savePost(socnetDTOS)));
+            mav.addObject("posts",posts);
+        }
+        return mav;
+    }
+
+    private int getOffset(@RequestParam Map<String, String> allRequestParams) {
+        int offset = 0;
+        try {
+            offset = Integer.parseInt(allRequestParams.get("offset"));
+        } catch (Exception e){}
+        return offset;
+    }
+
+    @RequestMapping(method=RequestMethod.GET, value="report")
+    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
+        ModelAndView mav = new ModelAndView("report");
+        List<Record> records = reportService.getReport(allRequestParams);
+        mav.addObject("report",records);
+        List<Location> locations = locationRepository.findAll();
+        mav.addObject("locations", locations);
+        List<Theme> themes = themeRepository.findAll();
+        mav.addObject("themes", themes);
+        mav.addObject("startDate",allRequestParams.get("startDate"));
+        mav.addObject("endDate",allRequestParams.get("endDate"));
+        return mav;
+    }
+
+    @RequestMapping("/savePost")
+    public ResponseEntity<String> savePost(@RequestBody InstagramData instagramData){
+        ModelAndView mav = new ModelAndView("instaload");
+        List<SocnetDTO> parsed = InstagramParser.parse(instagramData.getData());
+        Post post = postService.savePost(parsed);
+        return new ResponseEntity<>("saved", HttpStatus.OK);
     }
 
     @RequestMapping("/photo")
@@ -89,37 +152,6 @@ public class MainController {
     @RequestMapping(value = {"/","/login"})
     public String login(Model model) {
         return "login";
-    }
-
-    @RequestMapping(value = {"/record"})
-    public ModelAndView record(Model model){
-        ModelAndView mav = new ModelAndView("record");
-        List<Author> authors = authorRepository.findAll();
-        mav.addObject("authors", authors);
-        List<Location> locations = locationRepository.findAll();
-        mav.addObject("locations", locations);
-        List<Theme> themes = themeRepository.findAll();
-        mav.addObject("themes", themes);
-        return mav;
-    }
-
-    @RequestMapping(method=RequestMethod.GET, value="report")
-    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
-        System.out.println(allRequestParams.toString());
-        ModelAndView mav = new ModelAndView("report");
-        List<Record> records = reportService.getReport(allRequestParams);
-        mav.addObject("report",records);
-        List<Location> locations = locationRepository.findAll();
-        mav.addObject("locations", locations);
-        List<Theme> themes = themeRepository.findAll();
-        mav.addObject("themes", themes);
-        mav.addObject("startDate",allRequestParams.get("startDate"));
-        mav.addObject("endDate",allRequestParams.get("endDate"));
-        return mav;
-    }
-
-    public class SearchRequest {
-        private Map<String, String> params;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/send")

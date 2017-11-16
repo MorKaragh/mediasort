@@ -62,6 +62,9 @@ $(document).ready(function() {
 
 });
 
+$('.post-edit-comment-box').hover(function() {
+  $(this).css("background-color","red")
+});
 
 $('#authorSelect').on('select2:select', function (e) {
     $("#locationSelect").focus();
