@@ -62,9 +62,20 @@ $(document).ready(function() {
 
 });
 
-$('.post-edit-comment-box').hover(function() {
-  $(this).css("background-color","red")
-});
+$('.post-edit-comment-box')
+    .mouseenter( function() {
+                   $(this).addClass("comment-box-selected")
+                 } )
+    .mouseleave( function() {
+                   $(this).removeClass("comment-box-selected")
+                 } )
+    .click(function(){
+        $("#editor").show();
+        $("#editor").appendTo(this);
+        $('html, body').animate({
+                scrollTop: $("#editor").offset().top-200
+            }, 300);
+    });
 
 $('#authorSelect').on('select2:select', function (e) {
     $("#locationSelect").focus();

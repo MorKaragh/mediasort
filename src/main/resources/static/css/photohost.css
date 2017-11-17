@@ -84,3 +84,14 @@
 .post-comment-box{
     padding: 7px;
 }
+
+.comment-box-selected {
+    background-color: #e6e6ff;
+    cursor: pointer;
+}
+
+.post-edit{
+    border: 1px solid #b3b3ff;
+    border-radius: 3px;
+    margin-bottom: 3px;
+}

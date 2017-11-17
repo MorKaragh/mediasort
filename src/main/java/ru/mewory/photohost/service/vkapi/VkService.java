@@ -7,15 +7,19 @@ import com.vk.api.sdk.client.actors.ServiceActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
+import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.users.UserXtrCounters;
 import com.vk.api.sdk.objects.wall.WallComment;
 import com.vk.api.sdk.objects.wall.WallpostFull;
 import com.vk.api.sdk.objects.wall.responses.GetCommentsExtendedResponse;
 import com.vk.api.sdk.objects.wall.responses.GetCommentsResponse;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
+import com.vk.api.sdk.queries.groups.GroupField;
+import com.vk.api.sdk.queries.users.UserField;
 import com.vk.api.sdk.queries.users.UsersGetQuery;
 import com.vk.api.sdk.queries.wall.WallGetCommentsSort;
 import com.vk.api.sdk.queries.wall.WallGetFilter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.model.socnet.SocNet;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
@@ -31,7 +35,6 @@ public class VkService {
 
     private static final Integer APP_ID = 6250403;
     private static final String CLIENT_SECRET = "Eymrv81FaqLwSgO74Q62";
-    private static final String REDIRECT_URI = "";
     private static final String CODE = "545a7f5a545a7f5a545a7f5ac8540520f95545a545a7f5a0e5b854efbb6597cddc55e1e";
 
     private TransportClient transportClient;
@@ -51,7 +54,7 @@ public class VkService {
         Integer ownerId = andreyvorobiev.get(0).getId();
         GetResponse posts = vk.wall().get(actor)
                 .ownerId(ownerId)
-                .count(10)
+                .count(1)
                 .offset(offset)
                 .filter(WallGetFilter.OWNER)
                 .execute();
@@ -62,32 +65,59 @@ public class VkService {
             post.setSocnet(SocNet.VK);
             post.setDate(new Date(wallpostFull.getDate() * 1000L));
             Thread.sleep(200L);
+
             GetCommentsResponse allComments = vk.wall().getComments(actor, wallpostFull.getId())
                     .sort(WallGetCommentsSort.ASC)
                     .count(100500)
                     .ownerId(ownerId)
                     .execute();
 
+            for (WallComment c : allComments.getItems()){
+                System.out.println(c.getFromId() + " ::: " + c.getText());
+            }
+
             dtos.add(post);
 
             Map<Integer, String> users = new HashMap<>();
-            String[] userIds = new String[allComments.getItems().size()];
-            int i = 0;
+            Set<String> userIds = new HashSet<>();
+            Set<String> groupIds = new HashSet<>();
             for (WallComment c : allComments.getItems()){
-                userIds[i++] = String.valueOf(c.getFromId());
+                if (c.getFromId() >= 0) {
+                    userIds.add(String.valueOf(c.getFromId()));
+                } else {
+                    groupIds.add(String.valueOf(-c.getFromId()));
+                }
                 SocnetDTO comment = new SocnetDTO(c.getFromId(), c.getText());
                 comment.setUserId(c.getFromId());
                 comment.setId(Long.valueOf(c.getId()));
                 comment.setDate(new Date(c.getDate() * 1000L));
                 dtos.add(comment);
             }
-            List<UserXtrCounters> allUsers = vk.users().get(actor).userIds(userIds).execute();
+
+            List<UserXtrCounters> allUsers = null;
+            if (!userIds.isEmpty()) {
+                List<String> userz = new ArrayList<>();
+                userz.addAll(userIds);
+                allUsers = vk.users().get(actor).userIds(userz).fields(UserField.SCREEN_NAME).execute();
+            }
+
+            List<GroupFull> execute = null;
+            if (!groupIds.isEmpty()) {
+                List<String> groupz = new ArrayList<>();
+                groupz.addAll(groupIds);
+                execute = vk.groups().getById(actor).groupIds(groupz).execute();
+            }
 
             Thread.sleep(200L);
-            allUsers.forEach(userXtrCounters -> users.put(userXtrCounters.getId()
-                    ,userXtrCounters.getFirstName() + " " + userXtrCounters.getLastName()));
-            for (int z = 1; i < dtos.size(); i++){
-                SocnetDTO dto = dtos.get(z);
+            if (allUsers != null) {
+                allUsers.forEach(userXtrCounters -> users.put(userXtrCounters.getId()
+                        , userXtrCounters.getFirstName() + " " + userXtrCounters.getLastName()));
+            }
+            if (execute != null) {
+                execute.forEach(groupFull -> users.put(-Integer.valueOf(groupFull.getId()),groupFull.getName()));
+            }
+            for (int i = 1; i < dtos.size(); i++){
+                SocnetDTO dto = dtos.get(i);
                 dto.setAuthor(users.get(dto.getUserId()));
             }
             result.add(dtos);

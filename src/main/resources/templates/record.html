@@ -20,16 +20,17 @@
     <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
         <div id="post">
             <div class="row well">
-                <div class="post-author" th:text="${post.author}"></div>
+                <div class="post-author" th:text="${post.author.name}"></div>
                 <div class="post-comment" th:text="${post.text}"></div>
             </div>
 
-            <div class="row post-edit-comment-box post-comment-box" th:each="item : ${comments}">
-                <div class="post-author" th:text="${item.author}"></div>
+            <div class="row post-edit post-edit-comment-box post-comment-box" th:each="item : ${post.comments}">
+                <input type="hidden" th:val="item.id"/>
+                <div class="post-author" th:text="${item.author.name}"></div>
                 <div class="post-comment" th:text="${item.text}"></div>
             </div>
         </div>
-        <div id="editor container">
+        <div hidden="true" id="editor">
             <div class="row">
                 <div class="form-group" style="padding: 0 15px 0 15px">
                     <label for="authorSelect" class="inptlbl control-label">Автор</label>

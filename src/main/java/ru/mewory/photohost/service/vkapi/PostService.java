@@ -94,6 +94,12 @@ public class PostService {
     }
 
     public Post findNextPostAndFetchFreeComments(Long postId) {
-        return null;
+        Long maxPostIdWithFreeComments;
+        if (postId == null) {
+            maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
+        } else {
+            maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeCommentsLessThenId(postId);
+        }
+        return postRepository.findByIdAndFetchFreeComments(maxPostIdWithFreeComments);
     }
 }

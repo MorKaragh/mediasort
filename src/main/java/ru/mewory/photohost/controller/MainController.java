@@ -73,10 +73,9 @@ public class MainController {
         List<Theme> themes = themeRepository.findAll();
         mav.addObject("themes", themes);
 
-        Post post = postService.findNextPostAndFetchFreeComments(
-                Long.valueOf(allRequestParams.get("postId")));
+        String postId = allRequestParams.get("postId");
+        Post post = postService.findNextPostAndFetchFreeComments(postId != null ? Long.valueOf(postId) : null);
         mav.addObject("post",post);
-
         return mav;
     }
 
