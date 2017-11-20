@@ -25,37 +25,44 @@
             </div>
 
             <div class="row post-edit post-edit-comment-box post-comment-box" th:each="item : ${post.comments}">
-                <input type="hidden" th:val="item.id"/>
-                <div class="post-author" th:text="${item.author.name}"></div>
-                <div class="post-comment" th:text="${item.text}"></div>
+                <input class="item-id" type="hidden" th:value="${item.id}"/>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="${item.author.name}"></div>
+                <div hidden="true" class="cancel-buttons col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <button type="button" class="btn btn-xs btn-danger" style="float:right;">Нет темы</button>
+                    <button type="button" class="btn btn-xs btn-danger" style="float:right;margin-right: 5px;">Нет места</button>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 post-comment" th:text="${item.text}"></div>
             </div>
         </div>
-        <div hidden="true" id="editor">
-            <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label for="authorSelect" class="inptlbl control-label">Автор</label>
-                    <select id="authorSelect" class="js-example-basic-single dictSelector" name="state">
-                        <option th:each="item : ${authors}" th:text="${item.name}"></option>
-                    </select>
+        <div hidden="true" class="post-editor" id="editor">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">                <!--<div class="row">-->
+                    <!--<div class="form-group" style="padding: 0 15px 0 15px">-->
+                        <!--<label for="authorSelect" class="inptlbl control-label">Автор</label>-->
+                        <!--<select id="authorSelect" class="js-example-basic-single dictSelector" name="state">-->
+                            <!--<option th:each="item : ${authors}" th:text="${item.name}"></option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="row">
+                    <div class="form-group" style="padding: 0 15px 0 15px">
+                        <label for="locationSelect" class="inptlbl locationLbl control-label">Место</label>
+                        <select id="locationSelect" class="js-example-basic-single dictSelector" name="state">
+                            <option selected="true"></option>
+                            <option th:each="item : ${locations}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group" style="padding: 0 15px 0 15px">
+                        <label for="themeSelect" class="inptlbl locationLbl control-label">Категория</label>
+                        <select id="themeSelect" class="js-example-basic-single dictSelector" name="state">
+                            <option selected="true"></option>
+                            <option th:each="item : ${themes}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label for="locationSelect" class="inptlbl locationLbl control-label">Место</label>
-                    <select id="locationSelect" class="js-example-basic-single dictSelector" name="state">
-                        <option th:each="item : ${locations}" th:text="${item.name}"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label for="themeSelect" class="inptlbl locationLbl control-label">Категория</label>
-                    <select id="themeSelect" class="js-example-basic-single dictSelector" name="state">
-                        <option th:each="item : ${themes}" th:text="${item.name}"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="row form-inline">
+                <div class="row form-inline">
                 <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <label class="inptlbl tagLbl control-label">Тэги</label>
                     <input type="text" class="tag-input"/>
@@ -66,7 +73,7 @@
                 <textarea class="form-control" rows="5" id="comment"></textarea>
             </div>
             <div class="row form-group" style="padding: 0 15px 0 15px">
-                <button id="sendBtn" type="button" class="btn btn-lg btn-default">Сохранить</button>
+                <button id="sendBtn" type="button" class="btn btn-lg btn-success">Сохранить</button>
             </div>
 
         </div>

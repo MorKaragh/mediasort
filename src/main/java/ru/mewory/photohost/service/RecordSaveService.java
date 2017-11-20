@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.model.*;
+import ru.mewory.photohost.model.socnet.Comment;
+import ru.mewory.photohost.model.socnet.CommentStatus;
 
 import java.util.Date;
 
@@ -26,19 +28,23 @@ public class RecordSaveService {
     private RecordTagLinkRepository recordTagLinkRepository;
     @Autowired
     private ThemeRepository themeRepository;
+    @Autowired
+    private CommentsRepository commentsRepository;
 
     public Record save(Record record){
+        assert record.getCommentId() != null;
+
+        Comment c = commentsRepository.findById(record.getCommentId());
+        assert c != null;
+        c.setStatus(CommentStatus.DONE);
+        commentsRepository.save(c);
+
         record.setDate(new Date());
         Record saved = recordRepository.save(record);
 
         Location location = locationRepository.findByName(record.getLocation());
         if (location == null && StringUtils.isNotBlank(record.getLocation())) {
             locationRepository.save(new Location(record.getLocation()));
-        }
-
-        Author author = authorRepository.findByName(record.getAuthor());
-        if (author == null && StringUtils.isNotBlank(record.getAuthor())) {
-            authorRepository.save(new Author(record.getAuthor()));
         }
 
         Theme theme = themeRepository.findByName(record.getTheme());

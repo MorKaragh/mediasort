@@ -21,9 +21,6 @@ public class Record {
     @JsonProperty("theme")
     private String theme;
 
-    @JsonProperty("author")
-    private String author;
-
     @JsonProperty("tags")
     @Transient
     private ArrayList<String> tags;
@@ -34,7 +31,18 @@ public class Record {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("commentId")
+    private Long commentId;
+
     private Date date;
+
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
+    }
 
     public String getTheme() {
         return theme;
@@ -100,13 +108,5 @@ public class Record {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 }

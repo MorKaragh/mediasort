@@ -1,6 +1,7 @@
 package ru.mewory.photohost.service.vkapi;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -79,7 +80,7 @@ public class PostService {
         comment.setAuthor(author);
         comment.setPost(post);
         comment.setNetId(e.getId());
-        comment.setStatus(CommentStatus.FREE);
+        comment.setStatus(StringUtils.isBlank(e.getText()) ? CommentStatus.NO_THEME : CommentStatus.FREE);
         commentsRepository.save(comment);
     }
 

@@ -66,8 +66,6 @@ public class MainController {
     @RequestMapping(value = {"/record"})
     public ModelAndView record(@RequestParam Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("record");
-        List<Author> authors = authorRepository.findAll();
-        mav.addObject("authors", authors);
         List<Location> locations = locationRepository.findAll();
         mav.addObject("locations", locations);
         List<Theme> themes = themeRepository.findAll();
@@ -77,6 +75,13 @@ public class MainController {
         Post post = postService.findNextPostAndFetchFreeComments(postId != null ? Long.valueOf(postId) : null);
         mav.addObject("post",post);
         return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
+    public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
+        recordSaveService.save(record);
+        Map<String,String> result = new HashMap<>();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/parseInstagram")
@@ -157,13 +162,6 @@ public class MainController {
     public String upload(@RequestBody Image img) throws IOException {
         imageSaveService.save(img);
         return "index";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
-    public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
-        recordSaveService.save(record);
-        Map<String,String> result = new HashMap<>();
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(method=RequestMethod.GET, value="/rectags")

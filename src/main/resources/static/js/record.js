@@ -2,9 +2,9 @@ $(document).ready(function() {
     $('#locationSelect').select2({
         tags: true
     });
-    $('#authorSelect').select2({
-        tags: true
-    });
+//    $('#authorSelect').select2({
+//        tags: true
+//    });
     $('#themeSelect').select2({
         tags: true
     });
@@ -52,7 +52,7 @@ $(document).ready(function() {
       }
     });
 
-    $("#authorSelect").focus();
+//    $("#authorSelect").focus();
 
     $('.date').datepicker({
         format: "dd.mm.yyyy"
@@ -64,22 +64,37 @@ $(document).ready(function() {
 
 $('.post-edit-comment-box')
     .mouseenter( function() {
-                   $(this).addClass("comment-box-selected")
+                   $(this).addClass("comment-box-selected");
+                   $(this).find(".cancel-buttons").show();
                  } )
     .mouseleave( function() {
-                   $(this).removeClass("comment-box-selected")
+                   $(this).removeClass("comment-box-selected");
+                   if(!$(this).hasClass("post-edit-active")){
+                     $(this).find(".cancel-buttons").hide();
+                   }
                  } )
     .click(function(){
+        if($(this).hasClass("post-edit-active")){
+            return;
+        }
         $("#editor").show();
-        $("#editor").appendTo(this);
+        $("#editor").appendTo($(this).find(".post-comment"));
+        $("#locationSelect").focus();
+        $(".post-edit").each(function(){
+            $(this).removeClass("post-edit-active");
+            $(this).find(".cancel-buttons").hide();
+        });
+        $(this).find(".cancel-buttons").show();
+        $("#author-name").val($("#editor").closest(".post-edit-head").find(".post-author").html());
+        $(this).closest(".post-edit").addClass("post-edit-active");
         $('html, body').animate({
                 scrollTop: $("#editor").offset().top-200
             }, 300);
     });
 
-$('#authorSelect').on('select2:select', function (e) {
-    $("#locationSelect").focus();
-});
+//$('#authorSelect').on('select2:select', function (e) {
+//    $("#locationSelect").focus();
+//});
 $('#locationSelect').on('select2:select', function (e) {
     $("#themeSelect").focus();
 });
@@ -92,24 +107,34 @@ $("#sendBtn").blur(function(){
 })
 
 $("#sendBtn").click(function(){
+    console.log("sendBtn");
     var locationn = $( "#locationSelect option:selected" ).text();
-    var authorr = $( "#authorSelect option:selected" ).text();
+//    var authorr = $( "#authorSelect option:selected" ).text();
+//    var authorr = $("#editor").closest(".post-edit").find(".post-author").text();;
     var themeVar = $( "#themeSelect option:selected" ).text();
     var tagz = [];
     $('.tag-input .label').each(function(elem){
         tagz.push($(this).attr("data-tag"));
     })
+    var cId = $("#editor").closest(".post-edit").find(".item-id").val()
     var desc = $('#comment').val();
     if (!valid(location, tagz)){
         showError("внесите тэги и место!")
         return;
     }
-    console.log(JSON.stringify({tags : tagz, description: desc, author: authorr, location: locationn, theme: themeVar}));
+//    console.log(JSON.stringify({tags : tagz, description: desc, author: authorr, location: locationn, theme: themeVar}));
     $.ajax({
       method: "POST",
       contentType: "application/json",
       url: "/sendRecord",
-      data: JSON.stringify({tags : tagz, description: desc, author: authorr, location: locationn, theme: themeVar}),
+      data: JSON.stringify({
+            tags : tagz,
+            description: desc,
+//            author: authorr,
+            location: locationn,
+            theme: themeVar,
+            commentId : cId
+        }),
       success: function(response) {
                    },
       error: function(xhr, ajaxOptions, thrownError) {
