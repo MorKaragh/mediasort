@@ -15,12 +15,13 @@
     <script src="../static/js/jquery-3.2.1.min.js" th:src="@{js/jquery-3.2.1.min.js}"></script>
     <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
     <script src="../static/js/typeahead.bundle.min.js" th:src="@{js/typeahead.bundle.min.js}"></script>
+    <script src="../static/js/common.js" th:src="@{js/common.js}"></script>
 </div>
 <ul th:fragment="navbar" class="nav navbar-nav">
     <li id="navrecord"><a href="record">Внесение</a></li>
     <li id="navreport"><a href="report">Отчет</a></li>
     <li id="navinstaload"><a href="instaload">Загрузка из Instagram</a></li>
-    <li id="navvkload"><a href="vkload">Загрузка из VK</a></li>
+    <li id="navvkload"><a href="vkload" onclick="show_overlay();">Загрузка из VK</a></li>
 </ul>
 
 </body>

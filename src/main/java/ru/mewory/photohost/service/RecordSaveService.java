@@ -7,6 +7,7 @@ import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.CommentStatus;
+import ru.mewory.photohost.utils.UserUtils;
 
 import java.util.Date;
 
@@ -37,6 +38,7 @@ public class RecordSaveService {
         Comment c = commentsRepository.findById(record.getCommentId());
         assert c != null;
         c.setStatus(CommentStatus.DONE);
+        c.setChangeUser(UserUtils.getUsername());
         commentsRepository.save(c);
 
         record.setDate(new Date());

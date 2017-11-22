@@ -8,6 +8,7 @@
 
 
 <body hidden="true">
+
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -22,16 +23,26 @@
             <div class="row well">
                 <div class="post-author" th:text="${post.author.name}"></div>
                 <div class="post-comment" th:text="${post.text}"></div>
+                <input type="hidden" id="postId" th:value="${post.id}"/>
+            </div>
+            <div class="row form-group">
+                <!--<button id="prevBtn" type="button" class="btn btn-md btn-success">-->
+                    <!--<span class="glyphicon glyphicon-arrow-left"></span> предыдущий</button>-->
+                <button id="nextBtn" type="button" class="btn btn-md btn-success">
+                    следующий <span class="glyphicon glyphicon-arrow-right"></span></button>
             </div>
 
             <div class="row post-edit post-edit-comment-box post-comment-box" th:each="item : ${post.comments}">
                 <input class="item-id" type="hidden" th:value="${item.id}"/>
+                <!--<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="'('+${item.id}+') '+${item.author.name}"></div>-->
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="${item.author.name}"></div>
                 <div hidden="true" class="cancel-buttons col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                    <button type="button" class="btn btn-xs btn-danger" style="float:right;">Нет темы</button>
-                    <button type="button" class="btn btn-xs btn-danger" style="float:right;margin-right: 5px;">Нет места</button>
+                    <button type="button" class="no-theme-btn btn btn-xs btn-danger" style="float:right;">Нет темы</button>
+                    <button type="button" class="no-place-btn btn btn-xs btn-danger" style="float:right;margin-right: 5px;">Нет места</button>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 post-comment" th:text="${item.text}"></div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 post-comment">
+                    <div class="post-comment-text" th:text="${item.text}"></div>
+                </div>
             </div>
         </div>
         <div hidden="true" class="post-editor" id="editor">
@@ -88,7 +99,6 @@
     <script src="../static/js/mab-jquery-taginput.js" th:src="@{js/mab-jquery-taginput.js}"></script>
 
     <!--custom-->
-    <script src="../static/js/common.js" th:src="@{js/common.js}"></script>
     <script src="../static/js/record.js" th:src="@{js/record.js}"></script>
     <script src="../static/js/bootstrap-notify.min.js" th:src="@{js/bootstrap-notify.min.js}"></script>
 </html>

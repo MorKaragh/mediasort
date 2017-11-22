@@ -24,9 +24,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Query("SELECT p FROM Post p WHERE EXISTS (from Comment c where c.status = 'FREE') AND p.id > ?1")
     List<Post> findPostsWhereExistsNonEdited(Long id);
 
-    @Query("SELECT max(p.id) FROM Post p WHERE EXISTS (from Comment c where c.status = 'FREE') AND p.id < ?1")
+    @Query("SELECT max(p.id) FROM Post p WHERE EXISTS (from Comment c where c.status = 'FREE' and c.post = p) AND p.id < ?1")
     Long findMaxPostIdWithFreeCommentsLessThenId(Long id);
 
-    @Query("SELECT max(p.id) FROM Post p WHERE EXISTS (from Comment c where c.status = 'FREE')")
+    @Query("SELECT max(p.id) FROM Post p WHERE EXISTS (from Comment c where c.status = 'FREE' and c.post = p)")
     Long findMaxPostIdWithFreeComments();
 }

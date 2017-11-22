@@ -7,6 +7,7 @@ $(document).ready(function() {
 });
 
 $("#sendBtn").click(function(){
+    show_overlay();
     var dt = $('#summernote').summernote('code');
     $.ajax({
       method: "POST",
@@ -25,13 +26,13 @@ $("#sendBtn").click(function(){
         $('#sendBtn').hide();
         $('#saveBtn').show();
         $('#backBtn').show();
-//        console.log(response);
+        hide_overlay();
     });
 });
 
 $('#saveBtn').click(function(){
+    show_overlay();
      var dt = $('#summernote').summernote('code');
-     console.log(JSON.stringify({data : dt}));
      $.ajax({
        method: "POST",
        contentType: "application/json",
@@ -45,7 +46,7 @@ $('#saveBtn').click(function(){
          console.log(thrownError);
                   }
      }).done(function(response) {
-
+        location.reload();
      });
  });
 

@@ -2,9 +2,7 @@ $(document).ready(function() {
     $('#locationSelect').select2({
         tags: true
     });
-//    $('#authorSelect').select2({
-//        tags: true
-//    });
+
     $('#themeSelect').select2({
         tags: true
     });
@@ -13,7 +11,6 @@ $(document).ready(function() {
     $.ajax({
         url : "rectags",
         type : "get",
-        async: false,
         success : function(result) {
             if (result != null){
                 result.forEach(function(item, i, arr){
@@ -24,42 +21,36 @@ $(document).ready(function() {
         error: function() {
            alert("ERROR GETTING TAGS!");
         }
-     });
-
-    var tags = new Bloodhound({
-        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.tag); },
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: taglist
+     }).done(function(response) {
+        var tags = new Bloodhound({
+            datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.tag); },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: taglist
+        });
+        tags.initialize();
+        $('.tag-input').tagInput({
+          tagDataSeparator: '|',
+          allowDuplicates: false,
+          typeahead: true,
+          typeaheadOptions: {
+              highlight: true
+          },
+          typeaheadDatasetOptions: {
+            displayKey: 'tag',
+            source: tags.ttAdapter()
+          }
+        });
+        $('.date').datepicker({
+            format: "dd.mm.yyyy"
+        });
+        $('body').show();
     });
+});
 
-    tags.initialize();
 
-    $('.tag-input').tagInput({
-      // tags separator
-      tagDataSeparator: '|',
-      // allow duplicate tags
-      allowDuplicates: false,
-      // enable typehead.js
-      typeahead: true,
-      // tyhehead.js options
-      typeaheadOptions: {
-          highlight: true
-      },
-      // typehead dataset options
-      typeaheadDatasetOptions: {
-        displayKey: 'tag',
-        source: tags.ttAdapter()
-      }
-    });
-
-//    $("#authorSelect").focus();
-
-    $('.date').datepicker({
-        format: "dd.mm.yyyy"
-    });
-
-    $('body').show();
-
+$("#nextBtn").click(function(){
+    show_overlay();
+    window.location.href = "/record?postId="+$("#postId").val();
 });
 
 $('.post-edit-comment-box')
@@ -73,31 +64,126 @@ $('.post-edit-comment-box')
                      $(this).find(".cancel-buttons").hide();
                    }
                  } )
-    .click(function(){
+    .click(function(e){
         if($(this).hasClass("post-edit-active")){
             return;
         }
-        $("#editor").show();
-        $("#editor").appendTo($(this).find(".post-comment"));
-        $("#locationSelect").focus();
-        $(".post-edit").each(function(){
-            $(this).removeClass("post-edit-active");
-            $(this).find(".cancel-buttons").hide();
-        });
-        $(this).find(".cancel-buttons").show();
-        $("#author-name").val($("#editor").closest(".post-edit-head").find(".post-author").html());
-        $(this).closest(".post-edit").addClass("post-edit-active");
-        $('html, body').animate({
-                scrollTop: $("#editor").offset().top-200
-            }, 300);
-    });
+        if ($(e.target).is(".btn-xs")){
+            return;
+        }
+        var wantedId = $(this).find(".item-id").val();
+        takeToWork(wantedId, $(this));
 
-//$('#authorSelect').on('select2:select', function (e) {
-//    $("#locationSelect").focus();
-//});
+});
+
+function takeToWork(itemId, elem) {
+    $.ajax({
+      method: "POST",
+      contentType: "application/json",
+      url: "/takeToWork",
+      data: JSON.stringify({
+            commentId : itemId
+        }),
+      success: function(response) {
+                   },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+        console.log(ajaxOptions);
+        console.log(thrownError);
+                 }
+    }).done(function(response) {
+        var respo = JSON.parse(response);
+        if (respo.available != "true"){
+            showError(respo.error);
+            markAsProcessed(itemId);
+        } else {
+            $("#editor").show();
+            $("#editor").appendTo(elem.find(".post-comment"));
+            $("#locationSelect").focus();
+            $(".post-edit").each(function(){
+                if ($(this).hasClass("post-edit-active")){
+                    if (itemId != $(this).find(".item-id").val()){
+                        release($(this).find(".item-id").val());
+                    }
+                    $(this).removeClass("post-edit-active");
+                    $(this).find(".cancel-buttons").hide();
+                }
+            });
+            elem.find(".cancel-buttons").show();
+            $("#author-name").val($("#editor").closest(".post-edit-head").find(".post-author").html());
+            elem.closest(".post-edit").addClass("post-edit-active");
+            $('html, body').animate({
+                    scrollTop: $("#editor").offset().top-200
+                }, 300);
+        }
+    });
+}
+
+function release(itemId) {
+    $.ajax({
+      method: "POST",
+      contentType: "application/json",
+      url: "/release",
+      data: JSON.stringify({
+            commentId : itemId
+        }),
+      success: function(response) {
+                   },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+        console.log(ajaxOptions);
+        console.log(thrownError);
+                 }
+    }).done(function(response) {
+
+    });
+}
+
+function markAsProcessed(itemId) {
+    $(".item-id").each(function(){
+        if ($(this).val() == itemId){
+            $(this).closest(".post-edit").fadeOut(500);
+        }
+    });
+}
+
+$(".no-theme-btn").dblclick(function(){
+    var itemId = $(this).closest(".post-edit").find(".item-id").val();
+    setStatus(itemId,"NO_THEME");
+    markAsProcessed(itemId);
+})
+
+$(".no-place-btn").dblclick(function(){
+    var itemId = $(this).closest(".post-edit").find(".item-id").val();
+    setStatus(itemId,"NO_PLACE");
+    markAsProcessed(itemId);
+})
+
+function setStatus(itemId,sts){
+    $.ajax({
+      method: "POST",
+      contentType: "application/json",
+      url: "/setStatus",
+      data: JSON.stringify({
+            commentId : itemId,
+            status : sts
+        }),
+      success: function(response) {
+                   },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+        console.log(ajaxOptions);
+        console.log(thrownError);
+                 }
+    }).done(function(response) {
+        markAsProcessed(itemId);
+    });
+}
+
 $('#locationSelect').on('select2:select', function (e) {
     $("#themeSelect").focus();
 });
+
 $('#themeSelect').on('select2:select', function (e) {
     $(".mab-jquery-taginput-input").focus();
 });
@@ -107,7 +193,6 @@ $("#sendBtn").blur(function(){
 })
 
 $("#sendBtn").click(function(){
-    console.log("sendBtn");
     var locationn = $( "#locationSelect option:selected" ).text();
 //    var authorr = $( "#authorSelect option:selected" ).text();
 //    var authorr = $("#editor").closest(".post-edit").find(".post-author").text();;
@@ -122,7 +207,6 @@ $("#sendBtn").click(function(){
         showError("внесите тэги и место!")
         return;
     }
-//    console.log(JSON.stringify({tags : tagz, description: desc, author: authorr, location: locationn, theme: themeVar}));
     $.ajax({
       method: "POST",
       contentType: "application/json",

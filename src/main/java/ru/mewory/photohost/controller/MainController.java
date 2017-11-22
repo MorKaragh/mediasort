@@ -1,5 +1,7 @@
 package ru.mewory.photohost.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.mewory.photohost.dao.*;
+import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
@@ -49,9 +52,9 @@ public class MainController {
     private VkService vkService;
     @Autowired
     private PostService postService;
-
     @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private CommentsRepository commentsRepository;
 
@@ -59,7 +62,8 @@ public class MainController {
     public String test() throws ClientException, ApiException, InterruptedException {
         Long maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
         maxPostIdWithFreeComments.toString();
-        Long nextId = postRepository.findMaxPostIdWithFreeCommentsLessThenId(maxPostIdWithFreeComments);
+        Post byId = postRepository.findByIdAndFetchComments(2L);
+        List<Comment> byPostId = commentsRepository.findByPostId(2L);
         return "login";
     }
 
@@ -73,7 +77,11 @@ public class MainController {
 
         String postId = allRequestParams.get("postId");
         Post post = postService.findNextPostAndFetchFreeComments(postId != null ? Long.valueOf(postId) : null);
-        mav.addObject("post",post);
+        if (post == null){
+            mav.setViewName("instaload");
+        } else {
+            mav.addObject("post", post);
+        }
         return mav;
     }
 
@@ -91,6 +99,40 @@ public class MainController {
         modelAndView.addObject("post",parsed.get(0));
         modelAndView.addObject("comments",parsed.subList(1,parsed.size()));
         return modelAndView;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/setStatus")
+    public ResponseEntity<String>  setStatus(@RequestBody Map<String,String> allRequestParams){
+        JsonObject jsonObject = new JsonObject();
+        postService.setTrashStatus(Long.valueOf(allRequestParams.get("commentId")),allRequestParams.get("status"));
+        return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/takeToWork")
+    public ResponseEntity<String>  takeToWork(@RequestBody Map<String,String> allRequestParams){
+        JsonObject jsonObject = new JsonObject();
+        try {
+            if (allRequestParams.get("commentId") != null) {
+                postService.takeAndHold(Long.valueOf(allRequestParams.get("commentId")));
+                jsonObject.addProperty("available","true");
+            } else {
+                jsonObject.addProperty("error","нет такого комментария");
+                jsonObject.addProperty("available","false");
+            }
+        } catch (AllreadyHeldException e){
+            jsonObject.addProperty("error","этот комментарий уже обработан");
+            jsonObject.addProperty("available","false");
+        }
+        return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/release")
+    public ResponseEntity<String>  release(@RequestBody Map<String,String> allRequestParams){
+        JsonObject jsonObject = new JsonObject();
+        if (allRequestParams.get("commentId") != null) {
+            postService.release(Long.valueOf(allRequestParams.get("commentId")));
+        }
+        return new ResponseEntity<>(new Gson().toJson(jsonObject),HttpStatus.OK);
     }
 
     @RequestMapping("/instaload")

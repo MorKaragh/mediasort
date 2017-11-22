@@ -16,6 +16,7 @@ import ru.mewory.photohost.model.Author;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.utils.UserUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -102,5 +103,25 @@ public class PostService {
             maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeCommentsLessThenId(postId);
         }
         return postRepository.findByIdAndFetchFreeComments(maxPostIdWithFreeComments);
+    }
+
+    public void release(Long commentId) {
+        Comment byId = commentsRepository.findByIdAndStatus(commentId,CommentStatus.IN_PROGRESS);
+        if (byId != null){
+            byId.setStatus(CommentStatus.FREE);
+            byId.setChangeUser(null);
+            commentsRepository.save(byId);
+        }
+    }
+
+    public void setTrashStatus(Long commentId, String status) {
+        CommentStatus s = CommentStatus.valueOf(status);
+        Comment c = commentsRepository.findById(commentId);
+        if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)
+                && !c.getStatus().equals(CommentStatus.DONE)){
+            c.setStatus(s);
+            c.setChangeUser(UserUtils.getUsername());
+            commentsRepository.save(c);
+        }
     }
 }

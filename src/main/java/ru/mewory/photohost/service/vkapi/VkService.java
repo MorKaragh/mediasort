@@ -36,6 +36,7 @@ public class VkService {
     private static final Integer APP_ID = 6250403;
     private static final String CLIENT_SECRET = "Eymrv81FaqLwSgO74Q62";
     private static final String CODE = "545a7f5a545a7f5a545a7f5ac8540520f95545a545a7f5a0e5b854efbb6597cddc55e1e";
+    public static final int COUNT = 10;
 
     private TransportClient transportClient;
     private VkApiClient vk;
@@ -54,7 +55,7 @@ public class VkService {
         Integer ownerId = andreyvorobiev.get(0).getId();
         GetResponse posts = vk.wall().get(actor)
                 .ownerId(ownerId)
-                .count(1)
+                .count(COUNT)
                 .offset(offset)
                 .filter(WallGetFilter.OWNER)
                 .execute();
