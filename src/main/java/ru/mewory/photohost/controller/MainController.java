@@ -19,7 +19,7 @@ import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordSaveService;
-import ru.mewory.photohost.service.SimpleReportService;
+import ru.mewory.photohost.service.ReportService;
 import ru.mewory.photohost.service.vkapi.InstagramParser;
 import ru.mewory.photohost.service.vkapi.PostService;
 import ru.mewory.photohost.service.vkapi.VkService;
@@ -45,7 +45,7 @@ public class MainController {
     @Autowired
     private RecordSaveService recordSaveService;
     @Autowired
-    private SimpleReportService reportService;
+    private ReportService reportService;
     @Autowired
     private ThemeRepository themeRepository;
     @Autowired

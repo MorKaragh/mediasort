@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by tookuk on 10/8/17.
  */
 @Service
-public class SimpleReportService {
+public class ReportService {
 
     @Autowired
     private RecordRepository recordRepository;
