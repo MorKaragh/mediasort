@@ -1,11 +1,7 @@
-package ru.mewory.photohost.service.vkapi;
+package ru.mewory.photohost.service.socnet;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.dao.AuthorRepository;

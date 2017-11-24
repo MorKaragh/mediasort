@@ -20,9 +20,9 @@ import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordSaveService;
 import ru.mewory.photohost.service.ReportService;
-import ru.mewory.photohost.service.vkapi.InstagramParser;
-import ru.mewory.photohost.service.vkapi.PostService;
-import ru.mewory.photohost.service.vkapi.VkService;
+import ru.mewory.photohost.service.socnet.InstagramParser;
+import ru.mewory.photohost.service.socnet.PostService;
+import ru.mewory.photohost.service.socnet.VkService;
 
 import java.io.IOException;
 import java.util.*;

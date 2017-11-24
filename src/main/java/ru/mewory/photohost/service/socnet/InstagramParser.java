@@ -1,11 +1,9 @@
-package ru.mewory.photohost.service.vkapi;
+package ru.mewory.photohost.service.socnet;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.mewory.photohost.model.Author;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
 
 import java.util.ArrayList;

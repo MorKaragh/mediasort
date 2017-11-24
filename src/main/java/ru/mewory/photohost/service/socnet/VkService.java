@@ -1,6 +1,5 @@
-package ru.mewory.photohost.service.vkapi;
+package ru.mewory.photohost.service.socnet;
 
-import com.google.gson.JsonElement;
 import com.vk.api.sdk.client.TransportClient;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.ServiceActor;
@@ -11,15 +10,12 @@ import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.users.UserXtrCounters;
 import com.vk.api.sdk.objects.wall.WallComment;
 import com.vk.api.sdk.objects.wall.WallpostFull;
-import com.vk.api.sdk.objects.wall.responses.GetCommentsExtendedResponse;
 import com.vk.api.sdk.objects.wall.responses.GetCommentsResponse;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
-import com.vk.api.sdk.queries.groups.GroupField;
 import com.vk.api.sdk.queries.users.UserField;
-import com.vk.api.sdk.queries.users.UsersGetQuery;
 import com.vk.api.sdk.queries.wall.WallGetCommentsSort;
 import com.vk.api.sdk.queries.wall.WallGetFilter;
-import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.model.socnet.SocNet;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
@@ -33,10 +29,16 @@ import java.util.*;
 @Service
 public class VkService {
 
-    private static final Integer APP_ID = 6250403;
-    private static final String CLIENT_SECRET = "Eymrv81FaqLwSgO74Q62";
-    private static final String CODE = "545a7f5a545a7f5a545a7f5ac8540520f95545a545a7f5a0e5b854efbb6597cddc55e1e";
-    public static final int COUNT = 10;
+    @Value("${vk.appid}")
+    private static Integer APP_ID;
+    @Value("${vk.postauthor}")
+    private static String POST_AUTHOR;
+    @Value("${vk.clientsecret}")
+    private static String CLIENT_SECRET;
+    @Value("${vk.code}")
+    private static String CODE;
+
+    private static final int COUNT = 10;
 
     private TransportClient transportClient;
     private VkApiClient vk;
@@ -51,7 +53,7 @@ public class VkService {
 
     public List<List<SocnetDTO>> getPostsWithComments(int offset) throws ClientException, ApiException, InterruptedException {
         List<List<SocnetDTO>> result = new ArrayList<>();
-        List<UserXtrCounters> andreyvorobiev = vk.users().get(actor).userIds("andreyvorobiev").execute();
+        List<UserXtrCounters> andreyvorobiev = vk.users().get(actor).userIds(POST_AUTHOR).execute();
         Integer ownerId = andreyvorobiev.get(0).getId();
         GetResponse posts = vk.wall().get(actor)
                 .ownerId(ownerId)
