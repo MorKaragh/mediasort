@@ -76,7 +76,8 @@ public class MainController {
         mav.addObject("themes", themes);
 
         String postId = allRequestParams.get("postId");
-        Post post = postService.findNextPostAndFetchFreeComments(postId != null ? Long.valueOf(postId) : null);
+//        Post post = postService.findNextPostAndFetchFreeComments(postId != null ? Long.valueOf(postId) : null);
+        Post post = postService.findNextPostAndFetchAllComments(postId != null ? Long.valueOf(postId) : null);
         if (post == null){
             mav.setViewName("instaload");
         } else {
@@ -122,6 +123,7 @@ public class MainController {
         } catch (AllreadyHeldException e){
             jsonObject.addProperty("error","этот комментарий уже обработан");
             jsonObject.addProperty("available","false");
+            jsonObject.addProperty("status", e.getStatus().toString());
         }
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
     }

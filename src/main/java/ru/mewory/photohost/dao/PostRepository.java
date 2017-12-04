@@ -17,7 +17,6 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Query("SELECT p FROM Post p JOIN FETCH p.comments WHERE p.id = ?1")
     Post findByIdAndFetchComments(Long id);
 
-
     @Query("SELECT p FROM Post p JOIN FETCH p.comments comm WHERE p.id = ?1 and comm.status = 'FREE'")
     Post findByIdAndFetchFreeComments(Long id);
 

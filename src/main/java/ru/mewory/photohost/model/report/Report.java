@@ -9,5 +9,5 @@ import java.util.List;
  */
 public class Report {
     private List<ReportThemeCounter> counterList;
-    private List<Record>
+    private List<Record> records;
 }

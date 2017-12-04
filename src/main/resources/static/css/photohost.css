@@ -128,7 +128,17 @@
 
 .modal-dialog { position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto; width: 500px; height: 300px; }
 
-.graph_container{
+.graph_container {
   display:block;
   width:300px;
+}
+
+.in-progress {
+    background-color: #ffff99;
+}
+.processed {
+    background-color: #ccff99;
+}
+.trash {
+    background-color: #ffcccc;
 }

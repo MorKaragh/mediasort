@@ -32,7 +32,7 @@ public class PostService {
     public void takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId);
         if (!CommentStatus.FREE.equals(comment.getStatus())){
-            throw new AllreadyHeldException(comment.getChangeUser());
+            throw new AllreadyHeldException(comment.getChangeUser(), comment.getStatus());
         }
         comment.setChangeUser(UserUtils.getUsername());
         comment.setStatus(CommentStatus.IN_PROGRESS);
@@ -101,6 +101,16 @@ public class PostService {
         return postRepository.findByIdAndFetchFreeComments(maxPostIdWithFreeComments);
     }
 
+    public Post findNextPostAndFetchAllComments(Long postId) {
+        Long maxPostIdWithFreeComments;
+        if (postId == null) {
+            maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
+        } else {
+            maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeCommentsLessThenId(postId);
+        }
+        return postRepository.findByIdAndFetchComments(maxPostIdWithFreeComments);
+    }
+
     public void release(Long commentId) {
         Comment byId = commentsRepository.findByIdAndStatus(commentId,CommentStatus.IN_PROGRESS);
         if (byId != null){
@@ -114,7 +124,8 @@ public class PostService {
         CommentStatus s = CommentStatus.valueOf(status);
         Comment c = commentsRepository.findById(commentId);
         if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)
-                && !c.getStatus().equals(CommentStatus.DONE)){
+//                && !c.getStatus().equals(CommentStatus.DONE)
+                ){
             c.setStatus(s);
             c.setChangeUser(UserUtils.getUsername());
             commentsRepository.save(c);

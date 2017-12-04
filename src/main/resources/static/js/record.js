@@ -45,8 +45,14 @@ $(document).ready(function() {
         });
         $('body').show();
     });
-});
 
+    $(".status").each(function(){
+        var postBox = $(this).closest(".post-edit");
+        var itemId = postBox.find(".item-id").val();
+        markByStatus(itemId,$(this).val());
+    });
+
+});
 
 $("#nextBtn").click(function(){
     show_overlay();
@@ -93,10 +99,14 @@ function takeToWork(itemId, elem) {
                  }
     }).done(function(response) {
         var respo = JSON.parse(response);
-        if (respo.available != "true"){
-            showError(respo.error);
-            markAsProcessed(itemId);
-        } else {
+//        if (respo.available != "true"){
+//            showError(respo.error);
+//            markByStatus(itemId,respo.status);
+//        } else {
+            if (respo.available != "true"){
+                markByStatus(itemId,respo.status);
+                showError(respo.error);
+            }
             $("#editor").show();
             $("#editor").appendTo(elem.find(".post-comment"));
             $("#locationSelect").focus();
@@ -115,7 +125,7 @@ function takeToWork(itemId, elem) {
             $('html, body').animate({
                     scrollTop: $("#editor").offset().top-200
                 }, 300);
-        }
+//        }
     });
 }
 
@@ -139,10 +149,34 @@ function release(itemId) {
     });
 }
 
+function markByStatus(itemId, status) {
+    if (status === "FREE"){
+        return;
+    } else if (status === "IN_PROGRESS") {
+        markAsHeld(itemId);
+    } else if (status === "DONE") {
+        markAsProcessed(itemId);
+    } else {
+        markAsTrash(itemId);
+    }
+}
+
+function markAsHeld(itemId) {
+    mark(itemId,"in-progress")
+}
+
 function markAsProcessed(itemId) {
+    mark(itemId,"processed")
+}
+
+function markAsTrash(itemId) {
+    mark(itemId,"trash")
+}
+
+function mark(itemId, status) {
     $(".item-id").each(function(){
         if ($(this).val() == itemId){
-            $(this).closest(".post-edit").fadeOut(500);
+            $(this).closest(".post-edit").addClass(status);
         }
     });
 }
@@ -150,13 +184,13 @@ function markAsProcessed(itemId) {
 $(".no-theme-btn").dblclick(function(){
     var itemId = $(this).closest(".post-edit").find(".item-id").val();
     setStatus(itemId,"NO_THEME");
-    markAsProcessed(itemId);
+    markAsTrash(itemId);
 })
 
 $(".no-place-btn").dblclick(function(){
     var itemId = $(this).closest(".post-edit").find(".item-id").val();
     setStatus(itemId,"NO_PLACE");
-    markAsProcessed(itemId);
+    markAsTrash(itemId);
 })
 
 function setStatus(itemId,sts){
