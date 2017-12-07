@@ -105,6 +105,14 @@ function takeToWork(itemId, elem) {
 //        } else {
             if (respo.available != "true"){
                 markByStatus(itemId,respo.status);
+                $(".post-edit").each(function(){
+                    if (itemId === $(this).find(".item-id").val()){
+                        $(this).find(".comment-text").attr('value',respo.recordText);
+                        $(this).find(".comment-category").attr('value',respo.recordTheme);
+                        $(this).find(".comment-location").attr('value',respo.recordLocation);
+                        $(this).find(".comment-tags").attr('value',respo.recordTags);
+                    }
+                });
                 showError(respo.error);
             }
             $("#editor").show();
@@ -283,10 +291,8 @@ function valid(location, tags){
 
 function showError(errorMsg){
     $.notify({
-    	// options
     	message: errorMsg
     },{
-    	// settings
     	type: 'warning'
     });
 }

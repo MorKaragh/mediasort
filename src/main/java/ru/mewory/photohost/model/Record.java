@@ -1,6 +1,7 @@
 package ru.mewory.photohost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -94,6 +95,12 @@ public class Record {
     public ArrayList<String> getTags() {
         if (tags == null){
             tags = new ArrayList<>();
+        }
+        if (!CollectionUtils.isEmpty(tagsObjects)){
+            tags.clear();
+            for (Tag t:tagsObjects) {
+                tags.add(t.getName());
+            }
         }
         return tags;
     }

@@ -124,6 +124,10 @@ public class MainController {
             jsonObject.addProperty("error","этот комментарий уже обработан");
             jsonObject.addProperty("available","false");
             jsonObject.addProperty("status", e.getStatus().toString());
+            jsonObject.addProperty("recordText", e.getRecord().getDescription());
+            jsonObject.addProperty("recordTags", String.join(" | ", e.getRecord().getTags()));
+            jsonObject.addProperty("recordLocation", e.getRecord().getLocation());
+            jsonObject.addProperty("recordTheme", e.getRecord().getTheme());
         }
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
     }

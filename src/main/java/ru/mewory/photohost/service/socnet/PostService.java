@@ -4,11 +4,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mewory.photohost.dao.AuthorRepository;
-import ru.mewory.photohost.dao.CommentsRepository;
-import ru.mewory.photohost.dao.PostRepository;
+import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.Author;
+import ru.mewory.photohost.model.Record;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.utils.UserUtils;
 
@@ -28,11 +27,16 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private CommentsRepository commentsRepository;
+    @Autowired
+    private RecordRepository recordRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     public void takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId);
         if (!CommentStatus.FREE.equals(comment.getStatus())){
-            throw new AllreadyHeldException(comment.getChangeUser(), comment.getStatus());
+            Record record = recordRepository.findByCommentId(comment.getId());
+            throw new AllreadyHeldException(comment, record);
         }
         comment.setChangeUser(UserUtils.getUsername());
         comment.setStatus(CommentStatus.IN_PROGRESS);

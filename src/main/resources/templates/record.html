@@ -35,9 +35,9 @@
             <div class="row post-edit post-edit-comment-box post-comment-box" th:each="item : ${post.comments}">
                 <input class="item-id" type="hidden" th:value="${item.id}"/>
                 <input class="status" type="hidden" th:value="${item.status}"/>
-                <input class="comment-text" type="hidden"/>
-                <input class="comment-author" type="hidden"/>
+                <input class="comment-text" type="hidden" value="testval"/>
                 <input class="comment-category" type="hidden"/>
+                <input class="comment-location" type="hidden"/>
                 <input class="comment-tags" type="hidden"/>
                 <!--<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="'('+${item.id}+') '+${item.author.name}"></div>-->
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="${item.author.name}"></div>

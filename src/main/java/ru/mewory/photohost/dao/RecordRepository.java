@@ -17,4 +17,5 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
     List<Record> findByDateBetween(Date startDate, Date endDate);
     List<Record> findByThemeAndDateBetween(String theme, Date startDate, Date endDate);
     List<Record> findByLocationAndDateBetween(String location, Date startDate, Date endDate);
+    Record findByCommentId(Long commentId);
 }
