@@ -9,6 +9,7 @@ import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.Author;
 import ru.mewory.photohost.model.Record;
 import ru.mewory.photohost.model.socnet.*;
+import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.utils.UserUtils;
 
 import java.util.Arrays;
@@ -31,11 +32,13 @@ public class PostService {
     private RecordRepository recordRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    RecordService recordService;
 
     public void takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId);
         if (!CommentStatus.FREE.equals(comment.getStatus())){
-            Record record = recordRepository.findByCommentId(comment.getId());
+            Record record = recordService.loadByCommentId(comment.getId());
             throw new AllreadyHeldException(comment, record);
         }
         comment.setChangeUser(UserUtils.getUsername());

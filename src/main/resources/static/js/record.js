@@ -111,6 +111,7 @@ function takeToWork(itemId, elem) {
                         $(this).find(".comment-category").attr('value',respo.recordTheme);
                         $(this).find(".comment-location").attr('value',respo.recordLocation);
                         $(this).find(".comment-tags").attr('value',respo.recordTags);
+                        fillEditor(itemId);
                     }
                 });
                 showError(respo.error);
@@ -135,6 +136,38 @@ function takeToWork(itemId, elem) {
                 }, 300);
 //        }
     });
+}
+
+function fillEditor (itemId){
+    $(".post-edit").each(function(){
+        if (itemId === $(this).find(".item-id").val()){
+            var descr = $(this).find(".comment-text").val();
+            var category = $(this).find(".comment-category").val();
+            var location = $(this).find(".comment-location").val();
+            var tags = $(this).find(".comment-tags").val();
+            console.log("category="+category+" location="+location+" tags="+tags);
+            setSelect("#locationSelect",location);
+            setSelect("#themeSelect",category);
+            $("#comment").val(descr);
+            $("#tag-input").val(tags);
+        }
+    });
+}
+
+function setSelect(id, value){
+    console.log("selectId=" + id);
+    $(id).find('option').each(function(){
+        if ($(this).text() === value) {
+            console.log("selecting=" + value);
+            $(this).attr("selected","selected");
+        } else {
+            console.log("UNselecting=" + $(this).text() );
+            $(this).removeAttr("selected");
+        }
+        $(id).select2({
+            tags: true
+        });
+    })
 }
 
 function release(itemId) {

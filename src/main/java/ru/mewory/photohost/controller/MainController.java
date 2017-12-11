@@ -18,7 +18,7 @@ import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
-import ru.mewory.photohost.service.RecordSaveService;
+import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.service.ReportService;
 import ru.mewory.photohost.service.socnet.InstagramParser;
 import ru.mewory.photohost.service.socnet.PostService;
@@ -43,7 +43,7 @@ public class MainController {
     @Autowired
     private TagRepository tagRepository;
     @Autowired
-    private RecordSaveService recordSaveService;
+    private RecordService recordService;
     @Autowired
     private ReportService reportService;
     @Autowired
@@ -88,7 +88,7 @@ public class MainController {
 
     @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
     public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
-        recordSaveService.save(record);
+        recordService.save(record);
         Map<String,String> result = new HashMap<>();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -110,7 +110,7 @@ public class MainController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/takeToWork")
-    public ResponseEntity<String>  takeToWork(@RequestBody Map<String,String> allRequestParams){
+    public ResponseEntity<String> takeToWork(@RequestBody Map<String,String> allRequestParams){
         JsonObject jsonObject = new JsonObject();
         try {
             if (allRequestParams.get("commentId") != null) {
@@ -124,10 +124,10 @@ public class MainController {
             jsonObject.addProperty("error","этот комментарий уже обработан");
             jsonObject.addProperty("available","false");
             jsonObject.addProperty("status", e.getStatus().toString());
-            jsonObject.addProperty("recordText", e.getRecord().getDescription());
-            jsonObject.addProperty("recordTags", String.join(" | ", e.getRecord().getTags()));
-            jsonObject.addProperty("recordLocation", e.getRecord().getLocation());
-            jsonObject.addProperty("recordTheme", e.getRecord().getTheme());
+            jsonObject.addProperty("recordText", e.getRecord() != null ? e.getRecord().getDescription() : "");
+            jsonObject.addProperty("recordTags", e.getRecord() != null ? String.join("|", e.getRecord().getTags()) : "");
+            jsonObject.addProperty("recordLocation", e.getRecord() != null ? e.getRecord().getLocation() : "");
+            jsonObject.addProperty("recordTheme", e.getRecord() != null ? e.getRecord().getTheme() : "");
         }
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
     }

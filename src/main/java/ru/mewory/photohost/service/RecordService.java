@@ -10,12 +10,13 @@ import ru.mewory.photohost.model.socnet.CommentStatus;
 import ru.mewory.photohost.utils.UserUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by tookuk on 10/1/17.
  */
 @Service
-public class RecordSaveService {
+public class RecordService {
 
     @Autowired
     private RecordRepository recordRepository;
@@ -70,4 +71,14 @@ public class RecordSaveService {
         return record;
     }
 
+    public Record loadByCommentId(Long id) {
+        Record result = recordRepository.findByCommentId(id);
+        if (result != null){
+            List<RecordTagLink> byRecordId = recordTagLinkRepository.findByRecordId(result.getId());
+            for (RecordTagLink link : byRecordId) {
+                result.getTags().add(tagRepository.findById(link.getTagId()).getName());
+            }
+        }
+        return result;
+    }
 }
