@@ -1,14 +1,3 @@
-//function show_overlay(){
-//    $("#overlay").show();
-//}
-//
-//function hide_overlay(){
-//    $("#overlay").hide();
-//}
-
-/**
- * Displays overlay with "Please wait" text. Based on bootstrap modal. Contains animated progress bar.
- */
 function show_overlay() {
     var modalLoading = '<div class="modal" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false role="dialog">\
         <div class="modal-dialog">\
@@ -30,9 +19,30 @@ function show_overlay() {
     $("#pleaseWaitDialog").modal("show");
 }
 
-/**
- * Hides "Please wait" overlay. See function showPleaseWait().
- */
 function hide_overlay() {
     $("#pleaseWaitDialog").modal("hide");
+}
+
+function showError(errorMsg){
+    $.notify({
+    	message: errorMsg
+    },{
+    	type: 'warning'
+    });
+}
+
+function setSelect(id, value){
+    console.log("selectId=" + id);
+    $(id).find('option').each(function(){
+        if ($(this).text() === value) {
+            console.log("selecting=" + value);
+            $(this).attr("selected","selected");
+        } else {
+            console.log("UNselecting=" + $(this).text() );
+            $(this).removeAttr("selected");
+        }
+        $(id).select2({
+            tags: true
+        });
+    })
 }

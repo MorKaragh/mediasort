@@ -35,7 +35,12 @@ public class RecordService {
 
     public Record save(Record record){
         assert record.getCommentId() != null;
-
+        Record recordInBase = recordRepository.findByCommentId(record.getCommentId());
+        if (recordInBase != null){
+            recordRepository.delete(recordInBase);
+            List<RecordTagLink> byRecordId = recordTagLinkRepository.findByRecordId(recordInBase.getId());
+            recordTagLinkRepository.delete(byRecordId);
+        }
         Comment c = commentsRepository.findById(record.getCommentId());
         assert c != null;
         c.setStatus(CommentStatus.DONE);
