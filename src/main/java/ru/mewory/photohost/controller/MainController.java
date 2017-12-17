@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
+import ru.mewory.photohost.model.report.ReportElement;
+import ru.mewory.photohost.model.report.ReportTheme;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordService;
@@ -54,17 +57,16 @@ public class MainController {
     private PostService postService;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private RecordRepository recordRepository;
 
     @Autowired
     private CommentsRepository commentsRepository;
 
     @GetMapping("/test")
     public String test() throws ClientException, ApiException, InterruptedException {
-        Long maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
-        maxPostIdWithFreeComments.toString();
-        Post byId = postRepository.findByIdAndFetchComments(2L);
-        List<Comment> byPostId = commentsRepository.findByPostId(2L);
-        return "login";
+        List<ReportTheme> groupedReport = reportService.loadGroups(DateUtils.addDays(new Date(),-100), new Date());
+        return "";
     }
 
     @RequestMapping(value = {"/record"})
@@ -83,6 +85,14 @@ public class MainController {
         } else {
             mav.addObject("post", post);
         }
+        return mav;
+    }
+
+    @RequestMapping(method=RequestMethod.GET, value="report")
+    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
+        ModelAndView mav = new ModelAndView("report");
+        List<ReportTheme> records = reportService.getReportOld(allRequestParams);
+        mav.addObject("report",records);
         return mav;
     }
 
@@ -167,20 +177,6 @@ public class MainController {
             offset = Integer.parseInt(allRequestParams.get("offset"));
         } catch (Exception e){}
         return offset;
-    }
-
-    @RequestMapping(method=RequestMethod.GET, value="report")
-    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
-        ModelAndView mav = new ModelAndView("report");
-        List<Record> records = reportService.getReport(allRequestParams);
-        mav.addObject("report",records);
-        List<Location> locations = locationRepository.findAll();
-        mav.addObject("locations", locations);
-        List<Theme> themes = themeRepository.findAll();
-        mav.addObject("themes", themes);
-        mav.addObject("startDate",allRequestParams.get("startDate"));
-        mav.addObject("endDate",allRequestParams.get("endDate"));
-        return mav;
     }
 
     @RequestMapping("/savePost")

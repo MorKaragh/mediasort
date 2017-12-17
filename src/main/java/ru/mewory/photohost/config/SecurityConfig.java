@@ -17,7 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/report").hasRole("USER")
                 .antMatchers("/report").permitAll()
                 .antMatchers("/").hasRole("USER")
-                .antMatchers("/test").hasRole("USER")
+                .antMatchers("/test").permitAll()
                 .antMatchers("/instaload").hasRole("USER")
                 .antMatchers("/parseInstagram").hasRole("USER")
                 .antMatchers("/vkload").hasRole("USER")

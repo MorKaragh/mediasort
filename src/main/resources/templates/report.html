@@ -23,23 +23,6 @@
 <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
 
     <form id="params" action="report" method="GET">
-        <div class="row">
-            <div class="form-group" style="padding: 0 15px 0 15px">
-                <label for="locationSelect" class="inptlbl locationLbl control-label">Место</label>
-                <select id="locationSelect" class="js-example-basic-single dictSelector" name="location">
-                    <option th:each="item : ${locations}" th:text="${item.name}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group" style="padding: 0 15px 0 15px">
-                <label for="themeSelect" class="inptlbl locationLbl control-label">Категория</label>
-                <select id="themeSelect" class="js-example-basic-single dictSelector" name="theme">
-                    <option th:each="item : ${themes}" th:text="${item.name}"></option>
-                </select>
-            </div>
-        </div>
 
         <div class="row form-group">
             <div class="col-md-3">
@@ -74,21 +57,17 @@
         </div>
 
     </form>
-    <div id="chart4"/>
 
     <div class="row well" th:each="item : ${report}">
-        <div class="reportItemLocation" th:text="${item.location}"></div>
-        <div class="reportTagBox">
-            <span class="reportTag" th:each="tag : ${item.tags}" th:text="${tag}"></span>
+        <div class="reportTheme" th:text="${item.location}"></div>
+        <div class="reportComplain" th:each="complain : ${item.elements}">
+            <div th:text="${complain.count}"></div>
+            <div th:text="${complain.location}"></div>
+            <div th:text="${complain.description}"></div>
         </div>
-        <div class="reportItemDescription" th:text="${item.description}"></div>
     </div>
 
-
-
 </div>
-
-
 
 </body>
     <div th:replace="fragments/header :: script"/>
@@ -102,32 +81,4 @@
 
     <!--custom-->
     <script src="../static/js/report.js" th:src="@{js/report.js}"></script>
-
-    <script type="text/javascript">
-      $(document).ready(function(){
-        plot4 = $.jqplot('chart4', [[[2,1], [6,2], [7,3], [10,4]], [[7,1], [5,2],[3,3],[2,4]], [[14,1], [9,2], [9,3], [8,4]]], {
-            stackSeries: true,
-            captureRightClick: true,
-            seriesDefaults:{
-                renderer:$.jqplot.BarRenderer,
-                shadowAngle: 135,
-                rendererOptions: {
-                    barDirection: 'horizontal',
-                    highlightMouseDown: true
-                },
-                pointLabels: {show: true, formatString: '%d'}
-            },
-            legend: {
-                show: true,
-                location: 'e',
-                placement: 'outside'
-            },
-            axes: {
-                yaxis: {
-                    renderer: $.jqplot.CategoryAxisRenderer
-                }
-            }
-        });
-    });
-    </script>
 </html>

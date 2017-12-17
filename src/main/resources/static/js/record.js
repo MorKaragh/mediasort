@@ -7,10 +7,11 @@ $(document).ready(function() {
         tags: true
     });
 
+    $('.date').datepicker({
+        format: "dd.mm.yyyy"
+    });
+
     reloadTagInput(function(){
-        $('.date').datepicker({
-            format: "dd.mm.yyyy"
-        });
         $('body').show();
     });
 

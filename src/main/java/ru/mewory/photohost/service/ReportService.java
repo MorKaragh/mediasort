@@ -1,6 +1,5 @@
 package ru.mewory.photohost.service;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.dao.RecordRepository;
@@ -9,6 +8,8 @@ import ru.mewory.photohost.dao.TagRepository;
 import ru.mewory.photohost.model.Record;
 import ru.mewory.photohost.model.RecordTagLink;
 import ru.mewory.photohost.model.Tag;
+import ru.mewory.photohost.model.report.ReportElement;
+import ru.mewory.photohost.model.report.ReportTheme;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,8 +33,11 @@ public class ReportService {
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-    public List<Record> getReport(Map<String, String> param){
-        List<Record> all = new ArrayList<>();
+
+
+
+    public List<ReportTheme> getReportOld(Map<String, String> param){
+        List<ReportTheme> themes = new ArrayList<>();
         if (param != null && !param.isEmpty()){
             Date startDate;
             Date endDate;
@@ -43,16 +47,30 @@ public class ReportService {
             } catch (ParseException e) {
                 throw new RuntimeException(e.getMessage(),e);
             }
-            String theme = param.get("theme");
-            String location = param.get("location");
-            all = recordRepository.findByThemeAndLocationAndDateBetween(
-                    theme,
-                    location,
-                    startDate,
-                    endDate);
-            putTags(all);
+            themes = loadGroups(startDate, endDate);
         }
-        return all;
+        return themes;
+    }
+
+    public List<ReportTheme> loadGroups(Date startDate, Date endDate) {
+        List<String> locations = recordRepository.getThemesByDates(startDate, endDate);
+        List<ReportTheme> themes = new ArrayList<>();
+        for (String location : locations) {
+            ReportTheme theme = new ReportTheme();
+            theme.setLocation(location);
+            List<Object[]> groupedReport = recordRepository.getGroupedReport(startDate, endDate, location);
+            List<ReportElement> elements = new ArrayList<>();
+            for (Object[] o : groupedReport) {
+                ReportElement element = new ReportElement();
+                element.setCount((Long) o[0]);
+                element.setLocation((String) o[1]);
+                element.setDescription((String) o[2]);
+                elements.add(element);
+            }
+            theme.setElements(elements);
+            themes.add(theme);
+        }
+        return themes;
     }
 
     private void putTags(List<Record> all) {
