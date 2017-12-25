@@ -17,7 +17,7 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
     List<Record> findByThemeAndLocationAndDateBetween(String theme, String location, Date startDate, Date endDate);
     List<Record> findByDateBetween(Date startDate, Date endDate);
     List<Record> findByThemeAndDateBetween(String theme, Date startDate, Date endDate);
-    List<Record> findByLocationAndDateBetween(String location, Date startDate, Date endDate);
+    List<Record> findByLocationAndThemeAndDescriptionAndDateBetween(String location, String theme, String description, Date startDate, Date endDate);
 
     @Query("SELECT count(1) AS cnt, r.location, r.description " +
             " FROM Record r " +

@@ -142,3 +142,13 @@
 .trash {
     background-color: #ffcccc;
 }
+
+.reportComplain{
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid black;
+}
+
+.reportComplain:hover {
+    border: 2px solid blue;
+}

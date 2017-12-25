@@ -25,15 +25,15 @@
     <form id="params" action="report" method="GET">
 
         <div class="row form-group">
-            <div class="col-md-3">
+            <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
                 <div id="startDate" class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control" name="startDate" placeholder="дата с"/>
+                    <input type="text" class="form-control" name="startDate" th:value="${startDate}" placeholder="дата с"/>
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
                 <div id="endDate" class="input-group date" data-provide="datepicker">
                     <input type="text" class="form-control" name="endDate" placeholder="дата по" th:value="${endDate}"/>
                     <div class="input-group-addon">
@@ -41,13 +41,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
                 <button type="button"  id="week" class="btn btn-default">неделя</button>
             </div>
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
                 <button type="button" id="month" class="btn btn-default">месяц</button>
             </div>
-            <div class="col-md-2 form-group">
+            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
                 <button type="button" id="year" class="btn btn-default">год</button>
             </div>
         </div>
@@ -58,12 +58,14 @@
 
     </form>
 
-    <div class="row well" th:each="item : ${report}">
+    <div class="row" id="reportedit"></div>
+
+    <div class="row" th:each="item : ${report}">
         <div class="reportTheme" th:text="${item.location}"></div>
         <div class="reportComplain" th:each="complain : ${item.elements}">
-            <div th:text="${complain.count}"></div>
-            <div th:text="${complain.location}"></div>
-            <div th:text="${complain.description}"></div>
+            <div class="com-count" th:text="${complain.count}"></div>
+            <div class="com-location" th:text="${complain.location}"></div>
+            <div class="com-description" th:text="${complain.description}"></div>
         </div>
     </div>
 

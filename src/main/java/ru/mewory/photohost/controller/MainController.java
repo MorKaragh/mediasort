@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
-import ru.mewory.photohost.model.report.ReportElement;
 import ru.mewory.photohost.model.report.ReportTheme;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.ImageSaveService;
@@ -72,14 +71,9 @@ public class MainController {
     @RequestMapping(value = {"/record"})
     public ModelAndView record(@RequestParam Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("record");
-        List<Location> locations = locationRepository.findAll();
-        mav.addObject("locations", locations);
-        List<Theme> themes = themeRepository.findAll();
-        mav.addObject("themes", themes);
-
-        String postId = allRequestParams.get("postId");
-//        Post post = postService.findNextPostAndFetchFreeComments(postId != null ? Long.valueOf(postId) : null);
-        Post post = postService.findNextPostAndFetchAllComments(postId != null ? Long.valueOf(postId) : null);
+        fillDictionaries(mav);
+        Post post = getPost(allRequestParams);
+        mav.addObject("realpost","true");
         if (post == null){
             mav.setViewName("instaload");
         } else {
@@ -88,11 +82,47 @@ public class MainController {
         return mav;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = {"/reportedit"})
+    public ModelAndView reportedit(@RequestBody Map<String,String> allRequestParams){
+        ModelAndView mav = new ModelAndView("reportedit");
+        fillDictionaries(mav);
+        Post post = getPost(allRequestParams);
+        mav.addObject("realpost","false");
+        mav.addObject("post", post);
+        return mav;
+    }
+
+    private Post getPost(Map<String, String> allRequestParams) {
+        Post post;
+        String postId = allRequestParams.get("postId");
+        if (postId == null){
+            String startDateStr = allRequestParams.get("startDate");
+            if (startDateStr == null){
+                post = postService.findNextPostAndFetchAllComments(null);
+            } else {
+                post = postService.openCommentsForEdit(allRequestParams);
+            }
+        } else {
+            post = postService.findNextPostAndFetchAllComments(Long.valueOf(postId));
+        }
+        return post;
+    }
+
+    private void fillDictionaries(ModelAndView mav) {
+        List<Location> locations = locationRepository.findAll();
+        mav.addObject("locations", locations);
+        List<Theme> themes = themeRepository.findAll();
+        mav.addObject("themes", themes);
+    }
+
+
     @RequestMapping(method=RequestMethod.GET, value="report")
     public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("report");
-        List<ReportTheme> records = reportService.getReportOld(allRequestParams);
+        List<ReportTheme> records = reportService.getReport(allRequestParams);
         mav.addObject("report",records);
+        mav.addObject("startDate",allRequestParams.get("startDate"));
+        mav.addObject("endDate",allRequestParams.get("endDate"));
         return mav;
     }
 
@@ -153,8 +183,7 @@ public class MainController {
 
     @RequestMapping("/instaload")
     public ModelAndView instaload(){
-        ModelAndView mav = new ModelAndView("instaload");
-        return mav;
+        return new ModelAndView("instaload");
     }
 
     @RequestMapping(method=RequestMethod.GET, value="/vkload")
@@ -175,15 +204,16 @@ public class MainController {
         int offset = 0;
         try {
             offset = Integer.parseInt(allRequestParams.get("offset"));
-        } catch (Exception e){}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return offset;
     }
 
     @RequestMapping("/savePost")
     public ResponseEntity<String> savePost(@RequestBody InstagramData instagramData){
-        ModelAndView mav = new ModelAndView("instaload");
         List<SocnetDTO> parsed = InstagramParser.parse(instagramData.getData());
-        Post post = postService.savePost(parsed);
+        postService.savePost(parsed);
         return new ResponseEntity<>("saved", HttpStatus.OK);
     }
 

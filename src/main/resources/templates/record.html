@@ -25,7 +25,7 @@
                 <div class="post-comment" th:text="${post.text}"></div>
                 <input type="hidden" id="postId" th:value="${post.id}"/>
             </div>
-            <div class="row form-group">
+            <div class="row form-group" th:if="${realpost}">
                 <!--<button id="prevBtn" type="button" class="btn btn-md btn-success">-->
                     <!--<span class="glyphicon glyphicon-arrow-left"></span> предыдущий</button>-->
                 <button id="nextBtn" type="button" class="btn btn-md btn-success">
@@ -85,7 +85,6 @@
             <div class="row form-group" style="padding: 0 15px 0 15px">
                 <button id="sendBtn" type="button" class="btn btn-lg btn-success">Сохранить</button>
             </div>
-
         </div>
     </div>
 

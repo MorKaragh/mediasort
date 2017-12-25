@@ -2,6 +2,7 @@ package ru.mewory.photohost.service.socnet;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.dao.*;
@@ -12,9 +13,9 @@ import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.utils.UserUtils;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by tookuk on 11/9/17.
@@ -137,5 +138,31 @@ public class PostService {
             c.setChangeUser(UserUtils.getUsername());
             commentsRepository.save(c);
         }
+    }
+
+    public Post openCommentsForEdit(Map<String, String> allRequestParams) {
+        String startDate = allRequestParams.get("startDate");
+        String endDate = allRequestParams.get("endDate");
+        String theme = allRequestParams.get("theme");
+        String location = allRequestParams.get("location");
+        String description = allRequestParams.get("description");
+        try {
+            List<Record> records = recordRepository.findByLocationAndThemeAndDescriptionAndDateBetween(
+                    location,
+                    theme,
+                    description,
+                    DateUtils.parseDate(startDate, "dd.MM.yyyy"),
+                    DateUtils.parseDate(endDate, "dd.MM.yyyy"));
+            if (!CollectionUtils.isEmpty(records)){
+                List<Long> recordIds = records.stream().map(Record::getCommentId).collect(Collectors.toList());
+                Set<Comment> comments = commentsRepository.findByIdIn(recordIds);
+                Post post = new Post();
+                post.setComments(comments);
+                return post;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

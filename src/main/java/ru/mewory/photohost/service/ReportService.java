@@ -34,9 +34,7 @@ public class ReportService {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 
-
-
-    public List<ReportTheme> getReportOld(Map<String, String> param){
+    public List<ReportTheme> getReport(Map<String, String> param){
         List<ReportTheme> themes = new ArrayList<>();
         if (param != null && !param.isEmpty()){
             Date startDate;
