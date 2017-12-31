@@ -16,6 +16,7 @@ import com.vk.api.sdk.queries.users.UserField;
 import com.vk.api.sdk.queries.wall.WallGetCommentsSort;
 import com.vk.api.sdk.queries.wall.WallGetFilter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.model.socnet.SocNet;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
@@ -27,16 +28,17 @@ import java.util.*;
  * Created by tookuk on 11/7/17.
  */
 @Service
+@PropertySource("classpath:application.properties")
 public class VkService {
 
     @Value("${vk.appid}")
-    private static Integer APP_ID;
+    private Integer APP_ID;
     @Value("${vk.postauthor}")
-    private static String POST_AUTHOR;
+    private String POST_AUTHOR;
     @Value("${vk.clientsecret}")
-    private static String CLIENT_SECRET;
+    private String CLIENT_SECRET;
     @Value("${vk.code}")
-    private static String CODE;
+    private String CODE;
 
     private static final int COUNT = 10;
 

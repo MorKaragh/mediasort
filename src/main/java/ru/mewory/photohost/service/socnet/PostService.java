@@ -86,6 +86,7 @@ public class PostService {
         comment.setPost(post);
         comment.setNetId(e.getId());
         comment.setStatus(StringUtils.isBlank(e.getText()) ? CommentStatus.NO_THEME : CommentStatus.FREE);
+        comment.setDate(e.getDate());
         commentsRepository.save(comment);
     }
 
@@ -147,7 +148,7 @@ public class PostService {
         String location = allRequestParams.get("location");
         String description = allRequestParams.get("description");
         try {
-            List<Record> records = recordRepository.findByLocationAndThemeAndDescriptionAndDateBetween(
+            List<Record> records = recordRepository.findForReport(
                     location,
                     theme,
                     description,
@@ -165,4 +166,22 @@ public class PostService {
         }
         return null;
     }
+
+
+    public Post getPost(Map<String, String> allRequestParams) {
+        Post post;
+        String postId = allRequestParams.get("postId");
+        if (postId == null){
+            String startDateStr = allRequestParams.get("startDate");
+            if (startDateStr == null){
+                post = findNextPostAndFetchAllComments(null);
+            } else {
+                post = openCommentsForEdit(allRequestParams);
+            }
+        } else {
+            post = findNextPostAndFetchAllComments(Long.valueOf(postId));
+        }
+        return post;
+    }
+
 }

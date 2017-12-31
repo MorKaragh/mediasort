@@ -72,7 +72,7 @@ public class MainController {
     public ModelAndView record(@RequestParam Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("record");
         fillDictionaries(mav);
-        Post post = getPost(allRequestParams);
+        Post post = postService.getPost(allRequestParams);
         mav.addObject("realpost","true");
         if (post == null){
             mav.setViewName("instaload");
@@ -86,26 +86,10 @@ public class MainController {
     public ModelAndView reportedit(@RequestBody Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("reportedit");
         fillDictionaries(mav);
-        Post post = getPost(allRequestParams);
+        Post post = postService.getPost(allRequestParams);
         mav.addObject("realpost","false");
         mav.addObject("post", post);
         return mav;
-    }
-
-    private Post getPost(Map<String, String> allRequestParams) {
-        Post post;
-        String postId = allRequestParams.get("postId");
-        if (postId == null){
-            String startDateStr = allRequestParams.get("startDate");
-            if (startDateStr == null){
-                post = postService.findNextPostAndFetchAllComments(null);
-            } else {
-                post = postService.openCommentsForEdit(allRequestParams);
-            }
-        } else {
-            post = postService.findNextPostAndFetchAllComments(Long.valueOf(postId));
-        }
-        return post;
     }
 
     private void fillDictionaries(ModelAndView mav) {
@@ -128,6 +112,7 @@ public class MainController {
 
     @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
     public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
+        System.out.println("RECORD SENT");
         recordService.save(record);
         Map<String,String> result = new HashMap<>();
         return new ResponseEntity<>(result, HttpStatus.OK);

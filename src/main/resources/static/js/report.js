@@ -29,7 +29,6 @@ $(".reportComplain").click(function(){
       url: "/reportedit",
       data: d,
       success: function(response) {
-        console.log(response);
                    },
       error: function(xhr, ajaxOptions, thrownError) {
         console.log(xhr);
@@ -38,6 +37,8 @@ $(".reportComplain").click(function(){
                  }
     }).done(function(response) {
         $("#reportedit").html(response);
+        $('html, body').animate({
+            scrollTop: $("#reportedit").offset().top-200
+        }, 300);
     });
-
 });

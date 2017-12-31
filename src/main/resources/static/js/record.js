@@ -7,10 +7,6 @@ $(document).ready(function() {
         tags: true
     });
 
-    $('.date').datepicker({
-        format: "dd.mm.yyyy"
-    });
-
     reloadTagInput(function(){
         $('body').show();
     });
@@ -51,6 +47,7 @@ function sendRecord(){
             commentId : cId
         }),
       success: function(response) {
+        console.log("SEND RECORD  " + response);
                    },
       error: function(xhr, ajaxOptions, thrownError) {
         console.log(xhr);

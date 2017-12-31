@@ -3,6 +3,7 @@ package ru.mewory.photohost.model.socnet;
 import ru.mewory.photohost.model.Author;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by tookuk on 11/10/17.
@@ -27,6 +28,17 @@ public class Comment {
 
     @Enumerated(EnumType.STRING)
     private CommentStatus status;
+
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     private String changeUser;
 
     public String getChangeUser() {

@@ -60,7 +60,7 @@
 
     <div class="row" id="reportedit"></div>
 
-    <div class="row" th:each="item : ${report}">
+    <div class="row reportrow" th:each="item : ${report}">
         <div class="reportTheme" th:text="${item.location}"></div>
         <div class="reportComplain" th:each="complain : ${item.elements}">
             <div class="com-count" th:text="${complain.count}"></div>
