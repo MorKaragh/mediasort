@@ -7,8 +7,26 @@ public class ReportElement {
     private int vkPosts;
     private int instagramPosts;
     private long count;
+    private long vkCount;
+    private long instagramCount;
     private String location;
     private String description;
+
+    public long getVkCount() {
+        return vkCount;
+    }
+
+    public void setVkCount(long vkCount) {
+        this.vkCount = vkCount;
+    }
+
+    public long getInstagramCount() {
+        return instagramCount;
+    }
+
+    public void setInstagramCount(long instagramCount) {
+        this.instagramCount = instagramCount;
+    }
 
     public long getCount() {
         return count;

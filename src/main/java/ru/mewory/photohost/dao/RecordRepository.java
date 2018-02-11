@@ -20,19 +20,25 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
     List<Record> findByLocationAndThemeAndDescriptionAndDateBetween(String location, String theme, String description, Date startDate, Date endDate);
 
     @Query("SELECT r " +
-            " FROM Record r " +
-            " WHERE r.date BETWEEN ?4 AND ?5 " +
+            " FROM Record r, Comment c " +
+            " WHERE c.date BETWEEN ?4 AND ?5 " +
             " AND r.theme = ?2 " +
+            " AND c.id = r.commentId " +
             " AND r.location = ?1 " +
             " AND r.description = ?3 " +
-            " AND NOT EXISTS (SELECT 1 FROM Comment c WHERE c.id = r.commentId AND c.status in ('NO_PLACE','NO_THEME'))")
+            " AND c.status NOT IN ('NO_PLACE','NO_THEME') ")
     List<Record> findForReport(String location, String theme, String description, Date startDate, Date endDate);
 
-    @Query("SELECT count(1) AS cnt, r.location, r.description " +
-            " FROM Record r " +
-            " WHERE r.date BETWEEN ?1 AND ?2 " +
+    @Query("SELECT count(1) AS cnt, " +
+            "r.location, r.description, " +
+            "count(case p.socnet when 'VK' then 1 else null end) AS vkcnt, " +
+            "count(case p.socnet when 'INSTAGRAM' then 1 else null end) AS instacnt " +
+            " FROM Record r, Comment c, Post p " +
+            " WHERE c.date BETWEEN ?1 AND ?2 " +
             " AND r.theme = ?3 " +
-            " AND NOT EXISTS (SELECT 1 FROM Comment c WHERE c.id = r.commentId AND c.status in ('NO_PLACE','NO_THEME'))" +
+            " AND c.id = r.commentId " +
+            " AND c.post = p " +
+            " AND c.status NOT IN ('NO_PLACE','NO_THEME') " +
             " GROUP BY r.location, r.description ")
     List<Object[]> getGroupedReport(Date start, Date end, String theme);
 

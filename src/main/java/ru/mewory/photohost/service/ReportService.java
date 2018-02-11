@@ -63,6 +63,8 @@ public class ReportService {
                 element.setCount((Long) o[0]);
                 element.setLocation((String) o[1]);
                 element.setDescription((String) o[2]);
+                element.setVkCount((Long) o[3]);
+                element.setInstagramCount((Long) o[4]);
                 elements.add(element);
             }
             theme.setElements(elements);
