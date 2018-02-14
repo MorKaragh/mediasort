@@ -11,6 +11,15 @@ public class ReportElement {
     private long instagramCount;
     private String location;
     private String description;
+    private String additionalText;
+
+    public String getAdditionalText() {
+        return additionalText;
+    }
+
+    public void setAdditionalText(String additionalText) {
+        this.additionalText = additionalText;
+    }
 
     public long getVkCount() {
         return vkCount;

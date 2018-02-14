@@ -62,9 +62,11 @@
 
     <div class="row reportrow" th:each="item : ${report}">
         <div class="reportTheme" th:text="${item.location}"></div>
+        <div class="reportCounts" th:text="'Всего жалоб ' + ${item.cnt} + ' (' + ${item.instagramCnt} + ' Инстаграм, ' + ${item.vkCnt} + ' Вконтакте)'"></div>
         <div class="reportComplain" th:each="complain : ${item.elements}">
-            <div class="com-count" th:text="'Всего жалоб:' + ${complain.count} + '  (VK:' + ${complain.vkCount} + ', Instagram:' + ${complain.instagramCount} + ')'"></div>
+            <div class="com-count" th:text="'жалоб ' + ${complain.count}"></div>
             <div class="com-location" th:text="${complain.location}"></div>
+            <div class="com-additionalText " th:text="${complain.additionalText}"></div>
             <div class="com-description" th:text="${complain.description}"></div>
         </div>
     </div>

@@ -32,10 +32,22 @@ public class Record {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("additionalText")
+    @Column(length = 400)
+    private String additionalText;
+
     @JsonProperty("commentId")
     private Long commentId;
 
     private Date date;
+
+    public String getAdditionalText() {
+        return additionalText;
+    }
+
+    public void setAdditionalText(String additionalText) {
+        this.additionalText = additionalText;
+    }
 
     public Long getCommentId() {
         return commentId;

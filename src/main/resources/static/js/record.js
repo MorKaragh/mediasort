@@ -24,16 +24,18 @@ function sendRecord(){
 //    var authorr = $( "#authorSelect option:selected" ).text();
 //    var authorr = $("#editor").closest(".post-edit").find(".post-author").text();;
     var themeVar = $( "#themeSelect option:selected" ).text();
+    var addText = $("#additionalText").val();
     var tagz = [];
     $('.tag-input .label').each(function(elem){
         tagz.push($(this).attr("data-tag"));
     })
     var cId = $("#editor").closest(".post-edit").find(".item-id").val()
     var desc = $('#comment').val();
-    if (!valid(location, tagz)){
-        showError("внесите тэги и место!")
+    if (!valid(location, themeVar)){
+        showError("внесите категорию и место!")
         return;
     }
+
     $.ajax({
       method: "POST",
       contentType: "application/json",
@@ -44,7 +46,8 @@ function sendRecord(){
 //            author: authorr,
             location: locationn,
             theme: themeVar,
-            commentId : cId
+            commentId : cId,
+            additionalText : addText
         }),
       success: function(response) {
         console.log("SEND RECORD  " + response);
@@ -88,9 +91,11 @@ function takeToWork(itemId, elem) {
                         $(this).find(".comment-category").attr('value',respo.recordTheme);
                         $(this).find(".comment-location").attr('value',respo.recordLocation);
                         $(this).find(".comment-tags").attr('value',respo.recordTags);
+                        $(this).find(".additionalText").attr('value',respo.additionalText);
                         fillEditor(itemId);
                     }
                 });
+                console.log("RESPO: " + response);
                 showError(respo.error);
             } else {
                 clearEditor();
@@ -161,6 +166,7 @@ function clearEditor(){
     setSelect("#themeSelect","");
     $("#comment").val("");
     $(".tag-input").val("");
+    $("#additionalText").val("");
     reloadTagInput(function(){
         hide_overlay();
     });
@@ -174,10 +180,13 @@ function fillEditor (itemId){
             var category = $(this).find(".comment-category").val();
             var location = $(this).find(".comment-location").val();
             var tags = $(this).find(".comment-tags").val();
+            var addText = $(this).find(".additionalText").val();
             setSelect("#locationSelect",location);
             setSelect("#themeSelect",category);
             $("#comment").val(descr);
             $(".tag-input").val(tags);
+            console.log("ADD TEXT: " + addText);
+            $("#additionalText").val(addText);
             reloadTagInput(function(){
                 hide_overlay();
             });
@@ -314,7 +323,7 @@ function setStatus(itemId,sts){
     });
 }
 
-function valid(location, tags){
+function valid(location, theme){
     $( "#locationSelect option:selected" ).removeClass("inError");
     $( ".inptlbl" ).removeClass("inError");
     var err = false;
@@ -322,9 +331,9 @@ function valid(location, tags){
             $( ".locationLbl" ).addClass("inError");
             err = true;
     }
-    if (tags.length === 0){
-        $( ".tagLbl" ).addClass("inError");
-        err = true;
+    if (theme === '') {
+            $( ".themeLbl" ).addClass("inError");
+            err = true;
     }
     return !err;
 }

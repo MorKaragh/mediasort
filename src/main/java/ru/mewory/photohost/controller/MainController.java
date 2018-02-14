@@ -153,6 +153,7 @@ public class MainController {
             jsonObject.addProperty("recordTags", e.getRecord() != null ? String.join("|", e.getRecord().getTags()) : "");
             jsonObject.addProperty("recordLocation", e.getRecord() != null ? e.getRecord().getLocation() : "");
             jsonObject.addProperty("recordTheme", e.getRecord() != null ? e.getRecord().getTheme() : "");
+            jsonObject.addProperty("additionalText", e.getRecord() != null ? e.getRecord().getAdditionalText() : "");
         }
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
     }

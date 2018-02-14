@@ -32,14 +32,15 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
     @Query("SELECT count(1) AS cnt, " +
             "r.location, r.description, " +
             "count(case p.socnet when 'VK' then 1 else null end) AS vkcnt, " +
-            "count(case p.socnet when 'INSTAGRAM' then 1 else null end) AS instacnt " +
+            "count(case p.socnet when 'INSTAGRAM' then 1 else null end) AS instacnt," +
+            "r.additionalText " +
             " FROM Record r, Comment c, Post p " +
             " WHERE c.date BETWEEN ?1 AND ?2 " +
             " AND r.theme = ?3 " +
             " AND c.id = r.commentId " +
             " AND c.post = p " +
             " AND c.status NOT IN ('NO_PLACE','NO_THEME') " +
-            " GROUP BY r.location, r.description ")
+            " GROUP BY r.location, r.description, r.additionalText")
     List<Object[]> getGroupedReport(Date start, Date end, String theme);
 
     Record findByCommentId(Long commentId);

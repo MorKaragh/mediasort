@@ -152,3 +152,7 @@
 .reportComplain:hover {
     border: 2px solid blue;
 }
+
+#additionalText {
+    width: 400px;
+}
