@@ -3,6 +3,8 @@ $(document).ready(function() {
         format: "dd.mm.yyyy"
     });
 
+    fillChart();
+
     $('body').show();
 });
 
@@ -42,3 +44,57 @@ $(".reportComplain").click(function(){
         }, 300);
     });
 });
+
+function fillChart(){
+
+    var labelsArray = [];
+    var vkCounts = [];
+    var instagramCounts = [];
+
+    $(".reportrow").each(function(){
+        labelsArray.push($(this).find(".reportTheme").text());
+        vkCounts.push($(this).find(".vkcnt").val())
+        instagramCounts.push($(this).find(".instagramcnt").val())
+    })
+    console.log(labelsArray);
+
+
+    var ctx = document.getElementById("chart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: labelsArray,
+            datasets: [{
+                label: 'VK',
+                data: vkCounts,
+                backgroundColor: 'rgba(102, 102, 255, 0.2)',
+                borderColor: 'rgba(102, 102, 255, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Instagram',
+                data: instagramCounts,
+                backgroundColor: 'rgba(0, 153, 255, 0.2)',
+                borderColor: 'rgba(0, 153, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            title:{
+                display:true,
+                text:"Всего жалоб: 100"
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    },
+                    stacked: true
+                }],
+                xAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+}

@@ -42,26 +42,22 @@
                 </div>
             </div>
             <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
-                <button type="button"  id="week" class="btn btn-default">неделя</button>
+                <button type="submit" form="params" value="Submit" id="reportBtn" class="btn btn-success">
+                    Выгрузить отчет</button>
             </div>
-            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
-                <button type="button" id="month" class="btn btn-default">месяц</button>
-            </div>
-            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
-                <button type="button" id="year" class="btn btn-default">год</button>
-            </div>
-        </div>
-        <div class="row form-group">
-            <button type="submit" form="params" value="Submit" id="reportBtn" class="btn btn-success">
-                Выгрузить отчет</button>
+
         </div>
 
     </form>
+
+    <canvas id="chart" width="400" height="400"></canvas>
 
     <div class="row" id="reportedit"></div>
 
     <div class="row reportrow" th:each="item : ${report}">
         <div class="reportTheme" th:text="${item.location}"></div>
+        <input type="hidden" class="instagramcnt" th:value="${item.instagramCnt}"/>
+        <input type="hidden" class="vkcnt" th:value="${item.vkCnt}"/>
         <div class="reportCounts" th:text="'Всего жалоб ' + ${item.cnt} + ' (' + ${item.instagramCnt} + ' Инстаграм, ' + ${item.vkCnt} + ' Вконтакте)'"></div>
         <div class="reportComplain" th:each="complain : ${item.elements}">
             <div class="com-count" th:text="'жалоб ' + ${complain.count}"></div>
@@ -85,4 +81,5 @@
 
     <!--custom-->
     <script src="../static/js/report.js" th:src="@{js/report.js}"></script>
+    <script src="../static/js/Chart.bundle.min.js" th:src="@{js/Chart.bundle.min.js}"></script>
 </html>
