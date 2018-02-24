@@ -64,8 +64,14 @@ public class MainController {
 
     @GetMapping("/test")
     public String test() throws ClientException, ApiException, InterruptedException {
-        List<ReportTheme> groupedReport = reportService.loadGroups(DateUtils.addDays(new Date(),-100), new Date());
-        return "";
+        List<Record> all = recordRepository.findAll();
+        all.forEach(record -> System.out.println(record.toString()));
+
+        Comment byId = commentsRepository.findById(413L);
+        System.out.println(byId);
+        byId = commentsRepository.findById(414L);
+        System.out.println(byId);
+        return "report";
     }
 
     @RequestMapping(value = {"/record"})

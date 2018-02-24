@@ -86,7 +86,7 @@ public class PostService {
         comment.setPost(post);
         comment.setNetId(e.getId());
         comment.setStatus(StringUtils.isBlank(e.getText()) ? CommentStatus.NO_THEME : CommentStatus.FREE);
-        comment.setDate(e.getDate());
+        comment.setDate(e.getDate() == null ? new Date() : e.getDate());
         commentsRepository.save(comment);
     }
 

@@ -50,7 +50,7 @@ public class ReportService {
         return themes;
     }
 
-    public List<ReportTheme> loadGroups(Date startDate, Date endDate) {
+    private List<ReportTheme> loadGroups(Date startDate, Date endDate) {
         List<String> locations = recordRepository.getThemesByDates(startDate, endDate);
         List<ReportTheme> themes = new ArrayList<>();
         for (String location : locations) {

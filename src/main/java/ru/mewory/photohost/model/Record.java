@@ -128,4 +128,19 @@ public class Record {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "Record{" +
+                "id=" + id +
+                ", location='" + location + '\'' +
+                ", theme='" + theme + '\'' +
+                ", tags=" + tags +
+                ", tagsObjects=" + tagsObjects +
+                ", description='" + description + '\'' +
+                ", additionalText='" + additionalText + '\'' +
+                ", commentId=" + commentId +
+                ", date=" + date +
+                '}';
+    }
 }

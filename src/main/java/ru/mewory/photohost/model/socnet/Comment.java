@@ -97,15 +97,18 @@ public class Comment {
         this.netId = netId;
     }
 
+
     @Override
     public String toString() {
-        return "Comment{" + "\n" +
-                "id=" + id + "\n" +
+        return "Comment{" +
+                "id=" + id +
                 ", post=" + post +
-                ", text='" + text + '\'' + "\n" +
-                ", netId=" + netId + "\n" +
-                ", author=" + author + "\n" +
-                ", status=" + status + "\n" +
+                ", text='" + text + '\'' +
+                ", netId=" + netId +
+                ", author=" + author +
+                ", status=" + status +
+                ", date=" + date +
+                ", changeUser='" + changeUser + '\'' +
                 '}';
     }
 }
