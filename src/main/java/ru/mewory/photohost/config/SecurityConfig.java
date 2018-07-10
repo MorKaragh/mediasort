@@ -30,8 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("root").password("zaruba").roles("USER","ADMIN");
-        auth.inMemoryAuthentication().withUser("user").password("123321").roles("USER");
-        auth.inMemoryAuthentication().withUser("space").password("getlost").roles("USER");
+        auth.inMemoryAuthentication().withUser("admin").password("**********").roles("USER","ADMIN");
+        auth.inMemoryAuthentication().withUser("normal").password("*********").roles("USER");
     }
 }
