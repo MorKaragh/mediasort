@@ -39,9 +39,9 @@ public class RecordService {
         if (recordInBase != null){
             recordRepository.delete(recordInBase);
             List<RecordTagLink> byRecordId = recordTagLinkRepository.findByRecordId(recordInBase.getId());
-            recordTagLinkRepository.delete(byRecordId);
+            recordTagLinkRepository.deleteAll(byRecordId);
         }
-        Comment c = commentsRepository.findById(record.getCommentId());
+        Comment c = commentsRepository.findById(record.getCommentId()).get();
         assert c != null;
         c.setStatus(CommentStatus.DONE);
         c.setChangeUser(UserUtils.getUsername());
@@ -81,7 +81,7 @@ public class RecordService {
         if (result != null){
             List<RecordTagLink> byRecordId = recordTagLinkRepository.findByRecordId(result.getId());
             for (RecordTagLink link : byRecordId) {
-                result.getTags().add(tagRepository.findById(link.getTagId()).getName());
+                result.getTags().add(tagRepository.findById(link.getTagId()).get().getName());
             }
         }
         return result;

@@ -37,7 +37,7 @@ public class PostService {
     RecordService recordService;
 
     public void takeAndHold(Long postId) throws AllreadyHeldException {
-        Comment comment = commentsRepository.findById(postId);
+        Comment comment = commentsRepository.findById(postId).get();
         if (!CommentStatus.FREE.equals(comment.getStatus())){
             Record record = recordService.loadByCommentId(comment.getId());
             throw new AllreadyHeldException(comment, record);
@@ -131,7 +131,7 @@ public class PostService {
 
     public void setTrashStatus(Long commentId, String status) {
         CommentStatus s = CommentStatus.valueOf(status);
-        Comment c = commentsRepository.findById(commentId);
+        Comment c = commentsRepository.findById(commentId).get();
         if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)
 //                && !c.getStatus().equals(CommentStatus.DONE)
                 ){

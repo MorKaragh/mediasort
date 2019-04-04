@@ -1,7 +1,6 @@
 package ru.mewory.photohost.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.mewory.photohost.model.Image;
 import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.CommentStatus;
 import ru.mewory.photohost.model.socnet.Post;
@@ -17,7 +16,6 @@ public interface CommentsRepository extends JpaRepository<Comment,Long> {
     List<Comment> findByText(String text);
     List<Comment> findByTextAndPost(String text,Post post);
     List<Comment> findByPost(Post post);
-    Comment findById(Long commentId);
     Comment findByIdAndStatus(Long commentId, CommentStatus inProgress);
     Set<Comment> findByIdIn(List<Long> recordIds);
 }

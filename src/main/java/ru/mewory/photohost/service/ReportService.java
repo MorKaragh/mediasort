@@ -82,7 +82,7 @@ public class ReportService {
             List<RecordTagLink> byRecordId = tagLinkRepository.findByRecordId(r.getId());
             if (byRecordId != null){
                 for (RecordTagLink link : byRecordId){
-                    Tag tag = tagRepository.findById(link.getTagId());
+                    Tag tag = tagRepository.findById(link.getTagId()).get();
                     r.getTags().add(tag.getName());
                 }
             }

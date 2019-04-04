@@ -11,7 +11,6 @@ import java.util.List;
  * Created by tookuk on 11/10/17.
  */
 public interface PostRepository extends JpaRepository<Post,Long> {
-    Post findById(Long id);
     Post findByTextAndSocnet(String text, SocNet socNet);
 
     @Query("SELECT p FROM Post p JOIN FETCH p.comments WHERE p.id = ?1")

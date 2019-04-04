@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,10 @@ import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.report.ReportTheme;
-import ru.mewory.photohost.model.socnet.*;
+import ru.mewory.photohost.model.socnet.Comment;
+import ru.mewory.photohost.model.socnet.InstagramData;
+import ru.mewory.photohost.model.socnet.Post;
+import ru.mewory.photohost.model.socnet.SocnetDTO;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.service.ReportService;
@@ -27,7 +29,10 @@ import ru.mewory.photohost.service.socnet.PostService;
 import ru.mewory.photohost.service.socnet.VkService;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tookuk on 9/3/17.
@@ -67,9 +72,9 @@ public class MainController {
         List<Record> all = recordRepository.findAll();
         all.forEach(record -> System.out.println(record.toString()));
 
-        Comment byId = commentsRepository.findById(413L);
+        Comment byId = commentsRepository.findById(413L).get();
         System.out.println(byId);
-        byId = commentsRepository.findById(414L);
+        byId = commentsRepository.findById(414L).get();
         System.out.println(byId);
         return "report";
     }
