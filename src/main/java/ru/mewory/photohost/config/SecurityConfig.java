@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/parseInstagram").hasRole("USER")
                 .antMatchers("/vkload").hasRole("USER")
                 .antMatchers("/savePost").hasRole("USER")
+                .antMatchers("/instagramloader").hasRole("USER")
                 .antMatchers(HttpMethod.POST,"/sendRecord").hasRole("USER")
                 .and()
                 .formLogin().loginPage("/login").successForwardUrl("/record")

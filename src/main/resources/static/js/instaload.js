@@ -58,3 +58,23 @@ $('#backBtn').click(function(){
     $('#backBtn').hide();
 });
 
+$('#loadByInstagramRef').click(function(){
+     $.ajax({
+       method: "POST",
+       contentType: "application/json",
+       url: "/loadFromInstagram",
+       data: JSON.stringify({instagramRef : ""}),
+       success: function(response) {
+         console.log(response);
+                    },
+       error: function(xhr, ajaxOptions, thrownError) {
+         console.log(xhr);
+         console.log(ajaxOptions);
+         console.log(thrownError);
+                  }
+     }).done(function(response) {
+        console.log(response);
+        //location.reload();
+     });
+});
+

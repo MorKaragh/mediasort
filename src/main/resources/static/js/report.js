@@ -38,6 +38,8 @@ $(".reportComplain").click(function(){
         console.log(thrownError);
                  }
     }).done(function(response) {
+        console.log("reported");
+        console.log(response);
         $("#reportedit").html(response);
         $('html, body').animate({
             scrollTop: $("#reportedit").offset().top-200

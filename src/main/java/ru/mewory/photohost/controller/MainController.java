@@ -17,13 +17,13 @@ import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.report.ReportTheme;
-import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.InstagramData;
 import ru.mewory.photohost.model.socnet.Post;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
 import ru.mewory.photohost.service.ImageSaveService;
 import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.service.ReportService;
+import ru.mewory.photohost.service.socnet.InstagramLoader;
 import ru.mewory.photohost.service.socnet.InstagramParser;
 import ru.mewory.photohost.service.socnet.PostService;
 import ru.mewory.photohost.service.socnet.VkService;
@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Created by tookuk on 9/3/17.
@@ -63,12 +66,26 @@ public class MainController {
     private PostRepository postRepository;
     @Autowired
     private RecordRepository recordRepository;
-
     @Autowired
     private CommentsRepository commentsRepository;
+    @Autowired
+    private InstagramLoader instagramLoader;
+
+
+
 
     @GetMapping("/test")
     public String test() {
+
+        for (Record r : recordRepository.findAll()) {
+            System.out.println(r.toString());
+            System.out.println(commentsRepository.findById(r.getCommentId()).toString());
+        }
+
+//        for (Comment c : commentsRepository.findAll()) {
+//            System.out.println(c.toString());
+//        }
+
         return "report";
     }
 
@@ -87,14 +104,14 @@ public class MainController {
 
         mav.addObject("realpost","true");
         if (post == null){
-            mav.setViewName("instaload");
+            mav.setViewName("instagramloader");
         } else {
             mav.addObject("post", post);
         }
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = {"/reportedit"})
+    @RequestMapping(method = POST, value = {"/reportedit"})
     public ModelAndView reportedit(@RequestBody Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("reportedit");
         fillDictionaries(mav);
@@ -120,7 +137,7 @@ public class MainController {
     }
 
 
-    @RequestMapping(method=RequestMethod.GET, value="report")
+    @RequestMapping(method = GET, value = "report")
     public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("report");
         List<ReportTheme> records = reportService.getReport(allRequestParams);
@@ -130,14 +147,14 @@ public class MainController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
+    @RequestMapping(method = POST, value = "sendRecord")
     public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
         recordService.save(record);
         Map<String,String> result = new HashMap<>();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/parseInstagram")
+    @RequestMapping(method = POST, value = "/parseInstagram")
     public ModelAndView parseInstagram(@RequestBody InstagramData instagramData) throws IOException {
         ModelAndView modelAndView = new ModelAndView("parsedpost");
         List<SocnetDTO> parsed = InstagramParser.parse(instagramData.getData());
@@ -146,14 +163,28 @@ public class MainController {
         return modelAndView;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/setStatus")
+
+    @RequestMapping(value = {"/instagramloader"})
+    public ModelAndView instaloader(@RequestParam Map<String, String> allRequestParams) {
+        ModelAndView mav = new ModelAndView("instagramloader");
+        return mav;
+    }
+
+    @RequestMapping(method = POST, value = "loadFromInstagram")
+    public ResponseEntity<String> loadFromInstagram(@RequestBody Map<String, String> allRequestParams) {
+        instagramLoader.load(allRequestParams.get("instagramRef"));
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+
+    @RequestMapping(method = POST, value = "/setStatus")
     public ResponseEntity<String>  setStatus(@RequestBody Map<String,String> allRequestParams){
         JsonObject jsonObject = new JsonObject();
         postService.setTrashStatus(Long.valueOf(allRequestParams.get("commentId")),allRequestParams.get("status"));
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/takeToWork")
+    @RequestMapping(method = POST, value = "/takeToWork")
     public ResponseEntity<String> takeToWork(@RequestBody Map<String,String> allRequestParams){
         JsonObject jsonObject = new JsonObject();
         try {
@@ -177,7 +208,7 @@ public class MainController {
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/release")
+    @RequestMapping(method = POST, value = "/release")
     public ResponseEntity<String>  release(@RequestBody Map<String,String> allRequestParams){
         JsonObject jsonObject = new JsonObject();
         if (allRequestParams.get("commentId") != null) {
@@ -186,12 +217,12 @@ public class MainController {
         return new ResponseEntity<>(new Gson().toJson(jsonObject),HttpStatus.OK);
     }
 
-    @RequestMapping("/instaload")
-    public ModelAndView instaload(){
-        return new ModelAndView("instaload");
-    }
+//    @RequestMapping("/instaload")
+//    public ModelAndView instaload(){
+//        return new ModelAndView("instaload");
+//    }
 
-    @RequestMapping(method=RequestMethod.GET, value="/vkload")
+    @RequestMapping(method = GET, value = "/vkload")
     public ModelAndView vkload(@RequestParam Map<String,String> allRequestParams) throws InterruptedException, ClientException, ApiException {
         ModelAndView mav = new ModelAndView("vkload");
         int offset = getOffset(allRequestParams);
@@ -237,13 +268,13 @@ public class MainController {
         return "login";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/send")
+    @RequestMapping(method = POST, value = "/send")
     public String upload(@RequestBody Image img) throws IOException {
         imageSaveService.save(img);
         return "index";
     }
 
-    @RequestMapping(method=RequestMethod.GET, value="/rectags")
+    @RequestMapping(method = GET, value = "/rectags")
     public @ResponseBody List<Tag> recordTags(){
         return tagRepository.findAll();
     }

@@ -32,13 +32,10 @@ function showError(errorMsg){
 }
 
 function setSelect(id, value){
-    console.log("selectId=" + id);
     $(id).find('option').each(function(){
         if ($(this).text() === value) {
-            console.log("selecting=" + value);
             $(this).attr("selected","selected");
         } else {
-            console.log("UNselecting=" + $(this).text() );
             $(this).removeAttr("selected");
         }
         $(id).select2({

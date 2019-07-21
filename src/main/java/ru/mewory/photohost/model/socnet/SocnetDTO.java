@@ -68,4 +68,13 @@ public class SocnetDTO {
     public Date getDate() {
         return date;
     }
+
+
+    public static SocnetDTO fromInstagramLoaderObject(InstagramLoaderObject instagramLoaderObject) {
+        SocnetDTO dto = new SocnetDTO(instagramLoaderObject.getOwner().getUsername(), instagramLoaderObject.getText());
+        dto.setDate(new Date(instagramLoaderObject.getCreated_at() * 1000));
+        dto.setSocnet(SocNet.INSTAGRAM);
+        return dto;
+    }
+
 }

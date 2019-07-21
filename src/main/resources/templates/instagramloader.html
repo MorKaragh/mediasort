@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="ru">
+    <meta charset="UTF-8"/>
+    <title>Загрузчик Instagram</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+
+<body hidden="true">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Загрузка из Instagram</a>
+        </div>
+        <div th:replace="fragments/header :: navbar"/>
+    </div>
+</nav>
+
+<div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
+    <div>
+        <div class="row editor">
+            <label for="postref">ссылка на пост в Instagram</label>
+            <input class="form-control" id="postref" placeholder="https://www.instagram.com/p/B0JH0VWHf5A/"
+                   type="text"/>
+        </div>
+        <div class="row form-group" style="padding: 15px 0 0 0">
+            <button class="btn btn-lg btn-default" id="loadByInstagramRef" type="button">Загрузить</button>
+        </div>
+    </div>
+</div>
+
+</body>
+<div th:replace="fragments/header :: script"/>
+
+<!--custom-->
+<script src="../static/js/instagramloader.js" th:src="@{js/instagramloader.js}"></script>
+</html>
