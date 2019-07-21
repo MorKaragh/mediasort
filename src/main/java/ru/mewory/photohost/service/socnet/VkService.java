@@ -31,6 +31,7 @@ import java.util.*;
 @PropertySource("classpath:application.properties")
 public class VkService {
 
+    public static final long TIMEOIT = 200L;
     @Value("${vk.appid}")
     private Integer APP_ID;
     @Value("${vk.postauthor}")
@@ -69,17 +70,13 @@ public class VkService {
             post.setId(Long.valueOf(wallpostFull.getId()));
             post.setSocnet(SocNet.VK);
             post.setDate(new Date(wallpostFull.getDate() * 1000L));
-            Thread.sleep(200L);
+            Thread.sleep(TIMEOIT);
 
             GetCommentsResponse allComments = vk.wall().getComments(actor, wallpostFull.getId())
                     .sort(WallGetCommentsSort.ASC)
-                    .count(100500)
+                    .count(Integer.MAX_VALUE)
                     .ownerId(ownerId)
                     .execute();
-
-            for (WallComment c : allComments.getItems()){
-                System.out.println(c.getFromId() + " ::: " + c.getText());
-            }
 
             dtos.add(post);
 
@@ -101,19 +98,17 @@ public class VkService {
 
             List<UserXtrCounters> allUsers = null;
             if (!userIds.isEmpty()) {
-                List<String> userz = new ArrayList<>();
-                userz.addAll(userIds);
+                List<String> userz = new ArrayList<>(userIds);
                 allUsers = vk.users().get(actor).userIds(userz).fields(UserField.SCREEN_NAME).execute();
             }
 
             List<GroupFull> execute = null;
             if (!groupIds.isEmpty()) {
-                List<String> groupz = new ArrayList<>();
-                groupz.addAll(groupIds);
+                List<String> groupz = new ArrayList<>(groupIds);
                 execute = vk.groups().getById(actor).groupIds(groupz).execute();
             }
 
-            Thread.sleep(200L);
+            Thread.sleep(TIMEOIT);
             if (allUsers != null) {
                 allUsers.forEach(userXtrCounters -> users.put(userXtrCounters.getId()
                         , userXtrCounters.getFirstName() + " " + userXtrCounters.getLastName()));

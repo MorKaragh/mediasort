@@ -68,14 +68,7 @@ public class MainController {
     private CommentsRepository commentsRepository;
 
     @GetMapping("/test")
-    public String test() throws ClientException, ApiException, InterruptedException {
-        List<Record> all = recordRepository.findAll();
-        all.forEach(record -> System.out.println(record.toString()));
-
-        Comment byId = commentsRepository.findById(413L).get();
-        System.out.println(byId);
-        byId = commentsRepository.findById(414L).get();
-        System.out.println(byId);
+    public String test() {
         return "report";
     }
 
@@ -83,7 +76,15 @@ public class MainController {
     public ModelAndView record(@RequestParam Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("record");
         fillDictionaries(mav);
-        Post post = postService.getPost(allRequestParams);
+
+        Post post = postService.getPost(allRequestParams.get("postId"),
+                allRequestParams.get("startDate"),
+                allRequestParams.get("startDate"),
+                allRequestParams.get("endDate"),
+                allRequestParams.get("theme"),
+                allRequestParams.get("location"),
+                allRequestParams.get("description"));
+
         mav.addObject("realpost","true");
         if (post == null){
             mav.setViewName("instaload");
@@ -97,7 +98,15 @@ public class MainController {
     public ModelAndView reportedit(@RequestBody Map<String,String> allRequestParams){
         ModelAndView mav = new ModelAndView("reportedit");
         fillDictionaries(mav);
-        Post post = postService.getPost(allRequestParams);
+
+        Post post = postService.getPost(allRequestParams.get("postId"),
+                allRequestParams.get("startDate"),
+                allRequestParams.get("startDate"),
+                allRequestParams.get("endDate"),
+                allRequestParams.get("theme"),
+                allRequestParams.get("location"),
+                allRequestParams.get("description"));
+
         mav.addObject("realpost","false");
         mav.addObject("post", post);
         return mav;
@@ -123,7 +132,6 @@ public class MainController {
 
     @RequestMapping(method = RequestMethod.POST, value = "sendRecord")
     public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
-        System.out.println("RECORD SENT");
         recordService.save(record);
         Map<String,String> result = new HashMap<>();
         return new ResponseEntity<>(result, HttpStatus.OK);

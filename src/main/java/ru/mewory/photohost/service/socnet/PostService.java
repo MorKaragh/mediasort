@@ -50,6 +50,9 @@ public class PostService {
     public Post savePost(List<SocnetDTO> data){
         SocnetDTO head = data.get(0);
         Post post = postRepository.findByTextAndSocnet(head.getText(), SocNet.INSTAGRAM);
+        if (post == null) {
+            post = postRepository.findByTextAndSocnet(head.getText(), SocNet.VK);
+        }
         if (post == null){
             post = createPost(head);
         }
@@ -110,7 +113,7 @@ public class PostService {
         return postRepository.findByIdAndFetchFreeComments(maxPostIdWithFreeComments);
     }
 
-    public Post findNextPostAndFetchAllComments(Long postId) {
+    private Post findNextPostAndFetchAllComments(Long postId) {
         Long maxPostIdWithFreeComments;
         if (postId == null) {
             maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
@@ -132,21 +135,14 @@ public class PostService {
     public void setTrashStatus(Long commentId, String status) {
         CommentStatus s = CommentStatus.valueOf(status);
         Comment c = commentsRepository.findById(commentId).get();
-        if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)
-//                && !c.getStatus().equals(CommentStatus.DONE)
-                ){
+        if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)){
             c.setStatus(s);
             c.setChangeUser(UserUtils.getUsername());
             commentsRepository.save(c);
         }
     }
 
-    public Post openCommentsForEdit(Map<String, String> allRequestParams) {
-        String startDate = allRequestParams.get("startDate");
-        String endDate = allRequestParams.get("endDate");
-        String theme = allRequestParams.get("theme");
-        String location = allRequestParams.get("location");
-        String description = allRequestParams.get("description");
+    private Post openCommentsForEdit(String startDate, String endDate, String theme, String location, String description) {
         try {
             List<Record> records = recordRepository.findForReport(
                     location,
@@ -168,18 +164,16 @@ public class PostService {
     }
 
 
-    public Post getPost(Map<String, String> allRequestParams) {
+    public Post getPost(String postId1, String startDate, String startDate1, String endDate, String theme, String location, String description) {
         Post post;
-        String postId = allRequestParams.get("postId");
-        if (postId == null){
-            String startDateStr = allRequestParams.get("startDate");
-            if (startDateStr == null){
+        if (postId1 == null){
+            if (startDate == null){
                 post = findNextPostAndFetchAllComments(null);
             } else {
-                post = openCommentsForEdit(allRequestParams);
+                post = openCommentsForEdit(startDate1, endDate, theme, location, description);
             }
         } else {
-            post = findNextPostAndFetchAllComments(Long.valueOf(postId));
+            post = findNextPostAndFetchAllComments(Long.valueOf(postId1));
         }
         return post;
     }

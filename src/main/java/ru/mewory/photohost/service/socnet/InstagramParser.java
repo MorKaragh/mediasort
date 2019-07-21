@@ -16,7 +16,9 @@ public class InstagramParser {
 
     public static List<SocnetDTO> parse(String data){
         Document parse = Jsoup.parse(data);
-        Elements allElements = parse.get.getElementsByAttributeValueMatching("class", ".*notranslate.*");
+        Elements elements = parse.getElementsByTag("p");
+
+        Elements allElements = parse.getElementsByAttributeValueMatching("class", ".*notranslate.*");
         Element postHead = allElements.get(0);
         List<SocnetDTO> result = new ArrayList<>();
         SocnetDTO head = new SocnetDTO(postHead.text(), postHead.nextElementSibling().text());

@@ -11,7 +11,8 @@ import java.util.Set;
  * Created by tookuk on 11/10/17.
  */
 @Entity
-@Table(name = "posts")
+@Table(name = "posts",
+        indexes = {@Index(name = "IDX_TEXT_SOCNET", columnList = "text,socnet")})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @OrderBy("id")
     private Set<Comment> comments = new HashSet<>();
-    @Column(length = 8000)
+    @Column(length = 12000)
     private String text;
     private Long netId;
     private Date date;
