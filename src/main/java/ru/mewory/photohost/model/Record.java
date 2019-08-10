@@ -33,11 +33,15 @@ public class Record {
     private String description;
 
     @JsonProperty("additionalText")
-    @Column(length = 400)
+    @Column(length = 1000)
     private String additionalText;
 
     @JsonProperty("commentId")
     private Long commentId;
+
+    @JsonProperty("vedomstvo")
+    @Transient
+    private Boolean authorIsVedomstvo;
 
     private Date date;
 
@@ -127,6 +131,14 @@ public class Record {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Boolean getAuthorIsVedomstvo() {
+        return authorIsVedomstvo;
+    }
+
+    public void setAuthorIsVedomstvo(Boolean authorIsVedomstvo) {
+        this.authorIsVedomstvo = authorIsVedomstvo;
     }
 
     @Override

@@ -11,9 +11,11 @@ import javax.persistence.*;
 )
 public class Author {
 
+    private Boolean vedomstvo = false;
     private String name;
     @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
     private Long id;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,5 +40,13 @@ public class Author {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean isVedomstvo() {
+        return vedomstvo;
+    }
+
+    public void setVedomstvo(Boolean vedomstvo) {
+        this.vedomstvo = vedomstvo;
     }
 }

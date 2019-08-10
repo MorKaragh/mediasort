@@ -51,6 +51,9 @@ public class Post {
     }
 
     public void setText(String text) {
+        if (text.length() > 12000) {
+            this.text = text.substring(0, 11999);
+        }
         this.text = text;
     }
 

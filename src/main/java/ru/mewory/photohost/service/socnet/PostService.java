@@ -14,7 +14,10 @@ import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.utils.UserUtils;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -164,16 +167,16 @@ public class PostService {
     }
 
 
-    public Post getPost(String postId1, String startDate, String startDate1, String endDate, String theme, String location, String description) {
+    public Post getPost(String prevPostId, String startDate, String startDate1, String endDate, String theme, String location, String description) {
         Post post;
-        if (postId1 == null){
+        if (prevPostId == null) {
             if (startDate == null){
                 post = findNextPostAndFetchAllComments(null);
             } else {
                 post = openCommentsForEdit(startDate1, endDate, theme, location, description);
             }
         } else {
-            post = findNextPostAndFetchAllComments(Long.valueOf(postId1));
+            post = findNextPostAndFetchAllComments(Long.valueOf(prevPostId));
         }
         return post;
     }

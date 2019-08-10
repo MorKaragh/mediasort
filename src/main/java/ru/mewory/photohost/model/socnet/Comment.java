@@ -78,6 +78,9 @@ public class Comment {
     }
 
     public void setText(String text) {
+        if (text.length() > 8000) {
+            this.text = text.substring(0, 7999);
+        }
         this.text = text;
     }
 

@@ -42,9 +42,9 @@ public class RecordService {
             recordTagLinkRepository.deleteAll(byRecordId);
         }
         Comment c = commentsRepository.findById(record.getCommentId()).get();
-        assert c != null;
         c.setStatus(CommentStatus.DONE);
         c.setChangeUser(UserUtils.getUsername());
+        c.getAuthor().setVedomstvo(record.getAuthorIsVedomstvo());
         commentsRepository.save(c);
 
         record.setDate(new Date());

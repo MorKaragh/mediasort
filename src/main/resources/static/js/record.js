@@ -21,10 +21,9 @@ $(document).ready(function() {
 
 function sendRecord(){
     var locationn = $( "#locationSelect option:selected" ).text();
-//    var authorr = $( "#authorSelect option:selected" ).text();
-//    var authorr = $("#editor").closest(".post-edit").find(".post-author").text();;
     var themeVar = $( "#themeSelect option:selected" ).text();
     var addText = $("#additionalText").val();
+    var authorIsVedomstvo = $("#vedomstvoChk").is(':checked');
     var tagz = [];
     $('.tag-input .label').each(function(elem){
         tagz.push($(this).attr("data-tag"));
@@ -36,19 +35,23 @@ function sendRecord(){
         return;
     }
 
+    var sendData = JSON.stringify({
+                               tags : tagz,
+                               description: desc,
+                               location: locationn,
+                               theme: themeVar,
+                               commentId : cId,
+                               additionalText : addText,
+                               vedomstvo: authorIsVedomstvo
+                           });
+
+    console.log(sendData);
+
     $.ajax({
       method: "POST",
       contentType: "application/json",
       url: "/sendRecord",
-      data: JSON.stringify({
-            tags : tagz,
-            description: desc,
-//            author: authorr,
-            location: locationn,
-            theme: themeVar,
-            commentId : cId,
-            additionalText : addText
-        }),
+      data: sendData,
       success: function(response) {
         console.log("SEND RECORD  " + response);
                    },
@@ -78,11 +81,9 @@ function takeToWork(itemId, elem) {
         console.log(thrownError);
                  }
     }).done(function(response) {
+        console.log("takeToWork response");
+        console.log(response);
         var respo = JSON.parse(response);
-//        if (respo.available != "true"){
-//            showError(respo.error);
-//            markByStatus(itemId,respo.status);
-//        } else {
             if (respo.available != "true" && !["NO_PLACE","NO_THEME"].includes(respo.status)){
                 markByStatus(itemId,respo.status);
                 $(".post-edit").each(function(){
@@ -91,11 +92,10 @@ function takeToWork(itemId, elem) {
                         $(this).find(".comment-category").attr('value',respo.recordTheme);
                         $(this).find(".comment-location").attr('value',respo.recordLocation);
                         $(this).find(".comment-tags").attr('value',respo.recordTags);
-                        $(this).find(".additionalText").attr('value',respo.additionalText);
+                        $(this).find(".vedomstvoFlag").attr('value',respo.isVedomstvo);
                         fillEditor(itemId);
                     }
                 });
-                console.log("RESPO: " + response);
                 showError(respo.error);
             } else {
                 clearEditor();
@@ -118,7 +118,6 @@ function takeToWork(itemId, elem) {
             $('html, body').animate({
                     scrollTop: $("#editor").offset().top-200
                 }, 300);
-//        }
     });
 }
 
@@ -167,6 +166,7 @@ function clearEditor(){
     $("#comment").val("");
     $(".tag-input").val("");
     $("#additionalText").val("");
+    $('#vedomstvoChk').prop('checked', false);
     reloadTagInput(function(){
         hide_overlay();
     });
@@ -181,12 +181,16 @@ function fillEditor (itemId){
             var location = $(this).find(".comment-location").val();
             var tags = $(this).find(".comment-tags").val();
             var addText = $(this).find(".additionalText").val();
+            var isVedomstvo = $(this).find(".vedomstvoFlag").val() === 'true';
             setSelect("#locationSelect",location);
             setSelect("#themeSelect",category);
             $("#comment").val(descr);
             $(".tag-input").val(tags);
             console.log("ADD TEXT: " + addText);
             $("#additionalText").val(addText);
+            $('#vedomstvoChk')[0].checked = isVedomstvo
+            $('#vedomstvoChk').prop('checked', isVedomstvo);
+
             reloadTagInput(function(){
                 hide_overlay();
             });

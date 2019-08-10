@@ -17,22 +17,19 @@ import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
 import ru.mewory.photohost.model.report.ReportTheme;
-import ru.mewory.photohost.model.socnet.InstagramData;
+import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.Post;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
 import ru.mewory.photohost.service.ImageSaveService;
+import ru.mewory.photohost.service.JournalService;
 import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.service.ReportService;
 import ru.mewory.photohost.service.socnet.InstagramLoader;
-import ru.mewory.photohost.service.socnet.InstagramParser;
 import ru.mewory.photohost.service.socnet.PostService;
 import ru.mewory.photohost.service.socnet.VkService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -70,7 +67,8 @@ public class MainController {
     private CommentsRepository commentsRepository;
     @Autowired
     private InstagramLoader instagramLoader;
-
+    @Autowired
+    private JournalService journalService;
 
 
 
@@ -82,10 +80,6 @@ public class MainController {
             System.out.println(commentsRepository.findById(r.getCommentId()).toString());
         }
 
-//        for (Comment c : commentsRepository.findAll()) {
-//            System.out.println(c.toString());
-//        }
-
         return "report";
     }
 
@@ -94,13 +88,15 @@ public class MainController {
         ModelAndView mav = new ModelAndView("record");
         fillDictionaries(mav);
 
-        Post post = postService.getPost(allRequestParams.get("postId"),
+        Post post = postService.getPost(
+                allRequestParams.get("postId"),
                 allRequestParams.get("startDate"),
                 allRequestParams.get("startDate"),
                 allRequestParams.get("endDate"),
                 allRequestParams.get("theme"),
                 allRequestParams.get("location"),
-                allRequestParams.get("description"));
+                allRequestParams.get("description")
+        );
 
         mav.addObject("realpost","true");
         if (post == null){
@@ -116,13 +112,15 @@ public class MainController {
         ModelAndView mav = new ModelAndView("reportedit");
         fillDictionaries(mav);
 
-        Post post = postService.getPost(allRequestParams.get("postId"),
+        Post post = postService.getPost(
+                allRequestParams.get("postId"),
                 allRequestParams.get("startDate"),
                 allRequestParams.get("startDate"),
                 allRequestParams.get("endDate"),
                 allRequestParams.get("theme"),
                 allRequestParams.get("location"),
-                allRequestParams.get("description"));
+                allRequestParams.get("description")
+        );
 
         mav.addObject("realpost","false");
         mav.addObject("post", post);
@@ -147,6 +145,15 @@ public class MainController {
         return mav;
     }
 
+    @RequestMapping(method = GET, value = {"journal", "/"})
+    public @ResponseBody
+    ModelAndView getJournal(@RequestParam Map<String, String> allRequestParams) {
+        ModelAndView mav = new ModelAndView("journal");
+        List<JournalElement> posts = journalService.getJournal();
+        mav.addObject("posts", posts);
+        return mav;
+    }
+
     @RequestMapping(method = POST, value = "sendRecord")
     public ResponseEntity<Map<String,String>> sendRecord(@RequestBody Record record) throws IOException {
         recordService.save(record);
@@ -154,20 +161,10 @@ public class MainController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(method = POST, value = "/parseInstagram")
-    public ModelAndView parseInstagram(@RequestBody InstagramData instagramData) throws IOException {
-        ModelAndView modelAndView = new ModelAndView("parsedpost");
-        List<SocnetDTO> parsed = InstagramParser.parse(instagramData.getData());
-        modelAndView.addObject("post",parsed.get(0));
-        modelAndView.addObject("comments",parsed.subList(1,parsed.size()));
-        return modelAndView;
-    }
-
 
     @RequestMapping(value = {"/instagramloader"})
     public ModelAndView instaloader(@RequestParam Map<String, String> allRequestParams) {
-        ModelAndView mav = new ModelAndView("instagramloader");
-        return mav;
+        return new ModelAndView("instagramloader");
     }
 
     @RequestMapping(method = POST, value = "loadFromInstagram")
@@ -204,8 +201,17 @@ public class MainController {
             jsonObject.addProperty("recordLocation", e.getRecord() != null ? e.getRecord().getLocation() : "");
             jsonObject.addProperty("recordTheme", e.getRecord() != null ? e.getRecord().getTheme() : "");
             jsonObject.addProperty("additionalText", e.getRecord() != null ? e.getRecord().getAdditionalText() : "");
+            jsonObject.addProperty("isVedomstvo", e.getComment() != null ? extractVedomstvoFlag(e) : "false");
         }
         return new ResponseEntity<>(new Gson().toJson(jsonObject), HttpStatus.OK);
+    }
+
+    private String extractVedomstvoFlag(AllreadyHeldException e) {
+        return Optional.ofNullable(e.getComment())
+                .map(Comment::getAuthor)
+                .map(Author::isVedomstvo)
+                .map(bool -> bool ? "true" : "false")
+                .orElse("false");
     }
 
     @RequestMapping(method = POST, value = "/release")
@@ -217,10 +223,6 @@ public class MainController {
         return new ResponseEntity<>(new Gson().toJson(jsonObject),HttpStatus.OK);
     }
 
-//    @RequestMapping("/instaload")
-//    public ModelAndView instaload(){
-//        return new ModelAndView("instaload");
-//    }
 
     @RequestMapping(method = GET, value = "/vkload")
     public ModelAndView vkload(@RequestParam Map<String,String> allRequestParams) throws InterruptedException, ClientException, ApiException {
@@ -246,12 +248,6 @@ public class MainController {
         return offset;
     }
 
-    @RequestMapping("/savePost")
-    public ResponseEntity<String> savePost(@RequestBody InstagramData instagramData){
-        List<SocnetDTO> parsed = InstagramParser.parse(instagramData.getData());
-        postService.savePost(parsed);
-        return new ResponseEntity<>("saved", HttpStatus.OK);
-    }
 
     @RequestMapping("/photo")
     public ModelAndView photo(Model model) {

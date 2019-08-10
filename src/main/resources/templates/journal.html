@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="ru">
+    <title>журнал постов</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+
+
+<body hidden="true">
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Журнал постов</a>
+        </div>
+        <div th:replace="fragments/header :: navbar"/>
+    </div>
+</nav>
+
+<div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
+    <div class="row well journal-post" th:each="item : ${posts}">
+        <input class="idinput" th:value="${item.post.id}" type="hidden"/>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <b>
+                <span th:text="${item.post.socnet}"></span>
+            </b>
+            <span th:text="${#dates.format(item.post.date, 'dd-MM-yyyy HH:mm')}"></span>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span style="color:green" th:if="${item.processed} > 0" th:text="'обработано:' + ${item.processed}"></span>
+
+            <span style="color:red" th:if="${item.unprocessed} > 0"
+                  th:text="'не обработано:' + ${item.unprocessed}"></span>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px">
+            <div th:text="${item.post.text}"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+<div th:replace="fragments/header :: script"/>
+
+
+<!--custom-->
+<script src="../static/js/journal.js" th:src="@{js/journal.js}"></script>
+<script src="../static/js/bootstrap-notify.min.js" th:src="@{js/bootstrap-notify.min.js}"></script>
+</html>

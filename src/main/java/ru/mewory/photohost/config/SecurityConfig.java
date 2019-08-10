@@ -19,13 +19,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").hasRole("USER")
                 .antMatchers("/test").permitAll()
                 .antMatchers("/instaload").hasRole("USER")
+                .antMatchers("/journal").hasRole("USER")
                 .antMatchers("/parseInstagram").hasRole("USER")
                 .antMatchers("/vkload").hasRole("USER")
                 .antMatchers("/savePost").hasRole("USER")
                 .antMatchers("/instagramloader").hasRole("USER")
                 .antMatchers(HttpMethod.POST,"/sendRecord").hasRole("USER")
                 .and()
-                .formLogin().loginPage("/login").successForwardUrl("/record")
+                .formLogin().loginPage("/login").defaultSuccessUrl("/")
                 .and().csrf().disable();
     }
 
