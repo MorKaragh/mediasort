@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="ru">
-    <title>внесение</title>
+    <title>редактор справочников</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <div th:replace="fragments/header :: header-css"/>
 </head>
@@ -12,109 +12,94 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Внесение данных</a>
+            <a class="navbar-brand" href="#">Редактор справочников</a>
         </div>
         <div th:replace="fragments/header :: navbar"/>
     </div>
 </nav>
 
 <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
-    <div id="post">
-        <div class="row well">
-            <div class="post-author" th:text="${post.author.name}"></div>
-            <div class="post-comment" th:text="${post.text}"></div>
-            <input type="hidden" id="postId" th:value="${post.id}"/>
-        </div>
-        <div class="row form-group" th:if="${realpost}">
-            <!--<button id="prevBtn" type="button" class="btn btn-md btn-success">-->
-            <!--<span class="glyphicon glyphicon-arrow-left"></span> предыдущий</button>-->
-            <button id="nextBtn" type="button" class="btn btn-md btn-success">
-                следующий <span class="glyphicon glyphicon-arrow-right"></span></button>
-        </div>
 
-        <div class="row post-edit post-edit-comment-box post-comment-box" th:each="item : ${post.comments}">
-            <input class="item-id" type="hidden" th:value="${item.id}"/>
-            <input class="status" type="hidden" th:value="${item.status}"/>
-            <input class="comment-text" type="hidden" value="testval"/>
-            <input class="comment-category" type="hidden"/>
-            <input class="comment-location" type="hidden"/>
-            <input class="comment-tags" type="hidden"/>
-            <input class="additionalText" type="hidden"/>
-            <input class="vedomstvoFlag" type="hidden"/>
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author"
-                 th:text="${item.author.vedomstvo} ? ${item.author.name + ' (ведомство)'} : ${item.author.name}"></div>
-            <div hidden="true" class="cancel-buttons col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                <button type="button" class="no-theme-btn btn btn-xs btn-danger" style="float:right;">Нет темы</button>
-                <button type="button" class="no-place-btn btn btn-xs btn-danger" style="float:right;margin-right: 5px;">Нет места</button>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div th:text="${#dates.format(item.date, 'dd-MM-yyyy HH:mm')}"></div>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 post-comment">
-                <div class="post-comment-text" th:text="${item.text}"></div>
-            </div>
-        </div>
-
-    </div>
-    <div hidden="true" class="post-editor" id="editor">
+    <div class="dict-editor" id="dict-editor">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label for="locationSelect" class="inptlbl locationLbl control-label">Место</label>
-                    <select id="locationSelect" class="js-example-basic-single dictSelector" name="state">
-                        <option selected="true"></option>
-                        <option th:each="item : ${locations}" th:text="${item.name}"></option>
-                    </select>
-                </div>
+            <div class="row well">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="locationSelect" class="inptlbl locationLbl control-label" style="width: 150px">Заменить
+                            место</label>
+                        <select id="locationSelect" class="js-example-basic-single dictSelector" name="oldPlace">
+                            <option selected="true"></option>
+                            <option th:each="item : ${locations}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newLocationSelect" class="inptlbl locationLbl control-label"
+                               style="margin-left: 10px">на вот это</label>
+                        <select id="newLocationSelect" class="js-example-basic-single dictSelector" name="newPlace">
+                            <option selected="true"></option>
+                            <option th:each="item : ${locations}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="row well">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="themeSelect" class="inptlbl themeLbl control-label" style="width: 150px">Заменить
+                            категорию</label>
+                        <select id="themeSelect" class="js-example-basic-single dictSelector" name="oldCat">
+                            <option selected="true"></option>
+                            <option th:each="item : ${themes}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newThemeSelect" class="inptlbl themeLbl control-label" style="margin-left: 10px">на
+                            вот эту</label>
+                        <select id="newThemeSelect" class="js-example-basic-single dictSelector" name="newCat">
+                            <option selected="true"></option>
+                            <option th:each="item : ${themes}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                </form>
             </div>
             <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label for="themeSelect" class="inptlbl themeLbl control-label">Категория</label>
-                    <select id="themeSelect" class="js-example-basic-single dictSelector" name="state">
-                        <option selected="true"></option>
-                        <option th:each="item : ${themes}" th:text="${item.name}"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label for="additionalText" class="inptlbl control-label">Доп.инфо</label>
-                    <input type="text" class="" id="additionalText"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group" style="padding: 0 15px 0 15px">
-                    <label class="inptlbl control-label" for="vedomstvoChk">Ведомство</label>
-                    <input id="vedomstvoChk" type="checkbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading">История изменений</div>
+
+                    <table class="table">
+                        <tr class="info">
+                            <th>ID</th>
+                            <th>старое значение</th>
+                            <th>новое значение</th>
+                            <th>тип справочника</th>
+                        </tr>
+                        <tr th:each="item : ${transactions}">
+                            <td th:text="${item.id}"></td>
+                            <td th:text="${item.prevDictName}"></td>
+                            <td th:text="${item.newDictName}"></td>
+                            <td th:text="${item.dictClassName}"></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <div class="row form-inline" style="display:none;">
-            <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <label class="inptlbl tagLbl control-label">Тэги</label>
-                <input type="text" class="tag-input" id="tag-input"/>
-            </div>
-        </div>
-        <div class="row form-group" style="padding: 0 15px 0 15px">
-            <label for="comment">Описание</label>
-            <textarea class="form-control" rows="5" id="comment"></textarea>
-        </div>
-        <div class="row form-group" style="padding: 0 15px 0 15px">
-            <button id="sendBtn" type="button" class="btn btn-lg btn-success">Сохранить</button>
-        </div>
     </div>
+
+    <div class="row form-group" style="padding: 0 15px 0 15px">
+        <button id="sendBtn" type="button" class="btn btn-lg btn-success">Сохранить</button>
+        <button id="rollbackBtn" type="button" class="btn btn-lg btn-danger">Отменить последнее</button>
+    </div>
+
+</div>
 </div>
 
 </body>
 <div th:replace="fragments/header :: script"/>
 
-<!--components-->
 <script src="../static/js/select2.min.js" th:src="@{js/select2.min.js}"></script>
-<script src="../static/js/jquery-ui.min.js" th:src="@{js/jquery-ui.min.js}"></script>
-<script src="../static/js/mab-jquery-taginput.js" th:src="@{js/mab-jquery-taginput.js}"></script>
 
 <!--custom-->
-<script src="../static/js/record.js" th:src="@{js/record.js}"></script>
+<script src="../static/js/dictionaries.js" th:src="@{js/dictionaries.js}"></script>
 <script src="../static/js/bootstrap-notify.min.js" th:src="@{js/bootstrap-notify.min.js}"></script>
 </html>

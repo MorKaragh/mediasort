@@ -9,7 +9,7 @@ import ru.mewory.photohost.dao.LocationRepository;
 import ru.mewory.photohost.dao.TagRepository;
 import ru.mewory.photohost.model.Author;
 import ru.mewory.photohost.model.Image;
-import ru.mewory.photohost.model.Location;
+import ru.mewory.photohost.model.dictionaries.Location;
 import ru.mewory.photohost.model.Tag;
 
 import java.io.File;

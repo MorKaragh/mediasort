@@ -41,7 +41,7 @@ public class PostService {
 
     public void takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId).get();
-        if (!CommentStatus.FREE.equals(comment.getStatus())){
+        if (!CommentStatus.FREE.equals(comment.getStatus()) && !CommentStatus.IN_PROGRESS.equals(comment.getStatus())){
             Record record = recordService.loadByCommentId(comment.getId());
             throw new AllreadyHeldException(comment, record);
         }
@@ -166,6 +166,9 @@ public class PostService {
         return null;
     }
 
+    public Post getPostById(Long id){
+        return postRepository.findByIdAndFetchComments(id);
+    }
 
     public Post getPost(String prevPostId, String startDate, String startDate1, String endDate, String theme, String location, String description) {
         Post post;

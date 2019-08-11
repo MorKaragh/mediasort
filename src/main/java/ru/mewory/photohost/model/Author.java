@@ -49,4 +49,5 @@ public class Author {
     public void setVedomstvo(Boolean vedomstvo) {
         this.vedomstvo = vedomstvo;
     }
+
 }

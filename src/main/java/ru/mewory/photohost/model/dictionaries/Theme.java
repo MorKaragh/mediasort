@@ -1,4 +1,4 @@
-package ru.mewory.photohost.model;
+package ru.mewory.photohost.model.dictionaries;
 
 import javax.persistence.*;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name="themes",
         uniqueConstraints = {@UniqueConstraint(columnNames={"name"})}
 )
-public class Theme {
+public class Theme{
 
     private String name;
     private Long id;
@@ -35,7 +35,8 @@ public class Theme {
         return name;
     }
 
-    public void setName(String name) {
+    public Theme setName(String name) {
         this.name = name;
+        return this;
     }
 }

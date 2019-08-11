@@ -3,6 +3,6 @@ $(document).ready(function() {
 });
 
 $(".journal-post").click(function(){
-    var dirtyHackId = parseInt($(this).find(".idinput").val())+1; //Господи, прости меня
-    window.location.href = "/record?postId="+dirtyHackId;
+    var dirtyHackId = parseInt($(this).find(".idinput").val());
+    window.location.href = "/record?strict=true&postId="+dirtyHackId;
 })

@@ -5,8 +5,10 @@ import com.google.gson.JsonObject;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,14 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.*;
+import ru.mewory.photohost.model.dictionaries.Location;
+import ru.mewory.photohost.model.dictionaries.Theme;
 import ru.mewory.photohost.model.report.ReportTheme;
 import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.Post;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
-import ru.mewory.photohost.service.ImageSaveService;
-import ru.mewory.photohost.service.JournalService;
-import ru.mewory.photohost.service.RecordService;
-import ru.mewory.photohost.service.ReportService;
+import ru.mewory.photohost.service.*;
 import ru.mewory.photohost.service.socnet.InstagramLoader;
 import ru.mewory.photohost.service.socnet.PostService;
 import ru.mewory.photohost.service.socnet.VkService;
@@ -69,8 +70,10 @@ public class MainController {
     private InstagramLoader instagramLoader;
     @Autowired
     private JournalService journalService;
-
-
+    @Autowired
+    private DictEditService dictService;
+    @Autowired
+    private DictEditRepository dictEditRepository;
 
     @GetMapping("/test")
     public String test() {
@@ -88,19 +91,24 @@ public class MainController {
         ModelAndView mav = new ModelAndView("record");
         fillDictionaries(mav);
 
-        Post post = postService.getPost(
-                allRequestParams.get("postId"),
-                allRequestParams.get("startDate"),
-                allRequestParams.get("startDate"),
-                allRequestParams.get("endDate"),
-                allRequestParams.get("theme"),
-                allRequestParams.get("location"),
-                allRequestParams.get("description")
-        );
+        Post post;
+        if (allRequestParams.get("strict") != null) {
+            post = postService.getPostById(Long.valueOf(allRequestParams.get("postId")));
+        } else {
+            post = postService.getPost(
+                    allRequestParams.get("postId"),
+                    allRequestParams.get("startDate"),
+                    allRequestParams.get("startDate"),
+                    allRequestParams.get("endDate"),
+                    allRequestParams.get("theme"),
+                    allRequestParams.get("location"),
+                    allRequestParams.get("description")
+            );
+        }
 
         mav.addObject("realpost","true");
         if (post == null){
-            mav.setViewName("instagramloader");
+            mav.setViewName("journal");
         } else {
             mav.addObject("post", post);
         }
@@ -144,6 +152,35 @@ public class MainController {
         mav.addObject("endDate",allRequestParams.get("endDate"));
         return mav;
     }
+
+    @RequestMapping(method = GET, value = "dictionaries")
+    public @ResponseBody ModelAndView dictionaries(@RequestParam Map<String,String> allRequestParams){
+        ModelAndView mav = new ModelAndView("dictionaries");
+        fillDictionaries(mav);
+        mav.addObject("transactions",dictEditRepository.findAll(new Sort(Sort.Direction.DESC,"id")));
+        return mav;
+    }
+
+    @RequestMapping(method = POST, value = "changeDicts")
+    public ResponseEntity<Map<String,String>> changeDicts(@RequestBody Map<String, String> allRequestParams) throws IOException {
+        if (StringUtils.isNotEmpty(allRequestParams.get("oldLocation")) && StringUtils.isNotEmpty(allRequestParams.get("newLocation"))) {
+            dictService.changeDictionary(allRequestParams.get("oldLocation"),allRequestParams.get("newLocation"),Location.class);
+        }
+        if (StringUtils.isNotEmpty(allRequestParams.get("oldTheme")) && StringUtils.isNotEmpty(allRequestParams.get("newTheme"))) {
+            dictService.changeDictionary(allRequestParams.get("oldTheme"),allRequestParams.get("newTheme"),Theme.class);
+        }
+        Map<String,String> result = new HashMap<>();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(method = POST, value = "rollbackDicts")
+    public ResponseEntity<Map<String,String>> rollbackDicts(@RequestBody Map<String, String> allRequestParams) throws IOException {
+        dictService.rollbackTransaction();
+        return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
+    }
+
+
 
     @RequestMapping(method = GET, value = {"journal", "/"})
     public @ResponseBody

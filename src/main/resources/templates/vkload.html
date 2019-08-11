@@ -24,7 +24,7 @@
         <div class="row"><h2>Загружено:</h2></div>
         <div class="row">
             <div class="vk-post-head well" th:each="item : ${posts}">
-                <div class="post-author" th:text="${item.author}"></div>
+                <div class="post-author" th:text="${item.author.name}"></div>
                 <div class="post-date" th:text="${item.date}"></div>
                 <div class="post-comment" th:text="${item.text}"></div>
             </div>

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.model.*;
+import ru.mewory.photohost.model.dictionaries.Location;
+import ru.mewory.photohost.model.dictionaries.Theme;
 import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.CommentStatus;
 import ru.mewory.photohost.utils.UserUtils;

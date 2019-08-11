@@ -17,6 +17,19 @@ $(document).ready(function() {
         markByStatus(itemId,$(this).val());
     });
 
+    var firstFreeCommentId = null;
+    var firstFreeComment = null;
+    $(".post-edit-comment-box").each(function(){
+        console.log($(this).find(".status").val());
+        if ($(this).find(".status").val() === 'FREE' && firstFreeComment === null) {
+            firstFreeCommentId = $(this).find(".item-id").val();
+            firstFreeComment = $(this);
+        }
+    })
+    if (firstFreeComment != null && firstFreeCommentId != null) {
+        takeToWork(firstFreeCommentId, firstFreeComment);
+    }
+    console.log(firstFreeComment)
 });
 
 function sendRecord(){
