@@ -22,9 +22,9 @@
         <li id="navjournal"><a href="journal">Журнал</a></li>
         <li id="navrecord"><a href="record">Внесение</a></li>
         <li id="navreport"><a href="report">Отчет</a></li>
-        <li sec:authorize="hasAuthority('ADMIN')" id="navinstaload"><a href="instagramloader">Загрузка из Instagram</a></li>
-        <li sec:authorize="hasAuthority('ADMIN')" id="navvkload"><a href="vkload" onclick="show_overlay();">Загрузка из VK</a></li>
-        <li sec:authorize="hasAuthority('ADMIN')" id="navdicts"><a href="dictionaries">Справочники</a></li>
+        <li sec:authorize="hasRole('ADMIN')" id="navinstaload"><a href="instagramloader">Загрузка из Instagram</a></li>
+        <li sec:authorize="hasRole('ADMIN')" id="navvkload"><a href="vkload" onclick="show_overlay();">Загрузка из VK</a></li>
+        <li sec:authorize="hasRole('ADMIN')" id="navdicts"><a href="dictionaries">Справочники</a></li>
     </ul>
 </body>
 </html>
