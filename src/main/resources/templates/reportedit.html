@@ -10,11 +10,15 @@
             <input class="comment-location" type="hidden"/>
             <input class="comment-tags" type="hidden"/>
             <input class="additionalText" type="hidden"/>
-            <!--<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="'('+${item.id}+') '+${item.author.name}"></div>-->
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author" th:text="${item.author.name}"></div>
+            <input class="vedomstvoFlag" type="hidden"/>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 post-author"
+                 th:text="${item.author.vedomstvo} ? ${item.author.name + ' (ведомство)'} : ${item.author.name}"></div>
             <div hidden="true" class="cancel-buttons col-lg-4 col-md-4 col-sm-4 col-xs-4">
                 <button type="button" class="no-theme-btn btn btn-xs btn-danger" style="float:right;">Нет темы</button>
                 <button type="button" class="no-place-btn btn btn-xs btn-danger" style="float:right;margin-right: 5px;">Нет места</button>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div th:text="${#dates.format(item.date, 'dd-MM-yyyy HH:mm')}"></div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 post-comment">
                 <div class="post-comment-text" th:text="${item.text}"></div>
@@ -48,7 +52,14 @@
                     <input type="text" class="" id="additionalText"/>
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group" style="padding: 0 15px 0 15px">
+                    <label class="inptlbl control-label" for="vedomstvoChk">Ведомство</label>
+                    <input id="vedomstvoChk" type="checkbox">
+                </div>
+            </div>
         </div>
+
         <div class="row form-inline" style="display:none;">
             <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <label class="inptlbl tagLbl control-label">Тэги</label>

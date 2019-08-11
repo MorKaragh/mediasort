@@ -60,13 +60,11 @@ $("#sendBtn").click(function(){
               url: "/send",
               data: JSON.stringify({tags : tagz, img: e.target.result, author: authorr, location: locationn}),
               success: function(response) {
-                               console.log(response);
                            },
               error: function(xhr, ajaxOptions, thrownError) {
                              console.log(xhr);
                          }
             }).done(function(response) {
-                console.log(response);
             });
     }
 })

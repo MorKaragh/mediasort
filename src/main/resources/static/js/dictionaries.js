@@ -38,7 +38,6 @@ function rollback(){
                             rollback : "true"
                        }),
       success: function(response) {
-        console.log("CHANGE_DICTS  " + response);
                    },
       error: function(xhr, ajaxOptions, thrownError) {
         console.log(xhr);
@@ -66,7 +65,6 @@ function sendRecord(){
                                newTheme: newTheme
                            });
 
-    console.log(sendData);
 
     $.ajax({
       method: "POST",
@@ -74,7 +72,6 @@ function sendRecord(){
       url: "/changeDicts",
       data: sendData,
       success: function(response) {
-        console.log("CHANGE_DICTS  " + response);
                    },
       error: function(xhr, ajaxOptions, thrownError) {
         console.log(xhr);

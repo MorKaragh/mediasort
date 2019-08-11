@@ -20,7 +20,6 @@ $(document).ready(function() {
     var firstFreeCommentId = null;
     var firstFreeComment = null;
     $(".post-edit-comment-box").each(function(){
-        console.log($(this).find(".status").val());
         if ($(this).find(".status").val() === 'FREE' && firstFreeComment === null) {
             firstFreeCommentId = $(this).find(".item-id").val();
             firstFreeComment = $(this);
@@ -29,7 +28,6 @@ $(document).ready(function() {
     if (firstFreeComment != null && firstFreeCommentId != null) {
         takeToWork(firstFreeCommentId, firstFreeComment);
     }
-    console.log(firstFreeComment)
 });
 
 function sendRecord(){
@@ -57,8 +55,6 @@ function sendRecord(){
                                additionalText : addText,
                                vedomstvo: authorIsVedomstvo
                            });
-
-    console.log(sendData);
 
     $.ajax({
       method: "POST",
@@ -94,8 +90,6 @@ function takeToWork(itemId, elem) {
         console.log(thrownError);
                  }
     }).done(function(response) {
-        console.log("takeToWork response");
-        console.log(response);
         var respo = JSON.parse(response);
             if (respo.available != "true" && !["NO_PLACE","NO_THEME"].includes(respo.status)){
                 markByStatus(itemId,respo.status);
@@ -199,7 +193,6 @@ function fillEditor (itemId){
             setSelect("#themeSelect",category);
             $("#comment").val(descr);
             $(".tag-input").val(tags);
-            console.log("ADD TEXT: " + addText);
             $("#additionalText").val(addText);
             $('#vedomstvoChk')[0].checked = isVedomstvo
             $('#vedomstvoChk').prop('checked', isVedomstvo);

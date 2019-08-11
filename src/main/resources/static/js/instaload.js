@@ -65,7 +65,6 @@ $('#loadByInstagramRef').click(function(){
        url: "/loadFromInstagram",
        data: JSON.stringify({instagramRef : ""}),
        success: function(response) {
-         console.log(response);
                     },
        error: function(xhr, ajaxOptions, thrownError) {
          console.log(xhr);
@@ -73,7 +72,6 @@ $('#loadByInstagramRef').click(function(){
          console.log(thrownError);
                   }
      }).done(function(response) {
-        console.log(response);
         //location.reload();
      });
 });

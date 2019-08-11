@@ -154,7 +154,9 @@
 .reportComplain{
     margin: 5px;
     padding: 5px;
-    border: 2px solid black;
+    border: 2px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .reportComplain:hover {
