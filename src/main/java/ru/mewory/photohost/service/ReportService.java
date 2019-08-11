@@ -13,10 +13,7 @@ import ru.mewory.photohost.model.report.ReportTheme;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by tookuk on 10/8/17.
@@ -47,6 +44,7 @@ public class ReportService {
             }
             themes = loadGroups(startDate, endDate);
         }
+        themes.sort(Comparator.comparing(ReportTheme::getCnt).reversed());
         return themes;
     }
 

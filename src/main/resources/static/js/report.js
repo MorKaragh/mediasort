@@ -55,11 +55,13 @@ function fillChart(){
 
     $(".reportrow").each(function(){
         labelsArray.push($(this).find(".reportTheme").text());
-        vkCounts.push($(this).find(".vkcnt").val())
-        instagramCounts.push($(this).find(".instagramcnt").val())
+        vkCounts.push(parseInt($(this).find(".vkcnt").val()))
+        instagramCounts.push(parseInt($(this).find(".instagramcnt").val()))
     })
-    console.log(labelsArray);
 
+    var totalVk = vkCounts.reduce((a, b) => a + b, 0);
+    var totalInstagram = instagramCounts.reduce((a, b) => a + b, 0);
+    var total = totalInstagram + totalVk;
 
     var ctx = document.getElementById("chart").getContext('2d');
     var myChart = new Chart(ctx, {
@@ -82,16 +84,30 @@ function fillChart(){
             }]
         },
         options: {
+            plugins: {
+                    // Change options for ALL labels of THIS CHART
+                    datalabels: {
+                        color: 'black',
+                        font: {
+                            size: '10'
+                        },
+                        display: function(context) {
+                                    var index = context.dataIndex;
+                                    var value = context.dataset.data[index];
+                                    return value > 0 ? true : false;
+                                 }
+                    }
+                },
             title:{
                 display:true,
-                text:"Всего жалоб: 100"
+                text:"Всего жалоб: " + total + ", из них VK: " + totalVk + ", INSTAGRAM: " + totalInstagram
             },
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero:true
                     },
-                    stacked: true
+                    stacked: true,
                 }],
                 xAxes: [{
                     stacked: true

@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/instagramloader").hasRole("USER")
                 .antMatchers(HttpMethod.POST,"/sendRecord").hasRole("USER")
                 .and()
-                .formLogin().loginPage("/login").defaultSuccessUrl("/")
+                .formLogin().loginPage("/login").defaultSuccessUrl("/", true)
                 .and().csrf().disable();
     }
 
