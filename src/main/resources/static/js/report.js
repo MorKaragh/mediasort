@@ -50,7 +50,9 @@ function fillChart(){
     var instagramCounts = [];
 
     $(".reportrow").each(function(){
-        labelsArray.push($(this).find(".reportTheme").text());
+        labelsArray.push($(this).find(".reportTheme").text() + "  ("
+            + ( parseInt($(this).find(".vkcnt").val()) +  parseInt($(this).find(".instagramcnt").val()))
+        + ")  ");
         vkCounts.push(parseInt($(this).find(".vkcnt").val()))
         instagramCounts.push(parseInt($(this).find(".instagramcnt").val()))
     })
@@ -65,14 +67,14 @@ function fillChart(){
         data: {
             labels: labelsArray,
             datasets: [{
-                label: 'VK',
+                label: 'Вконтакте',
                 data: vkCounts,
                 backgroundColor: 'rgba(102, 102, 255, 0.2)',
                 borderColor: 'rgba(102, 102, 255, 1)',
                 borderWidth: 1
             },
             {
-                label: 'Instagram',
+                label: 'Инстаграм',
                 data: instagramCounts,
                 backgroundColor: 'rgba(0, 153, 255, 0.2)',
                 borderColor: 'rgba(0, 153, 255, 1)',
@@ -96,7 +98,7 @@ function fillChart(){
                 },
             title:{
                 display:true,
-                text:"Всего жалоб: " + total + ", из них VK: " + totalVk + ", INSTAGRAM: " + totalInstagram
+                text:"Всего жалоб " + total + ", из них " + totalVk + " \"Вконтакте\", " + totalInstagram + " \"Инстаграм\""
             },
             scales: {
                 yAxes: [{

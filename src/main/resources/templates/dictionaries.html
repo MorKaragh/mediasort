@@ -32,9 +32,11 @@
                             <option th:each="item : ${locations}" th:text="${item.name}"></option>
                         </select>
                     </div>
+                </form>
+                <form class="form-inline" style="margin-top: 10px">
                     <div class="form-group">
                         <label for="newLocationSelect" class="inptlbl locationLbl control-label"
-                               style="margin-left: 10px">на вот это</label>
+                               style="width: 150px">на другое</label>
                         <select id="newLocationSelect" class="js-example-basic-single dictSelector" name="newPlace">
                             <option selected="true"></option>
                             <option th:each="item : ${locations}" th:text="${item.name}"></option>
@@ -52,9 +54,10 @@
                             <option th:each="item : ${themes}" th:text="${item.name}"></option>
                         </select>
                     </div>
+                </form>
+                <form class="form-inline" style="margin-top: 10px">
                     <div class="form-group">
-                        <label for="newThemeSelect" class="inptlbl themeLbl control-label" style="margin-left: 10px">на
-                            вот эту</label>
+                        <label for="newThemeSelect" class="inptlbl themeLbl control-label" style="width: 150px">на другую</label>
                         <select id="newThemeSelect" class="js-example-basic-single dictSelector" name="newCat">
                             <option selected="true"></option>
                             <option th:each="item : ${themes}" th:text="${item.name}"></option>

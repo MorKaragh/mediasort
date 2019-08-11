@@ -50,9 +50,18 @@
 
     </form>
 
-    <canvas id="chart" width="400" ></canvas>
+    <canvas id="chart" width="400" height="400" ></canvas>
 
+    <div class="row">
+        <ul>
+        <li th:text="'жалоб от ведомств: ' + ${countVedomstva}"></li>
+        <li th:text="'жалоб от пользователей: ' + ${countUsers}"></li>
+        <li th:text="'уникальных пользователей: ' + ${countDistinctUsers}"></li>
+        </ul>
+    </div>
     <div class="row" id="reportedit"></div>
+
+
 
     <div class="row reportrow" th:each="item : ${report}">
         <div class="reportTheme" th:text="${item.location}"></div>

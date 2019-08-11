@@ -272,7 +272,7 @@ $('#locationSelect').on('select2:select', function (e) {
 });
 
 $('#themeSelect').on('select2:select', function (e) {
-    $(".mab-jquery-taginput-input").focus();
+    $("#additionalText").focus();
 });
 
 $("#sendBtn").blur(function(){

@@ -30,6 +30,8 @@ import ru.mewory.photohost.service.socnet.PostService;
 import ru.mewory.photohost.service.socnet.VkService;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -42,6 +44,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @EnableAutoConfiguration
 public class MainController {
 
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     @Autowired
     private ImageSaveService imageSaveService;
     @Autowired
@@ -144,12 +147,28 @@ public class MainController {
 
 
     @RequestMapping(method = GET, value = "report")
-    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams){
+    public @ResponseBody ModelAndView getReport(@RequestParam Map<String,String> allRequestParams) throws ParseException {
         ModelAndView mav = new ModelAndView("report");
-        List<ReportTheme> records = reportService.getReport(allRequestParams);
+
+        Date startDate = null;
+        if (allRequestParams.get("startDate") != null) {
+            startDate = SIMPLE_DATE_FORMAT.parse(allRequestParams.get("startDate"));
+        }
+        Date endDate = null;
+        if (allRequestParams.get("endDate") != null) {
+            endDate = SIMPLE_DATE_FORMAT.parse(allRequestParams.get("endDate"));
+        }
+
+        List<ReportTheme> records = reportService.getReport(startDate,endDate);
+
+        mav.addObject("countVedomstva",reportService.getVedomstvaCount(startDate,endDate));
+        mav.addObject("countUsers",reportService.getUsersCount(startDate,endDate));
+        mav.addObject("countDistinctUsers",reportService.getDistinctUsersCount(startDate,endDate));
+
         mav.addObject("report",records);
         mav.addObject("startDate",allRequestParams.get("startDate"));
         mav.addObject("endDate",allRequestParams.get("endDate"));
+
         return mav;
     }
 

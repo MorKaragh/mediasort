@@ -18,6 +18,34 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
     List<Record> findByThemeAndDateBetween(String theme, Date startDate, Date endDate);
     List<Record> findByLocationAndThemeAndDescriptionAndDateBetween(String location, String theme, String description, Date startDate, Date endDate);
 
+    @Query("SELECT COUNT(1) " +
+            "FROM Record r, Author a, Comment c " +
+            "WHERE c.author = a " +
+            "AND c.id = r.commentId " +
+            "AND a.vedomstvo is true " +
+            "AND c.status NOT IN ('NO_PLACE','NO_THEME') " +
+            "AND c.date BETWEEN ?1 AND ?2")
+    int countVedomstva(Date startDate, Date endDate);
+
+    @Query("SELECT COUNT(1) " +
+            "FROM Record r, Author a, Comment c " +
+            "WHERE c.author = a " +
+            "AND c.id = r.commentId " +
+            "AND a.vedomstvo is false " +
+            "AND c.status NOT IN ('NO_PLACE','NO_THEME') " +
+            "AND c.date BETWEEN ?1 AND ?2")
+    int countUsers(Date startDate, Date endDate);
+
+    @Query("SELECT COUNT(DISTINCT a.name) " +
+            "FROM Record r, Author a, Comment c " +
+            "WHERE c.author = a " +
+            "AND c.id = r.commentId " +
+            "AND a.vedomstvo is false " +
+            "AND c.status NOT IN ('NO_PLACE','NO_THEME') " +
+            "AND c.date BETWEEN ?1 AND ?2")
+    int countDistinctUsers(Date startDate, Date endDate);
+
+
     @Query("SELECT r " +
             " FROM Record r, Comment c, Author a  " +
             " WHERE c.date BETWEEN ?4 AND ?5 " +
@@ -56,4 +84,5 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
             " AND a.vedomstvo is false " +
             " GROUP BY r.theme, r.location, r.description ")
     List<String> getThemesByDates(Date startDate, Date endDate);
+
 }

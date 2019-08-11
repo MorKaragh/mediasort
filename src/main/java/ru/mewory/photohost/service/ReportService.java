@@ -12,7 +12,6 @@ import ru.mewory.photohost.model.report.ReportElement;
 import ru.mewory.photohost.model.report.ReportTheme;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -28,29 +27,40 @@ public class ReportService {
     @Autowired
     private RecordTagLinkRepository tagLinkRepository;
 
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-
-    public List<ReportTheme> getReport(Map<String, String> param){
-        List<ReportTheme> themes = new ArrayList<>();
-        if (param != null && !param.isEmpty()){
-            Date startDate;
-            Date endDate;
-            try {
-                startDate = simpleDateFormat.parse(param.get("startDate"));
-                endDate = simpleDateFormat.parse(param.get("endDate"));
-            } catch (ParseException e) {
-                throw new RuntimeException(e.getMessage(),e);
-            }
-            themes = loadGroups(startDate, endDate);
+    public int getVedomstvaCount(Date startDate, Date endDate){
+        if (startDate == null || endDate == null) {
+            return 0;
         }
+        return recordRepository.countVedomstva(startDate, endDate);
+    }
+
+    public int getUsersCount(Date startDate, Date endDate){
+        if (startDate == null || endDate == null) {
+            return 0;
+        }
+        return recordRepository.countUsers(startDate, endDate);
+    }
+
+    public int getDistinctUsersCount(Date startDate, Date endDate){
+        if (startDate == null || endDate == null) {
+            return 0;
+        }
+        return recordRepository.countDistinctUsers(startDate, endDate);
+    }
+
+    public List<ReportTheme> getReport(Date startDate, Date endDate){
+        List<ReportTheme> themes = loadGroups(startDate, endDate);
         themes.sort(Comparator.comparing(ReportTheme::getCnt).reversed());
         return themes;
     }
 
     private List<ReportTheme> loadGroups(Date startDate, Date endDate) {
-        List<String> locations = recordRepository.getThemesByDates(startDate, endDate);
         List<ReportTheme> themes = new ArrayList<>();
+        if (startDate == null || endDate == null) {
+            return themes;
+        }
+        List<String> locations = recordRepository.getThemesByDates(startDate, endDate);
         for (String location : locations) {
             ReportTheme theme = new ReportTheme();
             theme.setLocation(location);
