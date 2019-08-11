@@ -72,17 +72,17 @@
         <input type="hidden" class="vkcnt" th:value="${item.vkCnt}"/>
         <div class="reportComplain" th:each="complain : ${item.elements}">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span style="font-weight: bolder;" class="location-name"
+                  th:text="${complain.location}"></span>
             <span class="location-name"
-                  th:text="${complain.location} + ' (жалоб:' + ${complain.count} + ', пользователей:' + ${complain.userCount} + ')'"></span>
+                  th:text="'(жалоб:' + ${complain.count} + ', пользователей:' + ${complain.userCount} + ')'"></span>
+            <div style="margin-left:20px" class="com-description" th:text="${complain.additionalText}"></div>
             <input type="hidden" class="com-location" th:value="${complain.location}"/>
             <p>
             <ul>
-                <li th:if="${complain.additionalText!=null and #strings.length(complain.additionalText)>0}">
+                <li th:if="${complain.description!=null and #strings.length(complain.description)>0}">
                     <span style="font-weight: bolder;">Проблема: </span>
-                    <span class="com-additionalText " th:text="${complain.additionalText}"></span>
-                </li>
-                <li style="list-style-type: none">
-                    <div class="com-description" th:text="${complain.description}"></div>
+                    <span class="com-additionalText " th:text="${complain.description}"></span>
                 </li>
             </ul>
             </p>

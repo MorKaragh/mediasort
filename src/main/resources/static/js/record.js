@@ -98,6 +98,7 @@ function takeToWork(itemId, elem) {
                         $(this).find(".comment-category").attr('value',respo.recordTheme);
                         $(this).find(".comment-location").attr('value',respo.recordLocation);
                         $(this).find(".comment-tags").attr('value',respo.recordTags);
+                        $(this).find(".additionalText").attr('value',respo.additionalText);
                         $(this).find(".vedomstvoFlag").attr('value',respo.isVedomstvo);
                         fillEditor(itemId);
                     }
