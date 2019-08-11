@@ -11,6 +11,8 @@ import javax.persistence.*;
 )
 public class Theme{
 
+    public static final String DESCRIPTION = "Тема";
+
     private String name;
     private Long id;
 

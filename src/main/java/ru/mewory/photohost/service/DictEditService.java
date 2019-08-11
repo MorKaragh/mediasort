@@ -29,13 +29,13 @@ public class DictEditService {
     private ThemeRepository themeRepository;
 
     @Transactional
-    public void changeDictionary(String oldName, String newName, Class dictClass) {
+    public void changeDictionary(String oldName, String newName, String dictClass) {
         DictsEditTransaction transaction = new DictsEditTransaction()
-                .setDictClassName(dictClass.getName())
+                .setDictClassName(dictClass)
                 .setNewDictName(newName)
                 .setPrevDictName(oldName);
 
-        if (dictClass.equals(Location.class)) {
+        if (dictClass.equals(Location.DESCRIPTION)) {
             changeLocation(oldName, newName, transaction);
         } else {
             changeTheme(oldName, newName, transaction);
@@ -104,7 +104,7 @@ public class DictEditService {
         }
         DictsEditTransaction transaction = dictEditRepository.findById(maxId).get();
 
-        if (Location.class.getName().equals(transaction.getDictClassName())) {
+        if (Location.DESCRIPTION.equals(transaction.getDictClassName())) {
             for (DictsEditHistory history : transaction.getHistory()) {
                 history.getComment().setLocation(transaction.getPrevDictName());
                 recordRepository.save(history.getComment());

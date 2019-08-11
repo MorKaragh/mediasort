@@ -11,6 +11,8 @@ import javax.persistence.*;
 )
 public class Location{
 
+    public static final String DESCRIPTION = "Место";
+
     private String name;
     private Long id;
 

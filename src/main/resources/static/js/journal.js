@@ -2,7 +2,7 @@ $(document).ready(function() {
     $('body').show();
 });
 
-$(".journal-post").click(function(){
-    var dirtyHackId = parseInt($(this).find(".idinput").val());
+$(".post-row").click(function(){
+    var dirtyHackId = parseInt($(this).attr("post-id"));
     window.location.href = "/record?strict=true&postId="+dirtyHackId;
 })

@@ -18,25 +18,23 @@
     </div>
 </nav>
 
-<div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
-    <div class="row well journal-post" th:each="item : ${posts}">
-        <input class="idinput" th:value="${item.post.id}" type="hidden"/>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <b>
-                <span th:text="${item.post.socnet}"></span>
-            </b>
-            <span th:text="${#dates.format(item.post.date, 'dd-MM-yyyy HH:mm')}"></span>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <span style="color:green" th:if="${item.processed} > 0" th:text="'обработано:' + ${item.processed}"></span>
-
-            <span style="color:red" th:if="${item.unprocessed} > 0"
-                  th:text="'не обработано:' + ${item.unprocessed}"></span>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px">
-            <div th:text="${item.post.text}"></div>
-        </div>
-    </div>
+<div class="container col-md-10 col-lg-8 col-sm-12 col-xs-12 col-md-offset-1 col-lg-offset-2">
+    <table class="table table-hover table-bordered">
+        <tr class="info">
+            <th>Соц.сеть</th>
+            <th style="width: 100px">Дата</th>
+            <th>Пост</th>
+            <th>Осталось</th>
+            <th>Обработано</th>
+        </tr>
+        <tr class="post-row" th:attr="post-id=${item.post.id}" th:each="item : ${posts}">
+            <td style="font-weight: bold" th:text="${item.post.socnet}"></td>
+            <td style="width: 100px" th:text="${#dates.format(item.post.date, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${item.post.text}"></td>
+            <td th:style="${item.unprocessed} > 0 ? 'color: red;' : ''" th:text="${item.unprocessed}"></td>
+            <td style="color: green;" th:text="${item.processed}"></td>
+        </tr>
+    </table>
 </div>
 
 </body>

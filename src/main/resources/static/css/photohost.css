@@ -112,12 +112,8 @@
     padding-top: 10px;
 }
 
-.journal-post:hover {
-    border: 2px solid #23c2de;
+.post-row:hover {
     cursor: pointer;
-}
-.journal-post {
-    border: 2px solid white;
 }
 
 #overlay {

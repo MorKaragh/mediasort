@@ -140,8 +140,10 @@ public class MainController {
 
     private void fillDictionaries(ModelAndView mav) {
         List<Location> locations = locationRepository.findAll();
+        locations.sort(Comparator.comparing(Location::getName));
         mav.addObject("locations", locations);
         List<Theme> themes = themeRepository.findAll();
+        themes.sort(Comparator.comparing(Theme::getName));
         mav.addObject("themes", themes);
     }
 
@@ -189,10 +191,10 @@ public class MainController {
     @RequestMapping(method = POST, value = "changeDicts")
     public ResponseEntity<Map<String,String>> changeDicts(@RequestBody Map<String, String> allRequestParams) throws IOException {
         if (StringUtils.isNotEmpty(allRequestParams.get("oldLocation")) && StringUtils.isNotEmpty(allRequestParams.get("newLocation"))) {
-            dictService.changeDictionary(allRequestParams.get("oldLocation"),allRequestParams.get("newLocation"),Location.class);
+            dictService.changeDictionary(allRequestParams.get("oldLocation"),allRequestParams.get("newLocation"),"Место");
         }
         if (StringUtils.isNotEmpty(allRequestParams.get("oldTheme")) && StringUtils.isNotEmpty(allRequestParams.get("newTheme"))) {
-            dictService.changeDictionary(allRequestParams.get("oldTheme"),allRequestParams.get("newTheme"),Theme.class);
+            dictService.changeDictionary(allRequestParams.get("oldTheme"),allRequestParams.get("newTheme"),"Тема");
         }
         Map<String,String> result = new HashMap<>();
         return new ResponseEntity<>(result, HttpStatus.OK);
