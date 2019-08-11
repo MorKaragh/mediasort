@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:fragment="header-css">
         <link href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
@@ -21,9 +22,9 @@
         <li id="navjournal"><a href="journal">Журнал</a></li>
         <li id="navrecord"><a href="record">Внесение</a></li>
         <li id="navreport"><a href="report">Отчет</a></li>
-        <li id="navinstaload"><a href="instagramloader">Загрузка из Instagram</a></li>
-        <li id="navvkload"><a href="vkload" onclick="show_overlay();">Загрузка из VK</a></li>
-        <li id="navdicts"><a href="dictionaries">Справочники</a></li>
+        <li sec:authorize="hasAuthority('ADMIN')" id="navinstaload"><a href="instagramloader">Загрузка из Instagram</a></li>
+        <li sec:authorize="hasAuthority('ADMIN')" id="navvkload"><a href="vkload" onclick="show_overlay();">Загрузка из VK</a></li>
+        <li sec:authorize="hasAuthority('ADMIN')" id="navdicts"><a href="dictionaries">Справочники</a></li>
     </ul>
 </body>
 </html>
