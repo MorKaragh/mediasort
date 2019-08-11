@@ -145,14 +145,15 @@ public class PostService {
         }
     }
 
-    private Post openCommentsForEdit(String startDate, String endDate, String theme, String location, String description) {
+    public Post getPostForEditFromReport(String startDate, String endDate, String theme, String location, String description, String address) {
         try {
             List<Record> records = recordRepository.findForReport(
                     location,
                     theme,
                     description,
                     DateUtils.parseDate(startDate, "dd.MM.yyyy"),
-                    DateUtils.parseDate(endDate, "dd.MM.yyyy"));
+                    DateUtils.parseDate(endDate, "dd.MM.yyyy"),
+                    address);
             if (!CollectionUtils.isEmpty(records)){
                 List<Long> recordIds = records.stream().map(Record::getCommentId).collect(Collectors.toList());
                 Set<Comment> comments = commentsRepository.findByIdIn(recordIds);
@@ -170,18 +171,12 @@ public class PostService {
         return postRepository.findByIdAndFetchComments(id);
     }
 
-    public Post getPost(String prevPostId, String startDate, String startDate1, String endDate, String theme, String location, String description) {
-        Post post;
+    public Post getPost(String prevPostId) {
         if (prevPostId == null) {
-            if (startDate == null){
-                post = findNextPostAndFetchAllComments(null);
-            } else {
-                post = openCommentsForEdit(startDate1, endDate, theme, location, description);
-            }
+            return findNextPostAndFetchAllComments(null);
         } else {
-            post = findNextPostAndFetchAllComments(Long.valueOf(prevPostId));
+            return findNextPostAndFetchAllComments(Long.valueOf(prevPostId));
         }
-        return post;
     }
 
 }

@@ -55,8 +55,9 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
             " AND r.description = ?3 " +
             " AND c.author = a " +
             " AND a.vedomstvo is false " +
-            " AND c.status NOT IN ('NO_PLACE','NO_THEME') ")
-    List<Record> findForReport(String location, String theme, String description, Date startDate, Date endDate);
+            " AND c.status NOT IN ('NO_PLACE','NO_THEME') " +
+            " AND r.additionalText = ?6")
+    List<Record> findForReport(String location, String theme, String description, Date startDate, Date endDate, String address);
 
     @Query("SELECT count(1) AS cnt, " +
             "r.location, r.description, " +

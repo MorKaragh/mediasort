@@ -284,11 +284,6 @@ $("#sendBtn").click(function(){
     sendRecord();
 })
 
-$("#nextBtn").click(function(){
-    show_overlay();
-    window.location.href = "/record?postId="+$("#postId").val();
-});
-
 $('.post-edit-comment-box')
     .mouseenter( function() {
                    $(this).addClass("comment-box-selected");

@@ -99,13 +99,7 @@ public class MainController {
             post = postService.getPostById(Long.valueOf(allRequestParams.get("postId")));
         } else {
             post = postService.getPost(
-                    allRequestParams.get("postId"),
-                    allRequestParams.get("startDate"),
-                    allRequestParams.get("startDate"),
-                    allRequestParams.get("endDate"),
-                    allRequestParams.get("theme"),
-                    allRequestParams.get("location"),
-                    allRequestParams.get("description")
+                    allRequestParams.get("postId")
             );
         }
 
@@ -123,14 +117,13 @@ public class MainController {
         ModelAndView mav = new ModelAndView("reportedit");
         fillDictionaries(mav);
 
-        Post post = postService.getPost(
-                allRequestParams.get("postId"),
-                allRequestParams.get("startDate"),
+        Post post = postService.getPostForEditFromReport(
                 allRequestParams.get("startDate"),
                 allRequestParams.get("endDate"),
                 allRequestParams.get("theme"),
                 allRequestParams.get("location"),
-                allRequestParams.get("description")
+                allRequestParams.get("description"),
+                allRequestParams.get("address")
         );
 
         mav.addObject("realpost","false");

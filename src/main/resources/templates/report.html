@@ -76,13 +76,13 @@
                   th:text="${complain.location}"></span>
             <span class="location-name"
                   th:text="'(жалоб:' + ${complain.count} + ', пользователей:' + ${complain.userCount} + ')'"></span>
-            <div style="margin-left:20px" class="com-description" th:text="${complain.additionalText}"></div>
+            <div style="margin-left:20px" class="com-address" th:text="${complain.additionalText}"></div>
             <input type="hidden" class="com-location" th:value="${complain.location}"/>
             <p>
             <ul>
                 <li th:if="${complain.description!=null and #strings.length(complain.description)>0}">
                     <span style="font-weight: bolder;">Проблема: </span>
-                    <span class="com-additionalText " th:text="${complain.description}"></span>
+                    <span class="com-description" th:text="${complain.description}"></span>
                 </li>
             </ul>
             </p>

@@ -11,6 +11,7 @@ $(document).ready(function() {
 $(".reportComplain").click(function(){
     var theme = $(this).siblings(".reportThemeShort").val();
     var descr = $(this).find(".com-description").text();
+    var address = $(this).find(".com-address").text();
     var location = $(this).find(".com-location").val();
     var startDate = $("#startDate").find("input").val();
     var endDate = $("#endDate").find("input").val();
@@ -20,7 +21,8 @@ $(".reportComplain").click(function(){
         startDate: startDate,
         location: location,
         theme: theme,
-        description : descr
+        description : descr,
+        address : address
     });
 
     $.ajax({
