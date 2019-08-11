@@ -39,7 +39,7 @@
         </div>
         <div class="row">
             <div class="form-group" style="padding: 0 15px 0 15px">
-                <label for="themeSelect" class="inptlbl themeLbl control-label">Категория</label>
+                <label for="themeSelect" class="inptlbl themeLbl control-label">Тема</label>
                 <select id="themeSelect" class="js-example-basic-single dictSelector" name="state">
                     <option selected="true"></option>
                     <option th:each="item : ${themes}" th:text="${item.name}"></option>
@@ -48,7 +48,7 @@
         </div>
         <div class="row">
             <div class="form-group" style="padding: 0 15px 0 15px">
-                <label for="additionalText" class="inptlbl control-label">Доп.инфо</label>
+                <label for="additionalText" class="inptlbl control-label">Проблема</label>
                 <input type="text" class="" id="additionalText"/>
             </div>
         </div>
@@ -67,7 +67,7 @@
         </div>
     </div>
     <div class="row form-group" style="padding: 0 15px 0 15px">
-        <label for="comment">Описание</label>
+        <label for="comment">Дополнительное описание</label>
         <textarea class="form-control" rows="5" id="comment"></textarea>
     </div>
     <div class="row form-group" style="padding: 0 15px 0 15px">

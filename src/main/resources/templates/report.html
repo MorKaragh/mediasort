@@ -4,7 +4,8 @@
     <title>отчет</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <div th:replace="fragments/header :: header-css"/>
-    <link href="../static/css/jquery.jqplot.min.css" th:href="@{css/jquery.jqplot.min.css}" rel="stylesheet" media="screen"/>
+    <link href="../static/css/jquery.jqplot.min.css" th:href="@{css/jquery.jqplot.min.css}" rel="stylesheet"
+          media="screen"/>
 
 
 </head>
@@ -27,7 +28,8 @@
         <div class="row form-group">
             <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
                 <div id="startDate" class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control" name="startDate" th:value="${startDate}" placeholder="дата с"/>
+                    <input type="text" class="form-control" name="startDate" th:value="${startDate}"
+                           placeholder="дата с"/>
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
@@ -43,53 +45,64 @@
             </div>
             <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
                 <button type="submit" form="params" value="Submit" id="reportBtn" class="btn btn-success">
-                    Выгрузить отчет</button>
+                    Выгрузить отчет
+                </button>
             </div>
 
         </div>
 
     </form>
 
-    <canvas id="chart" width="400" height="400" ></canvas>
+    <canvas id="chart" width="400" th:height="${#lists.size(report)} * 13"></canvas>
 
-    <div class="row">
+    <div class="row well">
         <ul>
-        <li th:text="'жалоб от ведомств: ' + ${countVedomstva}"></li>
-        <li th:text="'жалоб от пользователей: ' + ${countUsers}"></li>
-        <li th:text="'уникальных пользователей: ' + ${countDistinctUsers}"></li>
+            <li th:text="'всего комментариев: ' + ${countTotal} + ' (Инстаграм: ' + ${countTotalInstagram} + ', Вконтакте: ' + ${countTotalVk} + ')'"></li>
+            <li th:text="'комментариев от ведомств: ' + ${countVedomstva}"></li>
+            <li th:text="'уникальных пользователей: ' + ${countDistinctUsers}"></li>
         </ul>
     </div>
     <div class="row" id="reportedit"></div>
 
-
-
-    <div class="row reportrow" th:each="item : ${report}">
-        <div class="reportTheme" th:text="${item.location}"></div>
+    <div class="row reportrow" style="margin-top: 10px" th:each="item : ${report}">
+        <div class="reportTheme"
+             th:text="${item.location} + ', ' + ${item.cnt} + ' жалоб ('  + ${item.vkCnt} + ' Вконтакте,' + ${item.instagramCnt} + ' Инстаграм)'"></div>
+        <input type="hidden" class="reportThemeShort" th:value="${item.location}"/>
         <input type="hidden" class="instagramcnt" th:value="${item.instagramCnt}"/>
         <input type="hidden" class="vkcnt" th:value="${item.vkCnt}"/>
-        <div class="reportCounts" th:text="'Всего жалоб ' + ${item.cnt} + ' (' + ${item.instagramCnt} + ' Инстаграм, ' + ${item.vkCnt} + ' Вконтакте)'"></div>
         <div class="reportComplain" th:each="complain : ${item.elements}">
-            <div class="com-count" th:text="'жалоб ' + ${complain.count}"></div>
-            <div class="com-location" th:text="${complain.location}"></div>
-            <div class="com-additionalText " th:text="${complain.additionalText}"></div>
-            <div class="com-description" th:text="${complain.description}"></div>
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="location-name"
+                  th:text="${complain.location} + ' (жалоб:' + ${complain.count} + ', пользователей:' + ${complain.userCount} + ')'"></span>
+            <input type="hidden" class="com-location" th:value="${complain.location}"/>
+            <p>
+            <ul>
+                <li th:if="${complain.additionalText!=null and #strings.length(complain.additionalText)>0}">
+                    <span style="font-weight: bolder;">Проблема: </span>
+                    <span class="com-additionalText " th:text="${complain.additionalText}"></span>
+                </li>
+                <li style="list-style-type: none">
+                    <div class="com-description" th:text="${complain.description}"></div>
+                </li>
+            </ul>
+            </p>
         </div>
     </div>
 
 </div>
 
 </body>
-    <div th:replace="fragments/header :: script"/>
+<div th:replace="fragments/header :: script"/>
 
-    <!--components-->
-    <script src="../static/js/select2.min.js" th:src="@{js/select2.min.js}"></script>
-    <script src="../static/js/jquery-ui.min.js" th:src="@{js/jquery-ui.min.js}"></script>
-    <script src="../static/js/mab-jquery-taginput.js" th:src="@{js/mab-jquery-taginput.js}"></script>
-    <script src="../static/js/bootstrap-datepicker.js" th:src="@{js/bootstrap-datepicker.js}"></script>
-    <script src="../static/js/jquery.jqplot.min.js" th:src="@{js/jquery.jqplot.min.js}"></script>
+<!--components-->
+<script src="../static/js/select2.min.js" th:src="@{js/select2.min.js}"></script>
+<script src="../static/js/jquery-ui.min.js" th:src="@{js/jquery-ui.min.js}"></script>
+<script src="../static/js/mab-jquery-taginput.js" th:src="@{js/mab-jquery-taginput.js}"></script>
+<script src="../static/js/bootstrap-datepicker.js" th:src="@{js/bootstrap-datepicker.js}"></script>
+<script src="../static/js/jquery.jqplot.min.js" th:src="@{js/jquery.jqplot.min.js}"></script>
 
-    <!--custom-->
-    <script src="../static/js/report.js" th:src="@{js/report.js}"></script>
-    <script src="../static/js/Chart.bundle.min.js" th:src="@{js/Chart.bundle.min.js}"></script>
-    <script src="../static/js/datalabels.min.js" th:src="@{js/datalabels.min.js}"></script>
+<!--custom-->
+<script src="../static/js/report.js" th:src="@{js/report.js}"></script>
+<script src="../static/js/Chart.bundle.min.js" th:src="@{js/Chart.bundle.min.js}"></script>
+<script src="../static/js/datalabels.min.js" th:src="@{js/datalabels.min.js}"></script>
 </html>

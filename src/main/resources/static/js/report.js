@@ -9,9 +9,9 @@ $(document).ready(function() {
 });
 
 $(".reportComplain").click(function(){
-    var theme = $(this).siblings(".reportTheme").text();
+    var theme = $(this).siblings(".reportThemeShort").val();
     var descr = $(this).find(".com-description").text();
-    var location = $(this).find(".com-location").text();
+    var location = $(this).find(".com-location").val();
     var startDate = $("#startDate").find("input").val();
     var endDate = $("#endDate").find("input").val();
 
@@ -50,7 +50,7 @@ function fillChart(){
     var instagramCounts = [];
 
     $(".reportrow").each(function(){
-        labelsArray.push($(this).find(".reportTheme").text() + "  ("
+        labelsArray.push($(this).find(".reportThemeShort").val() + "  ("
             + ( parseInt($(this).find(".vkcnt").val()) +  parseInt($(this).find(".instagramcnt").val()))
         + ")  ");
         vkCounts.push(parseInt($(this).find(".vkcnt").val()))

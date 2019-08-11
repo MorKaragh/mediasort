@@ -42,7 +42,7 @@ function sendRecord(){
     var cId = $("#editor").closest(".post-edit").find(".item-id").val()
     var desc = $('#comment').val();
     if (!valid(location, themeVar)){
-        showError("внесите категорию и место!")
+        showError("внесите тему и место!")
         return;
     }
 

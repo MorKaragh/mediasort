@@ -62,7 +62,8 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
             "r.location, r.description, " +
             "count(case p.socnet when 'VK' then 1 else null end) AS vkcnt, " +
             "count(case p.socnet when 'INSTAGRAM' then 1 else null end) AS instacnt," +
-            "r.additionalText " +
+            "r.additionalText, " +
+            "count(DISTINCT a.name) " +
             " FROM Record r, Comment c, Post p, Author a " +
             " WHERE c.date BETWEEN ?1 AND ?2 " +
             " AND r.theme = ?3 " +

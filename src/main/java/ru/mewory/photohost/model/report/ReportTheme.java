@@ -11,6 +11,16 @@ public class ReportTheme {
     private Long vkCnt = 0L;
     private Long instagramCnt = 0L;
     private Long cnt = 0L;
+    private Long userCount = 0L;
+
+    public Long getUserCount() {
+        return userCount;
+    }
+
+    public ReportTheme setUserCount(Long userCount) {
+        this.userCount = userCount;
+        return this;
+    }
 
     public Long getVkCnt() {
         return vkCnt;

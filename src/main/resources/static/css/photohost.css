@@ -154,15 +154,21 @@
 .reportComplain{
     margin: 5px;
     padding: 5px;
-    border: 2px solid rgb(204, 204, 204);
+    border: 2px solid white;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .reportComplain:hover {
-    border: 2px solid #23c2de;
+    border: 2px solid rgb(204, 204, 204);
 }
 
 #additionalText {
     width: 400px;
+}
+
+.reportTheme {
+    text-align:center;
+    color: rgb(102, 102, 255);
+    font-weight: bolder;
 }

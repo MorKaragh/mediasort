@@ -2,6 +2,7 @@ package ru.mewory.photohost.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mewory.photohost.dao.CommentsRepository;
 import ru.mewory.photohost.dao.RecordRepository;
 import ru.mewory.photohost.dao.RecordTagLinkRepository;
 import ru.mewory.photohost.dao.TagRepository;
@@ -26,7 +27,8 @@ public class ReportService {
     private TagRepository tagRepository;
     @Autowired
     private RecordTagLinkRepository tagLinkRepository;
-
+    @Autowired
+    private CommentsRepository commentsRepository;
 
     public int getVedomstvaCount(Date startDate, Date endDate){
         if (startDate == null || endDate == null) {
@@ -35,11 +37,18 @@ public class ReportService {
         return recordRepository.countVedomstva(startDate, endDate);
     }
 
-    public int getUsersCount(Date startDate, Date endDate){
+    public int getTotalVkCount(Date startDate, Date endDate){
         if (startDate == null || endDate == null) {
             return 0;
         }
-        return recordRepository.countUsers(startDate, endDate);
+        return commentsRepository.countVkComments(startDate, endDate);
+    }
+
+    public int getTotalInstagramCount(Date startDate, Date endDate){
+        if (startDate == null || endDate == null) {
+            return 0;
+        }
+        return commentsRepository.countInstagramComments(startDate, endDate);
     }
 
     public int getDistinctUsersCount(Date startDate, Date endDate){
@@ -73,6 +82,7 @@ public class ReportService {
                 element.setDescription((String) o[2]);
                 element.setVkCount((Long) o[3]);
                 element.setInstagramCount((Long) o[4]);
+                element.setUserCount((Long) o[6]);
                 element.setAdditionalText((String) o[5]);
                 elements.add(element);
                 theme.setCnt(theme.getCnt() + element.getCount());

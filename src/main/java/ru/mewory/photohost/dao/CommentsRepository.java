@@ -6,6 +6,7 @@ import ru.mewory.photohost.model.socnet.Comment;
 import ru.mewory.photohost.model.socnet.CommentStatus;
 import ru.mewory.photohost.model.socnet.Post;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -25,4 +26,10 @@ public interface CommentsRepository extends JpaRepository<Comment,Long> {
 
     @Query("SELECT COUNT(1) FROM Comment WHERE post_id = ?1 AND status in ('FREE','IN_PROGRESS')")
     int countUnprocessed(Long id);
+
+    @Query("SELECT COUNT(1) FROM Comment c, Post p WHERE c.post = p AND p.socnet = 'INSTAGRAM' AND c.date BETWEEN ?1 AND ?2")
+    int countInstagramComments(Date startDate, Date endDate);
+
+    @Query("SELECT COUNT(1) FROM Comment c, Post p WHERE c.post = p AND p.socnet = 'VK' AND c.date BETWEEN ?1 AND ?2")
+    int countVkComments(Date startDate, Date endDate);
 }

@@ -162,8 +162,14 @@ public class MainController {
         List<ReportTheme> records = reportService.getReport(startDate,endDate);
 
         mav.addObject("countVedomstva",reportService.getVedomstvaCount(startDate,endDate));
-        mav.addObject("countUsers",reportService.getUsersCount(startDate,endDate));
         mav.addObject("countDistinctUsers",reportService.getDistinctUsersCount(startDate,endDate));
+        int totalVkCount = reportService.getTotalVkCount(startDate, endDate);
+        int totalInstagramCount = reportService.getTotalInstagramCount(startDate, endDate);
+        mav.addObject("countTotal", totalVkCount + totalInstagramCount);
+        mav.addObject("countTotalVk", totalVkCount);
+        mav.addObject("countTotalInstagram", totalInstagramCount);
+
+
 
         mav.addObject("report",records);
         mav.addObject("startDate",allRequestParams.get("startDate"));

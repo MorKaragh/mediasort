@@ -12,6 +12,7 @@ public class ReportElement {
     private String location;
     private String description;
     private String additionalText;
+    private Long userCount;
 
     public String getAdditionalText() {
         return additionalText;
@@ -75,5 +76,13 @@ public class ReportElement {
 
     public void setLocation(String theme) {
         this.location = theme;
+    }
+
+    public void setUserCount(Long userCount) {
+        this.userCount = userCount;
+    }
+
+    public Long getUserCount() {
+        return userCount;
     }
 }
