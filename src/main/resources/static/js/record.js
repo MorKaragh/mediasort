@@ -62,7 +62,6 @@ function sendRecord(){
       url: "/sendRecord",
       data: sendData,
       success: function(response) {
-        console.log("SEND RECORD  " + response);
                    },
       error: function(xhr, ajaxOptions, thrownError) {
         console.log(xhr);
