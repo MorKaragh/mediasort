@@ -1,6 +1,7 @@
 package ru.mewory.photohost.service;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,11 @@ public class DictEditService {
 
     @Transactional
     public void changeDictionary(String oldName, String newName, String dictClass) {
+
+        if (StringUtils.isBlank(oldName) || StringUtils.isBlank(newName)) {
+            return;
+        }
+
         DictsEditTransaction transaction = new DictsEditTransaction()
                 .setDictClassName(dictClass)
                 .setNewDictName(newName)
@@ -45,18 +51,17 @@ public class DictEditService {
 
     private void changeTheme(String oldName, String newName, DictsEditTransaction transaction) {
         Theme oldTheme = themeRepository.findByName(oldName);
+        themeRepository.delete(oldTheme);
+
+        if (themeRepository.findByName(newName) == null) {
+            Theme newTheme = new Theme();
+            newTheme.setName(newName);
+            themeRepository.save(newTheme);
+            transaction.setWasCreatedNewEntry(true);
+        }
+
         List<Record> records = recordRepository.findByTheme(oldName);
-        if (CollectionUtils.isNotEmpty(records) && oldTheme != null) {
-
-            if (themeRepository.findByName(newName) == null) {
-                Theme newTheme = new Theme();
-                newTheme.setName(newName);
-                themeRepository.save(newTheme);
-                transaction.setWasCreatedNewEntry(true);
-            }
-
-            themeRepository.delete(oldTheme);
-
+        if (CollectionUtils.isNotEmpty(records)) {
             for (Record r : records) {
                 r.setTheme(newName);
                 transaction.getHistory().add(new DictsEditHistory()
@@ -64,26 +69,25 @@ public class DictEditService {
                         .setTransaction(transaction));
                 recordRepository.save(r);
             }
-
-            dictEditRepository.save(transaction);
         }
+
+        dictEditRepository.save(transaction);
     }
 
 
     private void changeLocation(String oldName, String newName, DictsEditTransaction transaction) {
         Location oldLocation = locationRepository.findByName(oldName);
+        locationRepository.delete(oldLocation);
+
+        if (locationRepository.findByName(newName) == null) {
+            Location newLocation = new Location();
+            newLocation.setName(newName);
+            locationRepository.save(newLocation);
+            transaction.setWasCreatedNewEntry(true);
+        }
+
         List<Record> records = recordRepository.findByLocation(oldName);
-        if (CollectionUtils.isNotEmpty(records) && oldLocation != null) {
-
-            if (locationRepository.findByName(newName) == null) {
-                Location newLocation = new Location();
-                newLocation.setName(newName);
-                locationRepository.save(newLocation);
-                transaction.setWasCreatedNewEntry(true);
-            }
-
-            locationRepository.delete(oldLocation);
-
+        if (CollectionUtils.isNotEmpty(records)) {
             for (Record r : records) {
                 r.setLocation(newName);
                 transaction.getHistory().add(new DictsEditHistory()
@@ -91,9 +95,9 @@ public class DictEditService {
                         .setTransaction(transaction));
                 recordRepository.save(r);
             }
-
-            dictEditRepository.save(transaction);
         }
+
+        dictEditRepository.save(transaction);
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package ru.mewory.photohost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -44,6 +45,13 @@ public class Record {
     private Boolean authorIsVedomstvo;
 
     private Date date;
+
+    public void trimAll(){
+        location = StringUtils.trim(location);
+        theme = StringUtils.trim(theme);
+        description = StringUtils.trim(description);
+        additionalText = StringUtils.trim(additionalText);
+    }
 
     public String getAdditionalText() {
         return additionalText;

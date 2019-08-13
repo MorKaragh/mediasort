@@ -37,6 +37,7 @@ public class RecordService {
 
     public Record save(Record record){
         assert record.getCommentId() != null;
+        record.trimAll();
         Record recordInBase = recordRepository.findByCommentId(record.getCommentId());
         if (recordInBase != null){
             recordRepository.delete(recordInBase);
