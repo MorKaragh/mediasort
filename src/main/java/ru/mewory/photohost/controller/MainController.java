@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -27,6 +28,7 @@ import ru.mewory.photohost.model.socnet.SocnetDTO;
 import ru.mewory.photohost.service.*;
 import ru.mewory.photohost.service.socnet.InstagramLoader;
 import ru.mewory.photohost.service.socnet.PostService;
+import ru.mewory.photohost.service.socnet.RefreshService;
 import ru.mewory.photohost.service.socnet.VkService;
 
 import java.io.IOException;
@@ -77,6 +79,8 @@ public class MainController {
     private DictEditService dictService;
     @Autowired
     private DictEditRepository dictEditRepository;
+    @Autowired
+    private RefreshService refreshService;
 
     @GetMapping("/test")
     public String test() {
@@ -110,6 +114,25 @@ public class MainController {
             mav.addObject("post", post);
         }
         return mav;
+    }
+
+    @RequestMapping(method = POST, value = {"/fefreshPost"})
+    public ResponseEntity<JournalElement> fefreshPost(@RequestBody Map<String,String> allRequestParams){
+        Long postNetId = Optional.ofNullable(allRequestParams.get("postNetId"))
+                .map(Long::parseLong)
+                .orElse(null);
+
+        String postNetLink = allRequestParams.get("postNetLink");
+
+        try {
+            Post refresh = refreshService.refresh(postNetId, postNetLink);
+            JournalElement singleElement = journalService.getSingleElement(refresh);
+            singleElement.getPost().setComments(null);
+            return new ResponseEntity<>(singleElement,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @RequestMapping(method = POST, value = {"/reportedit"})
@@ -226,8 +249,11 @@ public class MainController {
 
     @RequestMapping(method = POST, value = "loadFromInstagram")
     public ResponseEntity<String> loadFromInstagram(@RequestBody Map<String, String> allRequestParams) {
-        instagramLoader.load(allRequestParams.get("instagramRef"));
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        Post instagramRef = instagramLoader.load(allRequestParams.get("instagramRef"));
+        if (instagramRef != null) {
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("FAIL", HttpStatus.OK);
     }
 
 

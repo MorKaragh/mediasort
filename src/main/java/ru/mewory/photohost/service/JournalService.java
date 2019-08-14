@@ -24,13 +24,17 @@ public class JournalService {
         List<Post> posts = postRepository.findTop100ByOrderByDateDesc();
         for (Post p : posts) {
             result.add(
-                    new JournalElement()
-                            .setPost(p)
-                            .setProcessed(commentsRepository.countProcessed(p.getId()))
-                            .setUnprocessed(commentsRepository.countUnprocessed(p.getId()))
+                    getSingleElement(p)
             );
         }
         return result;
+    }
+
+    public JournalElement getSingleElement(Post p) {
+        return new JournalElement()
+                .setPost(p)
+                .setProcessed(commentsRepository.countProcessed(p.getId()))
+                .setUnprocessed(commentsRepository.countUnprocessed(p.getId()));
     }
 
 }

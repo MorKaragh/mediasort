@@ -54,8 +54,14 @@ public class VkService {
         actor = new ServiceActor(APP_ID, CLIENT_SECRET, CODE);
     }
 
+    public List<List<SocnetDTO>> getPostWithCommentsById(Long id) throws ClientException, ApiException, InterruptedException {
+        List<UserXtrCounters> andreyvorobiev = vk.users().get(actor).userIds(POST_AUTHOR).execute();
+        Integer ownerId = andreyvorobiev.get(0).getId();
+        List<WallpostFull> posts = vk.wall().getById(actor, ownerId + "_" + id).execute();
+        return loadPosts(ownerId, posts);
+    }
+
     public List<List<SocnetDTO>> getPostsWithComments(int offset) throws ClientException, ApiException, InterruptedException {
-        List<List<SocnetDTO>> result = new ArrayList<>();
         List<UserXtrCounters> andreyvorobiev = vk.users().get(actor).userIds(POST_AUTHOR).execute();
         Integer ownerId = andreyvorobiev.get(0).getId();
         GetResponse posts = vk.wall().get(actor)
@@ -64,9 +70,15 @@ public class VkService {
                 .offset(offset)
                 .filter(WallGetFilter.OWNER)
                 .execute();
-        for (WallpostFull wallpostFull : posts.getItems()){
+
+        return loadPosts(ownerId, posts.getItems());
+    }
+
+    private List<List<SocnetDTO>> loadPosts(Integer ownerId, List<WallpostFull> items) throws InterruptedException, ApiException, ClientException {
+        List<List<SocnetDTO>> result = new ArrayList<>();
+        for (WallpostFull wallpostFull : items) {
             List<SocnetDTO> dtos = new ArrayList<>();
-            SocnetDTO post = new SocnetDTO("andreyvorobiev",wallpostFull.getText());
+            SocnetDTO post = new SocnetDTO("andreyvorobiev", wallpostFull.getText());
             post.setId(Long.valueOf(wallpostFull.getId()));
             post.setSocnet(SocNet.VK);
             post.setDate(new Date(wallpostFull.getDate() * 1000L));
@@ -83,7 +95,7 @@ public class VkService {
             Map<Integer, String> users = new HashMap<>();
             Set<String> userIds = new HashSet<>();
             Set<String> groupIds = new HashSet<>();
-            for (WallComment c : allComments.getItems()){
+            for (WallComment c : allComments.getItems()) {
                 if (c.getFromId() >= 0) {
                     userIds.add(String.valueOf(c.getFromId()));
                 } else {
@@ -114,9 +126,9 @@ public class VkService {
                         , userXtrCounters.getFirstName() + " " + userXtrCounters.getLastName()));
             }
             if (execute != null) {
-                execute.forEach(groupFull -> users.put(-Integer.valueOf(groupFull.getId()),groupFull.getName()));
+                execute.forEach(groupFull -> users.put(-Integer.valueOf(groupFull.getId()), groupFull.getName()));
             }
-            for (int i = 1; i < dtos.size(); i++){
+            for (int i = 1; i < dtos.size(); i++) {
                 SocnetDTO dto = dtos.get(i);
                 dto.setAuthor(users.get(dto.getUserId()));
             }

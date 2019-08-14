@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mewory.photohost.model.socnet.InstagramLoaderObject;
+import ru.mewory.photohost.model.socnet.Post;
 import ru.mewory.photohost.model.socnet.SocNet;
 import ru.mewory.photohost.model.socnet.SocnetDTO;
 
@@ -29,24 +30,23 @@ public class InstagramLoader {
     private static final String INSTALOADE_FOLDER = System.getProperty("user.dir") + File.separator + "instaloader";
 
     @Autowired
-    PostService postService;
+    private PostService postService;
 
     static String extractIdFromPath(String path) {
         return StringUtils.removeEnd(path.replace("https://www.instagram.com/p/", ""), "/");
     }
 
-    public String load(String path) {
+    public Post load(String path) {
         try {
             String postId = extractIdFromPath(path);
             useInstaloaderToCreateFiles(postId);
-            postService.savePost(parseLoadedFile(postId));
+            Post post = postService.savePost(parseLoadedFile(postId, path));
             clearFiles(postId);
-
+            return post;
         } catch (Exception e) {
             e.printStackTrace();
-            return "FAIL";
+            return null;
         }
-        return "OK";
     }
 
     private void clearFiles(String postId) throws IOException {
@@ -69,7 +69,7 @@ public class InstagramLoader {
         in.close();
     }
 
-    private List<SocnetDTO> parseLoadedFile(String postId) throws IOException {
+    private List<SocnetDTO> parseLoadedFile(String postId, String path) throws IOException {
         List<SocnetDTO> result = new ArrayList<>();
 
         File commentsFile = getParsedFile(postId, "*comments.json");
@@ -80,6 +80,7 @@ public class InstagramLoader {
                     FileUtils.readFileToString(postTextFile, "UTF-8"));
             head.setSocnet(SocNet.INSTAGRAM);
             head.setDate(new Date());
+            head.setLink(path);
             result.add(head);
         }
 

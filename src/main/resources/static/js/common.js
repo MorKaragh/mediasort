@@ -19,6 +19,7 @@ function show_overlay() {
     $("#pleaseWaitDialog").modal("show");
 }
 
+
 function hide_overlay() {
     $("#pleaseWaitDialog").modal("hide");
 }
@@ -28,6 +29,22 @@ function showError(errorMsg){
     	message: errorMsg
     },{
     	type: 'warning'
+    });
+}
+
+function showException(errorMsg){
+    $.notify({
+    	message: errorMsg
+    },{
+    	type: 'danger'
+    });
+}
+
+function showSuccess(errorMsg){
+    $.notify({
+    	message: errorMsg
+    },{
+    	type: 'success'
     });
 }
 

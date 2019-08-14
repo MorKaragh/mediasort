@@ -59,6 +59,7 @@ public class PostService {
         if (post == null){
             post = createPost(head);
         }
+        post.setPostLink(head.getLink());
         postRepository.save(post);
 
         for (int i = 1; i < data.size(); i++){

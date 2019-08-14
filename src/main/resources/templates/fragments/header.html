@@ -17,8 +17,9 @@
         <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
         <script src="../static/js/typeahead.bundle.min.js" th:src="@{js/typeahead.bundle.min.js}"></script>
         <script src="../static/js/common.js" th:src="@{js/common.js}"></script>
+        <script src="../static/js/bootstrap-notify.min.js" th:src="@{js/bootstrap-notify.min.js}"></script>
     </div>
-    <ul th:fragment="navbar" class="nav navbar-nav">
+    <ul sec:authorize="hasRole('USER')" th:fragment="navbar" class="nav navbar-nav">
         <li id="navjournal"><a href="journal">Журнал</a></li>
         <li id="navrecord"><a href="record">Внесение</a></li>
         <li id="navreport"><a href="report">Отчет</a></li>

@@ -8,7 +8,41 @@ $(document).ready(function() {
     $('body').show();
 });
 
+var collapseMode = false;
+var collapse
+
+$("#collapseBtn").click(function(){
+    collapseMode = !collapseMode;
+    if (!collapseMode) {
+        $(".reportComplain").each(function(){
+            $(this).removeClass("collapsing-block");
+        })
+                $("#confirmCollapse").hide();
+                $("#collapseComplainInput").hide();
+    } else {
+        $("#confirmCollapse").show();
+        $("#collapseComplainInput").show();
+    }
+    $(this).removeClass("btn-warning");
+    $(this).removeClass("btn-danger");
+    $(this).addClass(collapseMode ? "btn-danger" : "btn-warning");
+    $(this).html(collapseMode ? "Отменить" : "Схлопывание жалоб")
+})
+
+
 $(".reportComplain").click(function(){
+
+    if (collapseMode) {
+        if ($(this).hasClass("collapsing-block")) {
+            $(this).removeClass("collapsing-block");
+        } else {
+            $(this).addClass("collapsing-block");
+        }
+        $("#collapseComplainInputFld").val($(this).find(".com-description").text());
+
+        return;
+    }
+
     var theme = $(this).siblings(".reportThemeShort").val();
     var descr = $(this).find(".com-description").text();
     var address = $(this).find(".com-address").text();

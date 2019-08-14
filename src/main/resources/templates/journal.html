@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="ru">
     <title>журнал постов</title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
@@ -26,13 +27,22 @@
             <th>Пост</th>
             <th>Осталось</th>
             <th>Обработано</th>
+            <th sec:authorize="hasRole('ADMIN')">дейстия</th>
         </tr>
         <tr class="post-row" th:attr="post-id=${item.post.id}" th:each="item : ${posts}">
-            <td style="font-weight: bold" th:text="${item.post.socnet}"></td>
+            <td th:text="${item.post.socnet}" style="font-weight: bold"></td>
             <td style="width: 100px" th:text="${#dates.format(item.post.date, 'dd-MM-yyyy HH:mm')}"></td>
-            <td th:text="${item.post.text}"></td>
-            <td th:style="${item.unprocessed} > 0 ? 'color: red;' : ''" th:text="${item.unprocessed}"></td>
-            <td style="color: green;" th:text="${item.processed}"></td>
+            <td th:text="${item.post.text}" class="jrnl-post-text"></td>
+            <td th:style="${item.unprocessed} > 0 ? 'color: red;' : ''" th:text="${item.unprocessed}"
+                class="jrnl-post-unprocessed"></td>
+            <td style="color: green;" th:text="${item.processed}" class="jrnl-post-processed"></td>
+            <td sec:authorize="hasRole('ADMIN')" style="text-align: center;">
+                <button th:if="${item.post.netId != null or item.post.postLink != null}"
+                        th:attr="net-id=${item.post.netId}, post-link=${item.post.postLink}, post-id=${item.post.id}"
+                        class="btn btn-default btn-sm refresh-button">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+            </td>
         </tr>
     </table>
 </div>
@@ -43,5 +53,4 @@
 
 <!--custom-->
 <script src="../static/js/journal.js" th:src="@{js/journal.js}"></script>
-<script src="../static/js/bootstrap-notify.min.js" th:src="@{js/bootstrap-notify.min.js}"></script>
 </html>

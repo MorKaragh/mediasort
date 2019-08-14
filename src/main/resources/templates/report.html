@@ -23,45 +23,49 @@
 
 <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
 
-    <form id="params" action="report" method="GET">
-
-        <div class="row form-group">
-            <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
-                <div id="startDate" class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control" name="startDate" th:value="${startDate}"
-                           placeholder="дата с"/>
-                    <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th"></span>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <form id="params" action="report" method="GET">
+                <div class="row">
+                    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-md-3 col-lg-3 col-sm-3 col-xs-4">
+                        <div id="startDate" class="input-group date" data-provide="datepicker">
+                            <input type="text" class="form-control" name="startDate" th:value="${startDate}"
+                                   placeholder="дата с"/>
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
-                <div id="endDate" class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control" name="endDate" placeholder="дата по" th:value="${endDate}"/>
-                    <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th"></span>
+                    <div class="col-md-3 col-lg-3 col-sm-3 col-xs-4">
+                        <div id="endDate" class="input-group date" data-provide="datepicker">
+                            <input type="text" class="form-control" name="endDate" placeholder="дата по"
+                                   th:value="${endDate}"/>
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 form-group">
-                <button type="submit" form="params" value="Submit" id="reportBtn" class="btn btn-success">
-                    Выгрузить отчет
-                </button>
-            </div>
+                    <div class="col-md-2 col-lg-2 col-sm-2 col-xs-4 form-group">
+                        <button type="submit" form="params" value="Submit" id="reportBtn" class="btn btn-success">
+                            Выгрузить отчет
+                        </button>
+                    </div>
 
+                </div>
+            </form>
         </div>
-
-    </form>
-
-    <canvas id="chart" width="400" th:height="300"></canvas>
-
-    <div class="row well">
-        <ul>
-            <li th:text="'всего комментариев: ' + ${countTotal} + ' (Инстаграм: ' + ${countTotalInstagram} + ', Вконтакте: ' + ${countTotalVk} + ')'"></li>
-            <li th:text="'комментариев от ведомств: ' + ${countVedomstva}"></li>
-            <li th:text="'уникальных пользователей: ' + ${countDistinctUsers}"></li>
-        </ul>
+        <div class="panel-body">
+            <canvas id="chart" width="400" th:height="300"></canvas>
+        </div>
+        <div class="panel-footer">
+            <ul>
+                <li th:text="'всего комментариев: ' + ${countTotal} + ' (Инстаграм: ' + ${countTotalInstagram} + ', Вконтакте: ' + ${countTotalVk} + ')'"></li>
+                <li th:text="'комментариев от ведомств: ' + ${countVedomstva}"></li>
+                <li th:text="'уникальных пользователей, оставивших жалобу: ' + ${countDistinctUsers}"></li>
+            </ul>
+        </div>
     </div>
+
     <div class="row" id="reportedit"></div>
 
     <div class="row reportrow" style="margin-top: 10px" th:each="item : ${report}">
@@ -90,6 +94,35 @@
     </div>
 
 </div>
+
+<div class="footer navbar-fixed-bottom" style="display: none; background-color: #cecbcb; padding: 10px 0 10px 0;">
+    <div class="container innser-footer">
+
+        <div class="form-horizontal">
+            <fieldset>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="collapseBtn"></label>
+                    <div class="col-md-8">
+                        <button id="collapseBtn" class="btn btn-warning" style="width: 160px;">
+                            Схлопывание жалоб
+                        </button>
+                        <button id="confirmCollapse" class="btn btn-success" style="display: none; width: 160px;">Схлопнуть!</button>
+                    </div>
+                </div>
+
+                <div id="collapseComplainInput" class="form-group" style="display: none;">
+                    <label class="col-lg-4 col-md-4 control-label" for="collapseComplainInputFld">новая жалоба</label>
+                    <div class="col-lg-6 col-md-6">
+                        <input id="collapseComplainInputFld" type="text" placeholder="текст жалобы" class="form-control input-md">
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+</div>
+
 
 </body>
 <div th:replace="fragments/header :: script"/>

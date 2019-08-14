@@ -29,6 +29,16 @@ public class Post {
     private String text;
     private Long netId;
     private Date date;
+    private String postLink;
+
+    public String getPostLink() {
+        return postLink;
+    }
+
+    public Post setPostLink(String postLink) {
+        this.postLink = postLink;
+        return this;
+    }
 
     public Set<Comment> getComments() {
         return comments;

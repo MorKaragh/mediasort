@@ -12,6 +12,7 @@ public class SocnetDTO {
     private Long id;
     private Integer userId;
     private Date date;
+    private String link;
 
     public SocnetDTO(String author, String text) {
         this.author = author;
@@ -21,6 +22,16 @@ public class SocnetDTO {
         this.userId = userId;
         this.text = text;
     }
+
+    public String getLink() {
+        return link;
+    }
+
+    public SocnetDTO setLink(String link) {
+        this.link = link;
+        return this;
+    }
+
     public SocNet getSocnet() {
         return socnet;
     }

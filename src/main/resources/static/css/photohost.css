@@ -99,6 +99,7 @@
     border: 1px solid #b3b3ff;
     border-radius: 3px;
     margin-bottom: 10px;
+    font-family: monospace;
 }
 
 .post-edit-active{
@@ -167,4 +168,8 @@
     text-align:center;
     color: rgb(102, 102, 255);
     font-weight: bolder;
+}
+
+.collapsing-block {
+    background-color: red;
 }
