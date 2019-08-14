@@ -20,9 +20,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class InstagramLoader {
@@ -40,7 +38,10 @@ public class InstagramLoader {
         try {
             String postId = extractIdFromPath(path);
             useInstaloaderToCreateFiles(postId);
-            Post post = postService.savePost(parseLoadedFile(postId, path));
+            List<SocnetDTO> data = parseLoadedFile(postId, path);
+            Optional<SocnetDTO> withMinDate = data.stream().min(Comparator.comparing(SocnetDTO::getDate));
+            data.get(0).setDate(withMinDate.get().getDate());
+            Post post = postService.savePost(data);
             clearFiles(postId);
             return post;
         } catch (Exception e) {

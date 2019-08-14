@@ -60,6 +60,7 @@ public class PostService {
             post = createPost(head);
         }
         post.setPostLink(head.getLink());
+        post.setDate(head.getDate());
         postRepository.save(post);
 
         for (int i = 1; i < data.size(); i++){
