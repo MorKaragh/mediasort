@@ -27,7 +27,7 @@
             <th>Пост</th>
             <th>Осталось</th>
             <th>Обработано</th>
-            <th sec:authorize="hasRole('ADMIN')">дейстия</th>
+            <th sec:authorize="hasRole('ADMIN')">Дейстия</th>
         </tr>
         <tr class="post-row" th:attr="post-id=${item.post.id}" th:each="item : ${posts}">
             <td th:text="${item.post.socnet}" style="font-weight: bold"></td>

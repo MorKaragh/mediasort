@@ -12,8 +12,10 @@ import ru.mewory.photohost.model.Tag;
 import ru.mewory.photohost.model.report.ReportElement;
 import ru.mewory.photohost.model.report.ReportTheme;
 
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by tookuk on 10/8/17.

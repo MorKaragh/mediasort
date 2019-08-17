@@ -29,6 +29,9 @@ $('.refresh-button').click(function(){
             console.log(response);
             parent.siblings('.jrnl-post-processed').html(response.processed);
             parent.siblings('.jrnl-post-unprocessed').html(response.unprocessed);
+            if (response.unprocessed > 0) {
+                parent.siblings('.jrnl-post-unprocessed').css("color", "red");
+            }
             parent.siblings('.jrnl-post-text').html(response.text);
             showSuccess("пост обновлен");
          },

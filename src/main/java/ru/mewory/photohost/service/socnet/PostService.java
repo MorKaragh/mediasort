@@ -37,7 +37,7 @@ public class PostService {
     @Autowired
     private TagRepository tagRepository;
     @Autowired
-    RecordService recordService;
+    private RecordService recordService;
 
     public void takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId).get();
@@ -173,7 +173,7 @@ public class PostService {
         return postRepository.findByIdAndFetchComments(id);
     }
 
-    public Post getPost(String prevPostId) {
+    public Post getClosestPostToEdit(String prevPostId) {
         if (prevPostId == null) {
             return findNextPostAndFetchAllComments(null);
         } else {

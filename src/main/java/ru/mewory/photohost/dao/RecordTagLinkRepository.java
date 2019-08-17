@@ -2,7 +2,6 @@ package ru.mewory.photohost.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.mewory.photohost.model.RecordTagLink;
-import ru.mewory.photohost.model.Tag;
 
 import java.util.List;
 

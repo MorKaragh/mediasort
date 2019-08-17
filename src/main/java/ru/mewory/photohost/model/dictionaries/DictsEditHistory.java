@@ -1,7 +1,6 @@
 package ru.mewory.photohost.model.dictionaries;
 
 import ru.mewory.photohost.model.Record;
-import ru.mewory.photohost.model.socnet.Comment;
 
 import javax.persistence.*;
 
