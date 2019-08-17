@@ -2,22 +2,22 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:fragment="header-css">
-        <link href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
-        <link href="../static/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet" media="screen"/>
+        <link href="../static/css/lib/bootstrap.min.css" th:href="@{css/lib/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+        <link href="../static/css/lib/bootstrap-theme.min.css" th:href="@{css/lib/bootstrap-theme.min.css}" rel="stylesheet" media="screen"/>
+        <link href="../static/css/lib/select2.min.css" th:href="@{css/lib/select2.min.css}" rel="stylesheet" media="screen"/>
+        <link href="../static/css/lib/mab-jquery-taginput.css" th:href="@{css/lib/mab-jquery-taginput.css}" rel="stylesheet" media="screen"/>
+        <link href="../static/css/lib/jquery-ui.min.css" th:href="@{css/lib/jquery-ui.min.css}" rel="stylesheet" media="screen"/>
+        <link href="../static/css/lib/bootstrap-datepicker.css" th:href="@{css/lib/bootstrap-datepicker.css}" rel="stylesheet" media="screen"/>
         <link href="../static/css/photohost.css" th:href="@{css/photohost.css}" rel="stylesheet" media="screen"/>
-        <link href="../static/css/select2.min.css" th:href="@{css/select2.min.css}" rel="stylesheet" media="screen"/>
-        <link href="../static/css/mab-jquery-taginput.css" th:href="@{css/mab-jquery-taginput.css}" rel="stylesheet" media="screen"/>
-        <link href="../static/css/jquery-ui.min.css" th:href="@{css/jquery-ui.min.css}" rel="stylesheet" media="screen"/>
-        <link href="../static/css/bootstrap-datepicker.css" th:href="@{css/bootstrap-datepicker.css}" rel="stylesheet" media="screen"/>
     </div>
 </head>
 <body>
     <div th:fragment="script">
-        <script src="../static/js/jquery-3.2.1.min.js" th:src="@{js/jquery-3.2.1.min.js}"></script>
-        <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-        <script src="../static/js/typeahead.bundle.min.js" th:src="@{js/typeahead.bundle.min.js}"></script>
+        <script src="../static/js/lib/jquery-3.2.1.min.js" th:src="@{js/lib/jquery-3.2.1.min.js}"></script>
+        <script src="../static/js/lib/bootstrap.min.js" th:src="@{js/lib/bootstrap.min.js}"></script>
+        <script src="../static/js/lib/typeahead.bundle.min.js" th:src="@{js/lib/typeahead.bundle.min.js}"></script>
+        <script src="../static/js/lib/bootstrap-notify.min.js" th:src="@{js/lib/bootstrap-notify.min.js}"></script>
         <script src="../static/js/common.js" th:src="@{js/common.js}"></script>
-        <script src="../static/js/bootstrap-notify.min.js" th:src="@{js/bootstrap-notify.min.js}"></script>
     </div>
     <ul sec:authorize="hasRole('USER')" th:fragment="navbar" class="nav navbar-nav">
         <li id="navjournal"><a href="journal">Журнал</a></li>

@@ -66,7 +66,8 @@ public class PostService {
         for (int i = 1; i < data.size(); i++){
             SocnetDTO e = data.get(i);
             String text = e.getText();
-            if (post.getId() == null || CollectionUtils.isEmpty(commentsRepository.findByTextAndPost(text,post))) {
+            if (post.getId() == null || CollectionUtils.isEmpty(
+                    commentsRepository.findByTextAndPostAndAuthorName(text,post,e.getAuthor()))) {
                 saveComment(post, e);
             }
         }

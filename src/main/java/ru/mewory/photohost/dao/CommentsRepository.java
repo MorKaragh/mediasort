@@ -16,7 +16,10 @@ import java.util.Set;
 public interface CommentsRepository extends JpaRepository<Comment,Long> {
     List<Comment> findByPostId(Long postId);
     List<Comment> findByText(String text);
-    List<Comment> findByTextAndPost(String text,Post post);
+
+
+    @Query("SELECT c FROM Comment c, Author a WHERE c.author = a AND c.text = ?1 AND c.post = ?2 AND a.name = ?3")
+    List<Comment> findByTextAndPostAndAuthorName(String text,Post p, String authorName);
     List<Comment> findByPost(Post post);
     Comment findByIdAndStatus(Long commentId, CommentStatus inProgress);
     Set<Comment> findByIdIn(List<Long> recordIds);

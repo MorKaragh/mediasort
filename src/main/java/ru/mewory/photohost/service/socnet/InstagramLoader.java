@@ -42,7 +42,7 @@ public class InstagramLoader {
             Optional<SocnetDTO> withMinDate = data.stream().min(Comparator.comparing(SocnetDTO::getDate));
             data.get(0).setDate(withMinDate.get().getDate());
             Post post = postService.savePost(data);
-            clearFiles(postId);
+            //clearFiles(postId);
             return post;
         } catch (Exception e) {
             e.printStackTrace();
