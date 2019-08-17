@@ -9,7 +9,8 @@ import java.util.Date;
  * Created by tookuk on 11/10/17.
  */
 @Entity
-@Table(name="comments")
+@Table(name="comments",
+        indexes = {@Index(columnList = "date"), @Index(columnList = "text"), @Index(columnList = "post_id")})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
