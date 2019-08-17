@@ -9,7 +9,6 @@ $(document).ready(function() {
 });
 
 var collapseMode = false;
-var collapse
 
 $("#collapseBtn").click(function(){
     collapseMode = !collapseMode;
@@ -119,7 +118,6 @@ function fillChart(){
         },
         options: {
             plugins: {
-                    // Change options for ALL labels of THIS CHART
                     datalabels: {
                         color: 'black',
                         font: {

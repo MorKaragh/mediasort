@@ -45,7 +45,6 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
             "AND c.date BETWEEN ?1 AND ?2")
     int countDistinctUsers(Date startDate, Date endDate);
 
-
     @Query("SELECT r " +
             " FROM Record r, Comment c, Author a  " +
             " WHERE c.date BETWEEN ?4 AND ?5 " +
