@@ -10,7 +10,10 @@ import java.util.Date;
  */
 @Entity
 @Table(name="comments",
-        indexes = {@Index(columnList = "date"), @Index(columnList = "text"), @Index(columnList = "post_id")})
+        indexes = {@Index(columnList = "date"),
+                @Index(columnList = "text"),
+                @Index(columnList = "post_id"),
+                @Index(columnList = "status")})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
