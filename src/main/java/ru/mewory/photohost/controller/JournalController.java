@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.mewory.photohost.model.JournalElement;
 import ru.mewory.photohost.model.socnet.Post;
 import ru.mewory.photohost.service.JournalService;
+import ru.mewory.photohost.service.socnet.PostService;
 import ru.mewory.photohost.service.socnet.RefreshService;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class JournalController {
     private JournalService journalService;
     @Autowired
     private RefreshService refreshService;
+    @Autowired
+    private PostService postService;
 
 
     @RequestMapping(method = GET, value = {"journal", "/"})
@@ -36,7 +39,7 @@ public class JournalController {
     }
 
     @RequestMapping(method = POST, value = {"/fefreshPost"})
-    public ResponseEntity<JournalElement> fefreshPost(@RequestBody Map<String,String> allRequestParams){
+    public ResponseEntity<JournalElement> fefreshPost(@RequestBody Map<String, String> allRequestParams) {
         Long postNetId = Optional.ofNullable(allRequestParams.get("postNetId"))
                 .map(Long::parseLong)
                 .orElse(null);
@@ -50,6 +53,10 @@ public class JournalController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    public ResponseEntity<String> deletePost(@RequestBody Map<String, String> allRequestParams) {
+        return null;
     }
 
 }

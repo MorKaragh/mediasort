@@ -2,9 +2,7 @@ package ru.mewory.photohost.model.socnet;
 
 import java.util.Date;
 
-/**
- * Created by tookuk on 11/13/17.
- */
+
 public class SocnetDTO {
     private String author;
     private String text;
@@ -32,60 +30,64 @@ public class SocnetDTO {
         return this;
     }
 
-    public SocNet getSocnet() {
-        return socnet;
-    }
-
-    public void setSocnet(SocNet socnet) {
-        this.socnet = socnet;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String name) {
-        this.author = name;
+    public SocnetDTO setAuthor(String author) {
+        this.author = author;
+        return this;
     }
 
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    public SocnetDTO setText(String text) {
         this.text = text;
+        return this;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public SocNet getSocnet() {
+        return socnet;
+    }
+
+    public SocnetDTO setSocnet(SocNet socnet) {
+        this.socnet = socnet;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public SocnetDTO setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public Integer getUserId() {
         return userId;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public SocnetDTO setUserId(Integer userId) {
+        this.userId = userId;
+        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public SocnetDTO setDate(Date date) {
+        this.date = date;
+        return this;
+    }
 
     public static SocnetDTO fromInstagramLoaderObject(InstagramLoaderObject instagramLoaderObject) {
-        SocnetDTO dto = new SocnetDTO(instagramLoaderObject.getOwner().getUsername(), instagramLoaderObject.getText());
-        dto.setDate(new Date(instagramLoaderObject.getCreated_at() * 1000));
-        dto.setSocnet(SocNet.INSTAGRAM);
-        return dto;
+        return new SocnetDTO(instagramLoaderObject.getOwner().getUsername(), instagramLoaderObject.getText())
+                .setDate(new Date(instagramLoaderObject.getCreated_at() * 1000))
+                .setSocnet(SocNet.INSTAGRAM);
     }
 
 }

@@ -12,10 +12,8 @@ public class RefreshService {
 
     @Autowired
     private VkService vkService;
-
     @Autowired
     private InstagramLoader instagramLoader;
-
     @Autowired
     private PostService postService;
 

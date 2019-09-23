@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.Author;
@@ -50,6 +51,7 @@ public class PostService {
         commentsRepository.save(comment);
     }
 
+    @Transactional
     public Post savePost(List<SocnetDTO> data){
         SocnetDTO head = data.get(0);
         Post post = postRepository.findByTextAndSocnet(head.getText(), SocNet.INSTAGRAM);
@@ -107,16 +109,6 @@ public class PostService {
             authorRepository.save(author);
         }
         return author;
-    }
-
-    public Post findNextPostAndFetchFreeComments(Long postId) {
-        Long maxPostIdWithFreeComments;
-        if (postId == null) {
-            maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeComments();
-        } else {
-            maxPostIdWithFreeComments = postRepository.findMaxPostIdWithFreeCommentsLessThenId(postId);
-        }
-        return postRepository.findByIdAndFetchFreeComments(maxPostIdWithFreeComments);
     }
 
     private Post findNextPostAndFetchAllComments(Long postId) {

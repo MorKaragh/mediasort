@@ -14,22 +14,32 @@ import java.util.Set;
 @Table(name = "posts",
         indexes = {@Index(name = "IDX_TEXT_SOCNET", columnList = "text,socnet")})
 public class Post {
+    private static final int COMMENT_MAX_LENGTH = 12000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Enumerated(EnumType.STRING)
     private SocNet socnet;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id")
     private Author author;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @OrderBy("id")
     private Set<Comment> comments = new HashSet<>();
-    @Column(length = 12000)
+
+    @Column(length = COMMENT_MAX_LENGTH)
     private String text;
+
     private Long netId;
+
     private Date date;
+
     private String postLink;
+
 
     public String getPostLink() {
         return postLink;
@@ -60,9 +70,10 @@ public class Post {
         return text;
     }
 
+
     public void setText(String text) {
-        if (text.length() > 12000) {
-            this.text = text.substring(0, 11999);
+        if (text.length() > COMMENT_MAX_LENGTH) {
+            this.text = text.substring(0, COMMENT_MAX_LENGTH);
         }
         this.text = text;
     }

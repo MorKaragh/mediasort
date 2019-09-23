@@ -22,13 +22,10 @@ public class DictEditService {
 
     @Autowired
     private DictEditRepository dictEditRepository;
-
     @Autowired
     private RecordRepository recordRepository;
-
     @Autowired
     private LocationRepository locationRepository;
-
     @Autowired
     private ThemeRepository themeRepository;
 

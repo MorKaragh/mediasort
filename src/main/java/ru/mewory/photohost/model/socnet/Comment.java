@@ -15,6 +15,8 @@ import java.util.Date;
                 @Index(columnList = "post_id"),
                 @Index(columnList = "status")})
 public class Comment {
+    private static final int TEXT_MAX_LENGTH = 8000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,8 +24,10 @@ public class Comment {
     @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "post_id")
     private Post post;
-    @Column(length = 8000)
+
+    @Column(length = TEXT_MAX_LENGTH)
     private String text;
+
     private Long netId;
 
     @ManyToOne(cascade=CascadeType.MERGE)
@@ -82,8 +86,8 @@ public class Comment {
     }
 
     public void setText(String text) {
-        if (text.length() > 8000) {
-            this.text = text.substring(0, 7999);
+        if (text.length() > TEXT_MAX_LENGTH) {
+            this.text = text.substring(0, TEXT_MAX_LENGTH);
         }
         this.text = text;
     }
