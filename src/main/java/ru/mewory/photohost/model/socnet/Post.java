@@ -4,8 +4,8 @@ import ru.mewory.photohost.model.Author;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by tookuk on 11/10/17.
@@ -29,7 +29,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @OrderBy("id")
-    private Set<Comment> comments = new HashSet<>();
+    private Set<Comment> comments = new TreeSet<>();
 
     @Column(length = COMMENT_MAX_LENGTH)
     private String text;
@@ -109,4 +109,5 @@ public class Post {
     public void setDate(Date date) {
         this.date = date;
     }
+
 }

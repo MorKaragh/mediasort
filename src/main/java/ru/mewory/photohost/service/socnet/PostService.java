@@ -10,6 +10,7 @@ import ru.mewory.photohost.dao.*;
 import ru.mewory.photohost.exception.AllreadyHeldException;
 import ru.mewory.photohost.model.Author;
 import ru.mewory.photohost.model.Record;
+import ru.mewory.photohost.model.dictionaries.DictsEditHistory;
 import ru.mewory.photohost.model.socnet.*;
 import ru.mewory.photohost.service.RecordService;
 import ru.mewory.photohost.utils.UserUtils;
@@ -39,6 +40,8 @@ public class PostService {
     private TagRepository tagRepository;
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private DictEditHistoryRepository dictEditHistoryRepository;
 
     public void takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId).get();
@@ -174,4 +177,21 @@ public class PostService {
         }
     }
 
+    @Transactional
+    public void deletePost(Long postId) {
+        for (Comment c : commentsRepository.findByPostId(postId)) {
+            Record record = recordRepository.findByCommentId(c.getId());
+            if (record != null) {
+                List<DictsEditHistory> dictEdits = dictEditHistoryRepository.findByRecord(record);
+                if (CollectionUtils.isNotEmpty(dictEdits)) {
+                    for (DictsEditHistory history : dictEdits) {
+                        dictEditHistoryRepository.delete(history);
+                    }
+                }
+                recordRepository.delete(record);
+            }
+            commentsRepository.delete(c);
+        }
+        postRepository.deleteById(postId);
+    }
 }

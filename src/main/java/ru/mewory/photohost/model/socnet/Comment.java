@@ -14,7 +14,7 @@ import java.util.Date;
                 @Index(columnList = "text"),
                 @Index(columnList = "post_id"),
                 @Index(columnList = "status")})
-public class Comment {
+public class Comment implements Comparable {
     private static final int TEXT_MAX_LENGTH = 8000;
 
     @Id
@@ -121,5 +121,13 @@ public class Comment {
                 ", date=" + date +
                 ", changeUser='" + changeUser + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Comment && ((Comment) o).getDate() != null) {
+            return date.compareTo(((Comment) o).getDate());
+        }
+        return -1;
     }
 }

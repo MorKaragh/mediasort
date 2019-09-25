@@ -55,8 +55,10 @@ public class JournalController {
 
     }
 
+    @RequestMapping(method = POST, value = {"/deletePost"})
     public ResponseEntity<String> deletePost(@RequestBody Map<String, String> allRequestParams) {
-        return null;
+        postService.deletePost(Long.valueOf(allRequestParams.get("postId")));
+        return ResponseEntity.ok("удалено");
     }
 
 }

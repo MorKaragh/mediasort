@@ -42,10 +42,41 @@
                         class="btn btn-default btn-sm refresh-button">
                     <span class="glyphicon glyphicon-refresh"></span>
                 </button>
+                <button class="btn btn-danger btn-sm delete-button"
+                        data-target="#deleteModal"
+                        data-toggle="modal"
+                        style="margin-top: 10px"
+                        th:attr="post-id=${item.post.id}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
             </td>
         </tr>
     </table>
 </div>
+
+<!-- delete modal -->
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="deleteModal" role="dialog"
+     sec:authorize="hasRole('ADMIN')" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">Удаление поста</h2>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить пост?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Нет, закрыть</button>
+                <button class="btn btn-danger" id="confirm-delete" type="button">Да, удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<button class="btn btn-primary" type="button">
+    Launch demo modal
+</button>
 
 </body>
 <div th:replace="fragments/header :: script"/>
