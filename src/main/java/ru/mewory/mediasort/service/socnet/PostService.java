@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Created by tookuk on 11/9/17.
- */
+
 @Service
 public class PostService {
 

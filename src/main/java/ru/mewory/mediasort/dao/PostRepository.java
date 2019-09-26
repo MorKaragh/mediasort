@@ -7,9 +7,7 @@ import ru.mewory.mediasort.model.socnet.SocNet;
 
 import java.util.List;
 
-/**
- * Created by tookuk on 11/10/17.
- */
+
 public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findTop100ByOrderByDateDesc();

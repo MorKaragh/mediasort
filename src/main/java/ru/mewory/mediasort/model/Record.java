@@ -8,9 +8,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by tookuk on 10/1/17.
- */
+
 @Entity
 @Table(name="records",
         indexes = {@Index(columnList = "description"),

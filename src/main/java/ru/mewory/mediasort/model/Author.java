@@ -2,9 +2,7 @@ package ru.mewory.mediasort.model;
 
 import javax.persistence.*;
 
-/**
- * Created by tookuk on 9/20/17.
- */
+
 @Entity
 @Table(name="authors",
     uniqueConstraints = {@UniqueConstraint(columnNames={"name"})}

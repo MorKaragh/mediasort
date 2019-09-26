@@ -16,9 +16,7 @@ import ru.mewory.mediasort.utils.UserUtils;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by tookuk on 10/1/17.
- */
+
 @Service
 public class RecordService {
 

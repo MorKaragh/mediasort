@@ -32,9 +32,7 @@ import java.util.Optional;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-/**
- * Created by tookuk on 9/3/17.
- */
+
 @Controller
 @EnableAutoConfiguration
 public class PostEditController {

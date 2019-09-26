@@ -7,9 +7,7 @@ import ru.mewory.mediasort.model.Record;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by tookuk on 10/8/17.
- */
+
 public interface RecordRepository extends JpaRepository<Record,Long> {
     List<Record> findByLocation(String location);
     List<Record> findByTheme(String theme);

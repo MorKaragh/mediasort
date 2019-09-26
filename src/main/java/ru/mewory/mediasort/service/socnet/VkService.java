@@ -24,9 +24,7 @@ import ru.mewory.mediasort.model.socnet.SocnetDTO;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
-/**
- * Created by tookuk on 11/7/17.
- */
+
 @Service
 @PropertySource("classpath:application.properties")
 public class VkService {

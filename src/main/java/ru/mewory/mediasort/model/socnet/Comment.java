@@ -5,9 +5,7 @@ import ru.mewory.mediasort.model.Author;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by tookuk on 11/10/17.
- */
+
 @Entity
 @Table(name="comments",
         indexes = {@Index(columnList = "date"),

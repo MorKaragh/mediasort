@@ -10,9 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by tookuk on 11/11/17.
- */
+
 public interface CommentsRepository extends JpaRepository<Comment,Long> {
     List<Comment> findByPostId(Long postId);
     List<Comment> findByText(String text);

@@ -2,9 +2,7 @@ package ru.mewory.mediasort.model.report;
 
 import java.util.List;
 
-/**
- * Created by tookuk on 11/23/17.
- */
+
 public class ReportTheme {
     private List<ReportElement> elements;
     private String location;

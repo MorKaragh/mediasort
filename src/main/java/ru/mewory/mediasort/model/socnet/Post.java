@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Created by tookuk on 11/10/17.
- */
+
 @Entity
 @Table(name = "posts",
         indexes = {@Index(name = "IDX_TEXT_SOCNET", columnList = "text,socnet")})

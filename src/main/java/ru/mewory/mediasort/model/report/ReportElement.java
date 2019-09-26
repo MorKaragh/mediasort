@@ -1,8 +1,6 @@
 package ru.mewory.mediasort.model.report;
 
-/**
- * Created by tookuk on 11/23/17.
- */
+
 public class ReportElement {
     private int vkPosts;
     private int instagramPosts;

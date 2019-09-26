@@ -3,9 +3,7 @@ package ru.mewory.mediasort.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by tookuk on 9/3/17.
- */
+
 @Entity
 @Table(name="tag")
 public class Tag  implements Serializable {

@@ -2,9 +2,7 @@ package ru.mewory.mediasort.model;
 
 import javax.persistence.*;
 
-/**
- * Created by tookuk on 10/8/17.
- */
+
 @Entity
 @Table(name="recordTagLink")
 public class RecordTagLink {

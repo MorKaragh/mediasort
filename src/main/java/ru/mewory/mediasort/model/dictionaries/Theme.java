@@ -2,9 +2,7 @@ package ru.mewory.mediasort.model.dictionaries;
 
 import javax.persistence.*;
 
-/**
- * Created by tookuk on 10/10/17.
- */
+
 @Entity
 @Table(name="themes",
         uniqueConstraints = {@UniqueConstraint(columnNames={"name"})}
