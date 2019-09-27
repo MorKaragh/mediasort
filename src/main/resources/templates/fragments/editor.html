@@ -6,7 +6,7 @@
 <div th:fragment="comment-box" class="row post-edit post-edit-comment-box post-comment-box" th:each="item : ${post.comments}">
     <input class="item-id" type="hidden" th:value="${item.id}"/>
     <input class="status" type="hidden" th:value="${item.status}"/>
-    <input class="comment-text" type="hidden" value="testval"/>
+    <input class="comment-text" type="hidden"/>
     <input class="comment-category" type="hidden"/>
     <input class="comment-location" type="hidden"/>
     <input class="comment-tags" type="hidden"/>

@@ -41,7 +41,7 @@ public class PostService {
     @Autowired
     private DictEditHistoryRepository dictEditHistoryRepository;
 
-    public void takeAndHold(Long postId) throws AllreadyHeldException {
+    public Comment takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId).get();
         if (!CommentStatus.FREE.equals(comment.getStatus()) && !CommentStatus.IN_PROGRESS.equals(comment.getStatus())){
             Record record = recordService.loadByCommentId(comment.getId());
@@ -50,6 +50,7 @@ public class PostService {
         comment.setChangeUser(UserUtils.getUsername());
         comment.setStatus(CommentStatus.IN_PROGRESS);
         commentsRepository.save(comment);
+        return comment;
     }
 
     @Transactional

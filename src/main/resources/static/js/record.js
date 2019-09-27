@@ -90,41 +90,46 @@ function takeToWork(itemId, elem) {
                  }
     }).done(function(response) {
         var respo = JSON.parse(response);
-            if (respo.available != "true" && !["NO_PLACE","NO_THEME"].includes(respo.status)){
-                markByStatus(itemId,respo.status);
-                $(".post-edit").each(function(){
-                    if (itemId === $(this).find(".item-id").val()){
-                        $(this).find(".comment-text").attr('value',respo.recordText);
-                        $(this).find(".comment-category").attr('value',respo.recordTheme);
-                        $(this).find(".comment-location").attr('value',respo.recordLocation);
-                        $(this).find(".comment-tags").attr('value',respo.recordTags);
-                        $(this).find(".additionalText").attr('value',respo.additionalText);
-                        $(this).find(".vedomstvoFlag").attr('value',respo.isVedomstvo);
-                        fillEditor(itemId);
-                    }
-                });
-                showError(respo.error);
-            } else {
-                clearEditor();
-            }
-            $("#editor").show();
-            $("#editor").appendTo(elem.find(".post-comment"));
-            $("#locationSelect").focus();
+        clearEditor();
+        if (respo.available != "true" && !["NO_PLACE","NO_THEME"].includes(respo.status)){
+            markByStatus(itemId,respo.status);
             $(".post-edit").each(function(){
-                if ($(this).hasClass("post-edit-active")){
-                    if (itemId != $(this).find(".item-id").val()){
-                        release($(this).find(".item-id").val());
-                    }
-                    $(this).removeClass("post-edit-active");
-                    $(this).find(".cancel-buttons").hide();
+                if (itemId === $(this).find(".item-id").val()){
+                    $(this).find(".comment-text").attr('value',respo.recordText);
+                    $(this).find(".comment-category").attr('value',respo.recordTheme);
+                    $(this).find(".comment-location").attr('value',respo.recordLocation);
+                    $(this).find(".comment-tags").attr('value',respo.recordTags);
+                    $(this).find(".additionalText").attr('value',respo.additionalText);
+                    $(this).find(".vedomstvoFlag").attr('value',respo.isVedomstvo);
                 }
             });
-            elem.find(".cancel-buttons").show();
-            $("#author-name").val($("#editor").closest(".post-edit-head").find(".post-author").html());
-            elem.closest(".post-edit").addClass("post-edit-active");
-            $('html, body').animate({
-                    scrollTop: $("#editor").offset().top-200
-                }, 300);
+            showError(respo.error);
+        } else {
+            $(".post-edit").each(function(){
+                if (itemId === $(this).find(".item-id").val()){
+                    $(this).find(".vedomstvoFlag").attr('value',respo.isVedomstvo);
+                }
+            });
+        }
+        fillEditor(itemId);
+        $("#editor").show();
+        $("#editor").appendTo(elem.find(".post-comment"));
+        $("#locationSelect").focus();
+        $(".post-edit").each(function(){
+            if ($(this).hasClass("post-edit-active")){
+                if (itemId != $(this).find(".item-id").val()){
+                    release($(this).find(".item-id").val());
+                }
+                $(this).removeClass("post-edit-active");
+                $(this).find(".cancel-buttons").hide();
+            }
+        });
+        elem.find(".cancel-buttons").show();
+        $("#author-name").val($("#editor").closest(".post-edit-head").find(".post-author").html());
+        elem.closest(".post-edit").addClass("post-edit-active");
+        $('html, body').animate({
+                scrollTop: $("#editor").offset().top-200
+            }, 300);
     });
 }
 
@@ -194,7 +199,7 @@ function fillEditor (itemId){
             $("#comment").val(descr);
             $(".tag-input").val(tags);
             $("#additionalText").val(addText);
-            $('#vedomstvoChk')[0].checked = isVedomstvo
+            $('#vedomstvoChk')[0].checked = isVedomstvo;
             $('#vedomstvoChk').prop('checked', isVedomstvo);
 
             reloadTagInput(function(){

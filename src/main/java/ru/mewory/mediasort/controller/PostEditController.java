@@ -87,8 +87,9 @@ public class PostEditController {
         JsonObject jsonObject = new JsonObject();
         try {
             if (allRequestParams.get("commentId") != null) {
-                postService.takeAndHold(Long.valueOf(allRequestParams.get("commentId")));
+                Comment comment = postService.takeAndHold(Long.valueOf(allRequestParams.get("commentId")));
                 jsonObject.addProperty("available", "true");
+                jsonObject.addProperty("isVedomstvo", comment != null ? extractVedomstvoFlag(comment) : "false");
             } else {
                 jsonObject.addProperty("error", "нет такого комментария");
                 jsonObject.addProperty("available", "false");
@@ -109,6 +110,12 @@ public class PostEditController {
 
     private String extractVedomstvoFlag(AllreadyHeldException e) {
         return Optional.ofNullable(e.getComment())
+                .map(this::extractVedomstvoFlag)
+                .orElse("false");
+    }
+
+    private String extractVedomstvoFlag(Comment e) {
+        return Optional.ofNullable(e)
                 .map(Comment::getAuthor)
                 .map(Author::isVedomstvo)
                 .map(bool -> bool ? "true" : "false")
