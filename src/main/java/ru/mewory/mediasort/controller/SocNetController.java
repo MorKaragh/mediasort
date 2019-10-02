@@ -3,7 +3,10 @@ package ru.mewory.mediasort.controller;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import ru.mewory.mediasort.model.socnet.Post;
 import ru.mewory.mediasort.model.socnet.SocnetDTO;
 import ru.mewory.mediasort.service.socnet.InstagramLoader;
@@ -34,6 +38,26 @@ public class SocNetController {
     @Autowired
     private PostService postService;
 
+    Logger logger = LoggerFactory.getLogger(SocNetController.class);
+    @Value("${self.domain}")
+    private String selfDomain;
+    @Value("${vk.appid}")
+    private String appid;
+
+    @RequestMapping(value = "/recievecode")
+    public ResponseEntity<String> recieveCode(@RequestParam String code) {
+        logger.info("code recieved: " + code);
+        return ResponseEntity.ok(code);
+    }
+
+    @RequestMapping(value = "/vkloadauth")
+    public RedirectView vkLoadAuth() {
+        String authUrl = "https://oauth.vk.com/authorize?client_id=" + appid
+                + "&display=page&redirect_uri="
+                + selfDomain + "/vkload&scope=wall,photos,video&response_type=code&v=5.101";
+        return new RedirectView(authUrl);
+    }
+
     @RequestMapping(value = {"/instagramloader"})
     public ModelAndView instaloader(@RequestParam Map<String, String> allRequestParams) {
         return new ModelAndView("instagramloader");
@@ -49,15 +73,20 @@ public class SocNetController {
     }
 
     @RequestMapping(method = GET, value = "/vkload")
-    public ModelAndView vkload(@RequestParam Map<String,String> allRequestParams) throws InterruptedException, ClientException, ApiException {
+    public ModelAndView vkload(@RequestParam Map<String, String> allRequestParams) throws InterruptedException, ClientException, ApiException {
         ModelAndView mav = new ModelAndView("vkload");
+
+        if (allRequestParams.get("code") != null) {
+            vkService.setAuthCode(allRequestParams.get("code"));
+        }
+
         int offset = getOffset(allRequestParams);
-        mav.addObject("offset",offset);
+        mav.addObject("offset", offset);
         List<List<SocnetDTO>> postsWithComments = vkService.getPostsWithComments(offset);
-        if (!CollectionUtils.isEmpty(postsWithComments)){
+        if (!CollectionUtils.isEmpty(postsWithComments)) {
             List<Post> posts = new ArrayList<>();
             postsWithComments.forEach(socnetDTOS -> posts.add(postService.savePost(socnetDTOS)));
-            mav.addObject("posts",posts);
+            mav.addObject("posts", posts);
         }
         return mav;
     }
@@ -66,7 +95,7 @@ public class SocNetController {
         int offset = 0;
         try {
             offset = Integer.parseInt(allRequestParams.get("offset"));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return offset;

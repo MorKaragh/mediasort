@@ -1,5 +1,7 @@
 package ru.mewory.mediasort.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,13 @@ public class JournalController {
     @Autowired
     private PostService postService;
 
+    Logger logger = LoggerFactory.getLogger(JournalController.class);
+
 
     @RequestMapping(method = GET, value = {"journal", "/"})
     public @ResponseBody
     ModelAndView getJournal(@RequestParam Map<String, String> allRequestParams) {
+        logger.info("loading journal");
         ModelAndView mav = new ModelAndView("journal");
         List<JournalElement> posts = journalService.getJournal();
         mav.addObject("posts", posts);

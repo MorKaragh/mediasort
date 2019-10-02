@@ -56,8 +56,16 @@ public class PostService {
     @Transactional
     public Post savePost(List<SocnetDTO> data){
         SocnetDTO head = data.get(0);
-        Post post = postRepository.findByTextAndSocnet(head.getText(), SocNet.INSTAGRAM);
+        Post post = null;
+        if (head.getId() != null && SocNet.VK.equals(head.getSocnet())) {
+            post = postRepository.findByNetId(head.getId());
+        } else if (StringUtils.isNotBlank(head.getLink())) {
+            post = postRepository.findByPostLink(head.getLink());
+        }
         if (post == null) {
+            post = postRepository.findByTextAndSocnet(head.getText(), SocNet.INSTAGRAM);
+        }
+        if (post == null && StringUtils.isNotBlank(head.getText())) {
             post = postRepository.findByTextAndSocnet(head.getText(), SocNet.VK);
         }
         if (post == null){

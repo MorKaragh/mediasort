@@ -28,4 +28,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     @Query("SELECT max(p.id) FROM Post p WHERE EXISTS (from Comment c where c.status = 'FREE' and c.post = p)")
     Long findMaxPostIdWithFreeComments();
+
+    Post findByNetId(Long netId);
+
+    Post findByPostLink(String link);
 }

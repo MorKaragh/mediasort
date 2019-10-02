@@ -16,6 +16,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/record").hasRole("USER")
 //                .antMatchers("/report").hasRole("USER")
                 .antMatchers("/report").permitAll()
+                .antMatchers("/recievecode").permitAll()
+                .antMatchers("/vkloadauth").permitAll()
                 .antMatchers("/").hasRole("USER")
                 .antMatchers("/test").permitAll()
                 .antMatchers("/instaload").hasRole("USER")
