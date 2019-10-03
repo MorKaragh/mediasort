@@ -3,8 +3,6 @@ package ru.mewory.mediasort.controller;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -38,15 +36,14 @@ public class SocNetController {
     @Autowired
     private PostService postService;
 
-    Logger logger = LoggerFactory.getLogger(SocNetController.class);
     @Value("${self.domain}")
     private String selfDomain;
+
     @Value("${vk.appid}")
     private String appid;
 
     @RequestMapping(value = "/recievecode")
     public ResponseEntity<String> recieveCode(@RequestParam String code) {
-        logger.info("code recieved: " + code);
         return ResponseEntity.ok(code);
     }
 
