@@ -34,6 +34,7 @@ public class Record {
     private ArrayList<Tag> tagsObjects;
 
     @JsonProperty("description")
+    @Column(length = 1000)
     private String description;
 
     @JsonProperty("additionalText")
