@@ -115,15 +115,25 @@ public class VkService {
 
         Thread.sleep(TIME_WAIT_BEFORE_REQUEST);
 
-        GetCommentsResponse allComments = vk.wall()
-                .getComments(actor, wallpostFull.getId())
-                .sort(WallGetCommentsSort.ASC)
-                .count(Integer.MAX_VALUE)
-                .ownerId(ownerId)
-                .execute();
+        int offset = 0;
+        while (true) {
+            GetCommentsResponse allComments = vk.wall()
+                    .getComments(actor, wallpostFull.getId())
+                    .sort(WallGetCommentsSort.ASC)
+                    .count(100)
+                    .ownerId(ownerId)
+                    .offset(offset)
+                    .execute();
 
-        for (WallComment c : allComments.getItems()) {
-            putComment(dtos, userIds, groupIds, c);
+            for (WallComment c : allComments.getItems()) {
+                putComment(dtos, userIds, groupIds, c);
+            }
+
+            offset += 100;
+
+            if (allComments.getItems().size() < 100) {
+                return;
+            }
         }
     }
 
