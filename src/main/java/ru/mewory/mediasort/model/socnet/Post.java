@@ -9,8 +9,9 @@ import java.util.TreeSet;
 
 
 @Entity
-@Table(name = "posts",
-        indexes = {@Index(name = "IDX_TEXT_SOCNET", columnList = "text,socnet")})
+@Table(name = "posts"
+        // ,indexes = {@Index(name = "IDX_TEXT_SOCNET", columnList = "text,socnet")}
+        )
 public class Post {
     private static final int COMMENT_MAX_LENGTH = 12000;
 
