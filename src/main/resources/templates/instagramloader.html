@@ -18,18 +18,18 @@
 
 <div class="container col-md-8 col-lg-6 col-sm-12 col-xs-12 col-md-offset-2 col-lg-offset-3">
     <div>
-        <form id="data" method="post" enctype="multipart/form-data" action="/uploadInstagramXls">
+        <form id="xls-form" method="post" enctype="multipart/form-data" action="/uploadInstagramXls">
             <div class="row form-group" style="padding: 0 15px 0 15px">
                 <label for="post-text">Текст поста</label>
                 <textarea class="form-control" name="posttext" rows="5" id="post-text"></textarea>
             </div>
 
-            <div class="custom-file row editor">
-                <input type="file" name="xls" class="form-control custom-file-input" id="customFile">
+            <div class="custom-file row well">
+                <input type="file" name="xls" class="custom-file-input" id="xls-file-input">
             </div>
 
             <div class="row form-group" style="padding: 15px 0 0 0">
-                <button class="btn btn-lg btn-default" id="loadByInstagramRef" type="submit">Загрузить</button>
+                <button class="btn btn-lg btn-default" id="uploadBtn" type="button">Загрузить</button>
             </div>
         </form>
     </div>

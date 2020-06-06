@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.mewory.mediasort.model.socnet.Post;
 import ru.mewory.mediasort.model.socnet.SocnetDTO;
+import ru.mewory.mediasort.service.socnet.InstagramExcelService;
 import ru.mewory.mediasort.service.socnet.InstagramLoader;
 import ru.mewory.mediasort.service.socnet.PostService;
 import ru.mewory.mediasort.service.socnet.VkService;
@@ -36,6 +37,8 @@ public class SocNetController {
     private VkService vkService;
     @Autowired
     private PostService postService;
+    @Autowired
+    private InstagramExcelService instagramExcelService;
 
     @Value("${self.domain}")
     private String selfDomain;
@@ -73,11 +76,12 @@ public class SocNetController {
     @RequestMapping(method = POST, value = "uploadInstagramXls")
     public ResponseEntity<String> uploadInstagramXls(@RequestParam("posttext") String text,
                                                      @RequestParam("xls") MultipartFile file) {
-        System.out.println("--------------");
-        System.out.println(file);
-        System.out.println("--------------");
-        System.out.println(text);
-        return new ResponseEntity<>("FAIL", HttpStatus.OK);
+        try {
+            instagramExcelService.savePostFromXls(text, file);
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
     @RequestMapping(method = GET, value = "/vkload")

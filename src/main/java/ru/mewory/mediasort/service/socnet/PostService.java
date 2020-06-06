@@ -71,6 +71,9 @@ public class PostService {
         if (post == null){
             post = createPost(head);
         }
+        if (StringUtils.isNotBlank(head.getText()) && !StringUtils.equalsIgnoreCase(head.getText(), post.getText())) {
+            post.setText(head.getText());
+        }
         post.setPostLink(head.getLink());
         post.setDate(head.getDate());
         postRepository.save(post);
