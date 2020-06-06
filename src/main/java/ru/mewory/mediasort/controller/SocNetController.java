@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.mewory.mediasort.model.socnet.Post;
@@ -66,6 +67,16 @@ public class SocNetController {
         if (instagramRef != null) {
             return new ResponseEntity<>("OK", HttpStatus.OK);
         }
+        return new ResponseEntity<>("FAIL", HttpStatus.OK);
+    }
+
+    @RequestMapping(method = POST, value = "uploadInstagramXls")
+    public ResponseEntity<String> uploadInstagramXls(@RequestParam("posttext") String text,
+                                                     @RequestParam("xls") MultipartFile file) {
+        System.out.println("--------------");
+        System.out.println(file);
+        System.out.println("--------------");
+        System.out.println(text);
         return new ResponseEntity<>("FAIL", HttpStatus.OK);
     }
 
