@@ -55,7 +55,8 @@ public class InstagramExcelService {
                     if (date != null && date.compareTo(minDate) < 0) {
                         minDate = date;
                     }
-                    SocnetDTO dto = new SocnetDTO(row.getCell(1).getStringCellValue(), row.getCell(4).getStringCellValue())
+                    String author = StringUtils.trim(StringUtils.replace(row.getCell(1).getStringCellValue(),"Replies : ",""));
+                    SocnetDTO dto = new SocnetDTO(author, row.getCell(4).getStringCellValue())
                             .setDate(date);
                     dto.setSocnet(SocNet.INSTAGRAM);
                     post.add(dto);
