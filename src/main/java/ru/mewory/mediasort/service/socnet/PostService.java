@@ -43,7 +43,7 @@ public class PostService {
 
     public Comment takeAndHold(Long postId) throws AllreadyHeldException {
         Comment comment = commentsRepository.findById(postId).get();
-        if (!CommentStatus.FREE.equals(comment.getStatus()) && !CommentStatus.IN_PROGRESS.equals(comment.getStatus())){
+        if (!CommentStatus.FREE.equals(comment.getStatus()) && !CommentStatus.IN_PROGRESS.equals(comment.getStatus())) {
             Record record = recordService.loadByCommentId(comment.getId());
             throw new AllreadyHeldException(comment, record);
         }
@@ -54,7 +54,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post savePost(List<SocnetDTO> data){
+    public Post savePost(List<SocnetDTO> data) {
         SocnetDTO head = data.get(0);
         Post post = null;
         if (head.getId() != null && SocNet.VK.equals(head.getSocnet())) {
@@ -62,27 +62,30 @@ public class PostService {
         } else if (StringUtils.isNotBlank(head.getLink())) {
             post = postRepository.findByPostLink(head.getLink());
         }
-        if (post == null) {
+        if (post == null && StringUtils.isNotBlank(head.getText()) && SocNet.INSTAGRAM == head.getSocnet()) {
             post = postRepository.findByTextAndSocnet(head.getText(), SocNet.INSTAGRAM);
         }
-        if (post == null && StringUtils.isNotBlank(head.getText())) {
+        if (post == null && StringUtils.isNotBlank(head.getText()) && SocNet.VK == head.getSocnet()) {
             post = postRepository.findByTextAndSocnet(head.getText(), SocNet.VK);
         }
-        if (post == null){
+        if (post == null) {
             post = createPost(head);
         }
         if (StringUtils.isNotBlank(head.getText()) && !StringUtils.equalsIgnoreCase(head.getText(), post.getText())) {
             post.setText(head.getText());
         }
+        if (post.getSocnet() == null && head.getSocnet() != null) {
+            post.setSocnet(head.getSocnet());
+        }
         post.setPostLink(head.getLink());
         post.setDate(head.getDate());
         postRepository.save(post);
 
-        for (int i = 1; i < data.size(); i++){
+        for (int i = 1; i < data.size(); i++) {
             SocnetDTO e = data.get(i);
             String text = e.getText();
             if (post.getId() == null || CollectionUtils.isEmpty(
-                    commentsRepository.findByTextAndPostAndAuthorName(text,post,e.getAuthor()))) {
+                    commentsRepository.findByTextAndPostAndAuthorName(text, post, e.getAuthor()))) {
                 saveComment(post, e);
             }
         }
@@ -135,8 +138,8 @@ public class PostService {
     }
 
     public void release(Long commentId) {
-        Comment byId = commentsRepository.findByIdAndStatus(commentId,CommentStatus.IN_PROGRESS);
-        if (byId != null){
+        Comment byId = commentsRepository.findByIdAndStatus(commentId, CommentStatus.IN_PROGRESS);
+        if (byId != null) {
             byId.setStatus(CommentStatus.FREE);
             byId.setChangeUser(null);
             commentsRepository.save(byId);
@@ -146,7 +149,7 @@ public class PostService {
     public void setTrashStatus(Long commentId, String status) {
         CommentStatus s = CommentStatus.valueOf(status);
         Comment c = commentsRepository.findById(commentId).get();
-        if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)){
+        if (Arrays.asList(CommentStatus.NO_PLACE, CommentStatus.NO_THEME).contains(s)) {
             c.setStatus(s);
             c.setChangeUser(UserUtils.getUsername());
             commentsRepository.save(c);
@@ -162,7 +165,7 @@ public class PostService {
                     DateUtils.parseDate(startDate, "dd.MM.yyyy"),
                     DateUtils.parseDate(endDate, "dd.MM.yyyy"),
                     address);
-            if (!CollectionUtils.isEmpty(records)){
+            if (!CollectionUtils.isEmpty(records)) {
                 List<Long> recordIds = records.stream().map(Record::getCommentId).collect(Collectors.toList());
                 Set<Comment> comments = commentsRepository.findByIdIn(recordIds);
                 Post post = new Post();
@@ -175,7 +178,7 @@ public class PostService {
         return null;
     }
 
-    public Post getPostById(Long id){
+    public Post getPostById(Long id) {
         return postRepository.findByIdAndFetchComments(id);
     }
 

@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mewory.mediasort.model.socnet.SocNet;
 import ru.mewory.mediasort.model.socnet.SocnetDTO;
 
 import java.io.*;
@@ -40,6 +41,7 @@ public class InstagramExcelService {
                 Row thirdRow = rows.get(2);
                 String link = extractLink(thirdRow.getCell(1).getStringCellValue());
                 SocnetDTO head = new SocnetDTO("andreyvorobiev", postText);
+                head.setSocnet(SocNet.INSTAGRAM);
                 head.setLink(link);
                 post.add(head);
 
@@ -55,6 +57,7 @@ public class InstagramExcelService {
                     }
                     SocnetDTO dto = new SocnetDTO(row.getCell(1).getStringCellValue(), row.getCell(4).getStringCellValue())
                             .setDate(date);
+                    dto.setSocnet(SocNet.INSTAGRAM);
                     post.add(dto);
                 }
                 head.setDate(minDate);
